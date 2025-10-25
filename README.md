@@ -17,6 +17,8 @@ SudoDog wraps your AI agents in a secure sandbox that:
 - ✅ Blocks dangerous operations before they execute
 - ✅ Provides instant rollback capabilities
 
+
+
 ## Installation
 
 ```bash
