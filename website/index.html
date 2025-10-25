@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SudoDog — AI Agent Sandbox & Security Monitoring</title>
+  <meta name="description" content="Sandbox for AI agents. Blocks dangerous operations, monitors behavior 24/7, alerts instantly. Deploy agents safely with real-time security.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="#home" aria-label="SudoDog home">
+        <img class="logo" src="assets/logo.png" alt="SudoDog logo">
+        <strong class="name"></strong>
+      </a>
+      <nav class="menu">
+        <a href="#demo">Demo</a>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#install" class="btn primary">Get Started</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="home">
+    <section class="hero container">
+      <div class="hero-copy center">
+        <img class="hero-logo" src="assets/hero_logo.png" alt="SudoDog logo">
+        <p class="lead">Secure sandbox for AI agents. Monitor continuously. Deploy confidently.</p>
+        <p class="lede-sub">AI agents need sandboxed execution to prevent disasters. SudoDog blocks dangerous file access, detects risky SQL and shell commands, and monitors agent behavior 24/7 so you know immediately when something goes wrong.</p>
+        <div class="cta-row">
+          <a class="btn primary lg" href="#install">Get Started Free</a>
+          <a class="btn ghost lg" href="#demo">See It In Action</a>
+        </div>
+      </div>
+      <div class="hero-terminal card">
+        <div class="term-top">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          <span class="title">bash • quick install</span>
+        </div>
+<pre class="tty"><code><span class="prompt">$</span> curl -sL install.sudodog.com | bash<span class="cursor"></span></code></pre>
+        <div class="status"><span class="ok">●</span> One command · zero configuration</div>
+      </div>
+    </section>
+
+    <section class="code container" id="demo">
+      <h2>See It In Action</h2>
+      <p class="sub center">Real example: Detecting dangerous operations before they execute</p>
+      <div class="hero-terminal card">
+        <div class="term-top">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          <span class="title">bash • sudodog run python test_agent.py</span>
+        </div>
+<pre class="tty"><code><span class="prompt">user@prod:~$</span> <span class="cmd">sudodog run python test_agent.py</span>
+<span class="out">🐕 SudoDog AI Agent Security</span>
+<span class="out">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="okline">✓ Sandboxed environment created</span>
+<span class="okline">✓ Behavioral monitoring active</span>
+<span class="out">Policy: default</span>
+
+<span class="out">🤖 AI Agent Starting...</span>
+<span class="okline">[Safe Operation] Reading OS information...</span>
+<span class="okline">[Safe Operation] Creating temporary file...</span>
+
+<span class="alert">[Dangerous Operation] Attempting to read /etc/shadow...</span>
+<span class="alert">  ✓ Blocked by system permissions</span>
+
+<span class="alert">[Dangerous Operation] Simulating database query...</span>
+<span class="alert">  Query: DROP TABLE customers;</span>
+<span class="warning">  ⚠️ This pattern detected by SudoDog!</span>
+
+<span class="alert">[Dangerous Operation] Simulating file deletion...</span>
+<span class="alert">  Command: rm -rf /important/data</span>
+<span class="warning">  ⚠️ This pattern detected by SudoDog!</span>
+
+<span class="out">✓ Process completed</span>
+<span class="out">Total actions: 7</span>
+<span class="out">Blocked actions: 3</span>
+<span class="out">Log file: ~/.sudodog/logs/20251023_110220.jsonl</span>
+
+<span class="prompt">user@prod:~$</span> <span class="cmd">sudodog logs</span>
+<span class="out">Full audit trail with timestamps and risk levels</span><span class="cursor"></span></code></pre>
+      </div>
+    </section>
+
+    <section class="features container" id="features">
+      <h2>Complete Sandbox & Security Platform</h2>
+      <div class="grid grid-3">
+        <article class="feature card hoverlift"><div class="icbox">🔒</div><h3>Sandboxed Execution</h3><p>Isolated environment for each agent. Blocks access to sensitive files like passwords, SSH keys, AWS credentials, and .env files automatically.</p></article>
+        <article class="feature card hoverlift"><div class="icbox">👁️</div><h3>Behavioral Monitoring</h3><p>Track every file access, network request, and system call. Full visibility into what your agents are actually doing in real-time.</p></article>
+        <article class="feature card hoverlift"><div class="icbox">🛡️</div><h3>Pattern Detection</h3><p>Detects dangerous SQL (DROP TABLE, DELETE FROM) and shell commands (rm -rf, sudo operations) before execution using smart pattern matching.</p></article>
+        <article class="feature card hoverlift"><div class="icbox">⏪</div><h3>File Rollback</h3><p>Rollback file modifications and creations. Undo mistakes with a single command. Automatic backups of all modified files.</p></article>
+        <article class="feature card hoverlift"><div class="icbox">📊</div><h3>Complete Audit Trail</h3><p>Immutable logs of every agent action in JSONL format. Perfect for compliance, debugging, and incident response.</p></article>
+        <article class="feature card hoverlift"><div class="icbox">⚡</div><h3>Zero Code Changes</h3><p>Wrap existing agents with one command. No SDK to integrate, works with any framework or language. Works with LangChain, AutoGPT, custom agents.</p></article>
+      </div>
+    </section>
+
+    <section class="pricing container" id="pricing">
+      <h2>Simple Pricing That Scales With You</h2>
+      <p class="sub center">Development → Production → Enterprise</p>
+      <div class="plans plans-3">
+        <article class="plan card hoverlift">
+          <h3>Development</h3>
+          <p class="price">$0 <span>/ forever</span></p>
+          <p>Test agents safely before deployment</p>
+          <ul>
+            <li>Single agent monitoring</li>
+            <li>File access blocking</li>
+            <li>Pattern detection (SQL, shell)</li>
+            <li>Local logging (7 days)</li>
+            <li>File rollback</li>
+            <li>Terminal interface only</li>
+            <li>Open source (MIT)</li>
+            <li>Community support</li>
+          </ul>
+          <a class="btn primary" href="#install">Get Started Free</a>
+        </article>
+        <article class="plan card popular hoverlift">
+          <div class="flag">Coming Soon</div>
+          <h3>Production</h3>
+          <p class="price-coming">Join Waitlist</p>
+          <p>Deploy agents with confidence & monitoring</p>
+          <ul>
+            <li>Everything in Development</li>
+            <li>Unlimited agents</li>
+            <li>24/7 monitoring & alerts</li>
+            <li>Unlimited cloud logging</li>
+            <li>Real‑time alerts (email + webhook)</li>
+            <li>Web dashboard</li>
+            <li>Historical trending</li>
+            <li>Anomaly detection</li>
+            <li>Network monitoring</li>
+            <li>Priority support</li>
+          </ul>
+          <a class="btn primary" href="https://forms.gle/FMN32h4GSHAKqjG17">Join Waitlist</a>
+          <p class="pricing-note">Early adopters get 50% off</p>
+        </article>
+        <article class="plan card hoverlift">
+          <div class="flag-muted">Coming Soon</div>
+          <h3>Enterprise</h3>
+          <p class="price-coming">Join Waitlist</p>
+          <p>Teams with compliance requirements</p>
+          <ul>
+            <li>Everything in Production</li>
+            <li>Multi‑user access & team collaboration</li>
+            <li>1 year data retention</li>
+            <li>Team policy sharing</li>
+            <li>SSO integration (SAML, OAuth)</li>
+            <li>Slack/Teams integration</li>
+            <li>API access</li>
+            <li>Compliance reports (SOC 2, HIPAA)</li>
+            <li>Dedicated support & SLA</li>
+          </ul>
+          <a class="btn ghost" href="https://forms.gle/FMN32h4GSHAKqjG17">Join Waitlist</a>
+          <p class="pricing-note">Custom pricing for teams</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="container code" id="install">
+      <h2>Get Started in 30 Seconds</h2>
+      <p class="sub center">One command. Zero configuration.</p>
+<pre class="codeblock"><code class="lang">curl -sL install.sudodog.com | bash</code></pre>
+      <p class="sub center">Then wrap any AI agent: <code class="inl">sudodog run your-agent.py</code></p>
+      <p class="sub center">Works on Ubuntu, Debian, Arch, Fedora, and most Linux distributions.</p>
+      <p class="sub center" style="margin-top: 20px;"><strong>Open Source:</strong> <a href="https://github.com/sudodog/sudodog" style="color: #667eea;">View on GitHub</a> • MIT License</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container foot">
+      <div class="id">
+        <img class="logo sm" src="assets/logo.png" alt="SudoDog logo small">
+        <div>
+          <strong>SudoDog</strong><br>
+          <small>Security for AI agents that actually works</small><br>
+          <small>© <span id="y"></span> SudoDog. MIT License.</small>
+        </div>
+      </div>
+      <nav class="links">
+        <a href="https://github.com/sudodog/sudodog">GitHub</a>
+        <a href="#">Documentation</a>
+        <a href="#">Blog</a>
+        <a href="#">Support</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>document.getElementById('y').textContent=new Date().getFullYear();</script>
+</body>
+</html>
