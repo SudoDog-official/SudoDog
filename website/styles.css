@@ -1,0 +1,88 @@
+:root{
+  --bg:#0b0d11; --panel:#0f1116; --muted:#151922;
+  --border:#242a36; --text:#e9eef2; --soft:#b8c4d1;
+  --brand:#2dd4bf; --brand-ink:#083c3b; --accent:#7c3aed; --ok:#22c55e;
+}
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;background:radial-gradient(1200px 600px at 15% -10%,#0f1420,transparent), radial-gradient(900px 500px at 110% -10%,#12192a,transparent), linear-gradient(#0a0c11,#0b0d11);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;overflow-x:hidden}
+.bg-grid{position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);background-size:30px 30px;mask-image:radial-gradient(600px 300px at 30% -10%, rgba(255,255,255,.25), transparent 60%)}
+
+.container{max-width:1160px;margin:0 auto;padding:0 20px}
+a{color:var(--text);text-decoration:none;transition:opacity .15s ease, transform .15s ease}
+
+/* Topbar */
+.topbar{position:sticky;top:0;z-index:30;background:rgba(9,11,15,.7);backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--border)}
+.nav{display:flex;align-items:center;gap:16px;padding:10px 0}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:#0c0f14;object-fit:contain;box-shadow:0 0 0 3px rgba(45,212,191,.06)}
+.logo.sm{width:28px;height:28px}
+.name{font-weight:800;letter-spacing:.2px}
+.menu{display:flex;gap:14px;align-items:center;margin-left:auto}
+.menu a{color:var(--soft);font-weight:600;opacity:.9}
+.menu a:hover{opacity:1;transform:translateY(-1px)}
+.btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid var(--border);font-weight:700;transition:transform .15s ease, box-shadow .2s ease}
+.btn.primary{background:linear-gradient(180deg,#31e6cf,#2dd4bf);color:#062b2a;border-color:transparent;box-shadow:0 8px 24px rgba(45,212,191,.25)}
+.btn.primary:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(45,212,191,.35)}
+.btn.ghost{background:transparent;color:var(--soft)}
+.btn.ghost:hover{transform:translateY(-1px)}
+.btn.muted{background:var(--muted);color:var(--soft)}
+.btn.lg{padding:12px 18px;border-radius:12px}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:flex-start;padding:64px 0 48px}
+@media (max-width:980px){.hero{grid-template-columns:1fr;padding:48px 0 38px}}
+.hero-copy{display:flex;flex-direction:column;align-items:flex-start}
+.hero-copy.center{text-align:left}
+.hero-copy .lead{color:#c9d5e1;font-size:18px;margin:2px 0 6px}
+.lede-sub{color:#b7c3ce;margin:0 0 14px 0;max-width:660px}
+.cta-row{display:flex;gap:10px;margin:14px 0 6px;flex-wrap:wrap;justify-content:flex-start}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.0));border:1px solid var(--border);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.22)}
+
+.hero-logo{width:clamp(220px, 26vw, 360px);height:auto;display:block;margin:0 0 10px 0;image-rendering:auto;filter:drop-shadow(0 6px 18px rgba(0,0,0,.28))}
+.hero-terminal{padding:0;overflow:hidden;margin-top:8px}
+
+.term-top{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
+.term-top .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.dot.red{background:#ef4444}.dot.yellow{background:#f59e0b}.dot.green{background:#22c55e}
+.term-top .title{margin-left:auto;color:#9fb0bf;font-size:12px}
+.tty{margin:0;border-radius:0;background:#0b0d10;color:#d0e2f2;border:none;padding:18px;font-family:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size:14px;line-height:1.6;overflow:auto}
+.prompt{color:var(--ok)} .cmd{color:#06d2e6} .out{color:#cfe1ea} .alert{color:#ef6666;font-weight:700} .okline{color:#22c55e} .warning{color:#f0c86f}
+.cursor{display:inline-block;width:10px;height:18px;background:#d0e2f2;margin-left:2px;animation:blink 1.05s steps(1,end) infinite;border-radius:2px;vertical-align:-3px}
+@keyframes blink{50%{opacity:.2}}
+
+/* Features */
+.features{padding:38px 0}
+.features h2{font-size:28px;margin:0 0 16px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:980px){.grid{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.grid{grid-template-columns:1fr}}
+.feature{padding:18px}
+.icbox{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:10px;background:var(--muted);border:1px solid var(--border);margin-bottom:10px}
+.feature h3{margin:6px 0 8px;font-size:18px}
+.feature p{margin:0;color:#b7c3ce;font-size:14px}
+.hoverlift{transition:transform .15s ease, box-shadow .2s ease}
+.hoverlift:hover{box-shadow:0 14px 32px rgba(0,0,0,.30);transform:translateY(-2px)}
+
+/* Code / Install blocks */
+.code{padding:32px 0 8px}
+.code h2{font-size:28px;margin:0 0 10px}
+.sub.center{text-align:center;color:#b7c3ce;margin:0 0 16px}
+.codeblock{background:#0b0d10;color:#d0e2f2;border:1px solid var(--border);padding:18px;border-radius:10px;overflow:auto;font-family:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
+.inl{background:#0b0d10;border:1px solid var(--border);padding:2px 6px;border-radius:6px;color:#9bdad0}
+
+/* Pricing */
+.pricing{padding:42px 0}
+.pricing h2{font-size:28px;margin:0 0 8px}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:980px){.plans{grid-template-columns:1fr}}
+.plan{padding:18px;position:relative}
+.plan .price{font-size:26px;margin:8px 0 10px}
+.plan ul{list-style:none;margin:0 0 14px;padding:0;color:#b7c3ce;font-size:14px}
+.flag{position:absolute;top:10px;right:10px;background:var(--accent);color:#fff;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:800}
+
+/* Footer */
+.footer{margin-top:40px;border-top:1px solid var(--border);background:rgba(255,255,255,.02)}
+.foot{display:flex;align-items:center;justify-content:space-between;padding:16px 0;gap:12px;flex-wrap:wrap}
+.id{display:flex;gap:10px;align-items:center}
+.links{display:flex;gap:14px}
+.links a{color:#9fb0bf}
