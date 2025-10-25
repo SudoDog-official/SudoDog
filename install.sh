@@ -1,74 +1,52 @@
 #!/bin/bash
-# SudoDog Installation Script
-# curl -sL install.sudodog.com | bash
-
 set -e
 
-SUDODOG_VERSION="0.1.0"
-INSTALL_DIR="$HOME/.local/bin"
-PYTHON_MIN_VERSION="3.8"
+echo "🐕 Installing SudoDog..."
+echo ""
 
-echo "🐕 SudoDog Installer v${SUDODOG_VERSION}"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo
-
-# Check if running on Linux
-if [[ "$(uname)" != "Linux" ]]; then
-    echo "❌ Error: SudoDog currently only supports Linux"
-    echo "   macOS support coming soon!"
+# Check if git is installed
+if ! command -v git &> /dev/null; then
+    echo "❌ Error: git is required but not installed."
+    echo "   Install it with: sudo apt install git"
     exit 1
 fi
 
-# Check Python version
+# Check if python3 is installed
 if ! command -v python3 &> /dev/null; then
-    echo "❌ Error: Python 3 is not installed"
-    echo "   Install Python 3.8+ and try again"
+    echo "❌ Error: python3 is required but not installed."
+    echo "   Install it with: sudo apt install python3"
     exit 1
 fi
 
-PYTHON_VERSION=$(python3 -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
-echo "✓ Found Python ${PYTHON_VERSION}"
-
-# Check pip
-if ! command -v pip3 &> /dev/null; then
-    echo "❌ Error: pip3 is not installed"
-    echo "   Install pip3 and try again"
+# Check if pip is installed
+if ! command -v pip3 &> /dev/null && ! command -v pip &> /dev/null; then
+    echo "❌ Error: pip is required but not installed."
+    echo "   Install it with: sudo apt install python3-pip"
     exit 1
 fi
 
-echo "✓ Found pip3"
+echo "📦 Installing SudoDog from GitHub..."
 
-# Create install directory
-mkdir -p "$INSTALL_DIR"
-
-# Install SudoDog
-echo
-echo "📦 Installing SudoDog..."
-pip3 install --user sudodog
-
-# Check if install dir is in PATH
-if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
-    echo
-    echo "⚠️  Warning: $INSTALL_DIR is not in your PATH"
-    echo
-    echo "Add this to your ~/.bashrc or ~/.zshrc:"
-    echo "  export PATH=\"\$HOME/.local/bin:\$PATH\""
-    echo
+# Try regular pip first, fall back to --break-system-packages if needed
+if pip3 install git+https://github.com/SudoDog-official/sudodog.git 2>/dev/null; then
+    echo "✅ Installed with pip3"
+elif pip3 install git+https://github.com/SudoDog-official/sudodog.git --break-system-packages 2>/dev/null; then
+    echo "✅ Installed with pip3 --break-system-packages"
+elif pip install git+https://github.com/SudoDog-official/sudodog.git 2>/dev/null; then
+    echo "✅ Installed with pip"
+elif pip install git+https://github.com/SudoDog-official/sudodog.git --break-system-packages; then
+    echo "✅ Installed with pip --break-system-packages"
+else
+    echo "❌ Installation failed. Please try manually:"
+    echo "   pip3 install git+https://github.com/SudoDog-official/sudodog.git --break-system-packages"
+    exit 1
 fi
 
-# Initialize SudoDog
-echo
-echo "🔧 Initializing SudoDog..."
-sudodog init
-
-echo
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
 echo "✅ SudoDog installed successfully!"
-echo
-echo "Get started:"
+echo ""
+echo "Quick start:"
+echo "  sudodog init          # Initialize SudoDog"
 echo "  sudodog run python your_agent.py"
-echo
-echo "Learn more:"
-echo "  sudodog --help"
-echo "  https://docs.sudodog.com"
-echo
+echo ""
+echo "Documentation: https://github.com/SudoDog-official/sudodog"
