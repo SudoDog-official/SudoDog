@@ -103,13 +103,65 @@ def status():
 def logs(last):
     """View agent activity logs"""
     console.print("\n[cyan]📋 Recent Agent Activity[/cyan]")
-    console.print("[cyan]" + "━" * 40 + "[/cyan]\n")
+    console.print("[cyan]" + "─" * 40 + "[/cyan]\n")
     
     logs_dir = Path.home() / '.sudodog' / 'logs'
     
     if not logs_dir.exists():
         console.print("[yellow]No logs found. Run 'sudodog init' first.[/yellow]\n")
         return
+    
+    # Get all log files, sorted by modification time
+    log_files = sorted(logs_dir.glob('*.jsonl'), key=lambda x: x.stat().st_mtime, reverse=True)
+    
+    if not log_files:
+        console.print("[yellow]No logged activities yet[/yellow]\n")
+        return
+    
+    console.print(f"[dim]Showing last {last} actions from recent sessions...[/dim]\n")
+    
+    total_shown = 0
+    for log_file in log_files:
+        if total_shown >= last:
+            break
+            
+        with open(log_file, 'r') as f:
+            for line in f:
+                if total_shown >= last:
+                    break
+                    
+                try:
+                    entry = json.loads(line.strip())
+                    timestamp = entry.get('timestamp', 'Unknown')
+                    action_type = entry.get('action_type', 'unknown')
+                    details = entry.get('details', {})
+                    
+                    # Format timestamp
+                    if timestamp != 'Unknown':
+                        dt = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
+                        time_str = dt.strftime('%H:%M:%S')
+                    else:
+                        time_str = 'Unknown'
+                    
+                    # Display based on action type
+                    if action_type == 'start':
+                        console.print(f"[green]✓[/green] [{time_str}] Started: {details.get('command', 'Unknown')}")
+                    elif action_type == 'complete':
+                        console.print(f"[green]✓[/green] [{time_str}] Completed - {details.get('total_actions', 0)} actions, {details.get('blocked_actions', 0)} blocked")
+                    elif action_type == 'file_access':
+                        console.print(f"[blue]📁[/blue] [{time_str}] File: {details.get('path', 'Unknown')} ({details.get('mode', 'Unknown')})")
+                    else:
+                        console.print(f"[dim]  [{time_str}] {action_type}: {details}[/dim]")
+                    
+                    total_shown += 1
+                except json.JSONDecodeError:
+                    continue
+    
+    if total_shown == 0:
+        console.print("[yellow]No logged activities yet[/yellow]\n")
+    else:
+        console.print(f"\n[dim]Showing {total_shown} most recent actions[/dim]")
+        console.print(f"[dim]Log files: {logs_dir}[/dim]\n")
     
     # This will read actual logs
     # For now, showing structure
