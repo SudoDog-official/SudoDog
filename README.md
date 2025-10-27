@@ -1,8 +1,8 @@
-# 🐕 SudoDog
+# SudoDog 🐕
 
-**Sandboxing and monitoring for AI agents in one command**
+**Secure sandbox for AI agents. Blocks dangerous operations, monitors behavior, full audit trail.**
 
-Security for AI agents that actually works. Deploy agents safely with automatic sandboxing, behavioral monitoring, and rollback capabilities.
+Deploy agents safely with automatic sandboxing, behavioral monitoring, and rollback capabilities.
 
 ## The Problem
 
@@ -17,30 +17,60 @@ SudoDog wraps your AI agents in a secure sandbox that:
 - ✅ Blocks dangerous operations before they execute
 - ✅ Provides instant rollback capabilities
 
+## How is SudoDog Different?
 
+Unlike general-purpose sandboxing tools (Sandboxie, Firejail, Docker), SudoDog is **purpose-built for AI agents** with intelligence that understands agent behavior:
+
+### AI-Native Security Features
+
+| Feature | General Sandboxes | SudoDog |
+|---------|------------------|---------|
+| **SQL Injection Detection** | ❌ | ✅ Detects `DROP TABLE`, `DELETE FROM`, etc. |
+| **Shell Command Analysis** | ❌ | ✅ Flags `rm -rf`, `curl \| bash`, etc. |
+| **Behavioral Monitoring** | ❌ | ✅ Tracks patterns over time |
+| **Session-Based Audit** | ❌ | ✅ Links conversations → actions |
+| **Semantic Rollback** | ❌ | ✅ Undo by logical operation |
+| **AI Anomaly Detection** | ❌ | ✅ Excessive API calls, data exfiltration |
+
+### The Key Difference
+
+**Traditional sandboxes** isolate processes at the system level—they're like putting code in a locked room.
+
+**SudoDog** understands *agent intent*—it's like having a security guard who reads what the agent is trying to do and makes intelligent decisions.
+
+### Example: SQL Query
+```python
+# Traditional sandbox
+agent.run("DROP TABLE users")  # ❌ Blocked: no database access
+
+# SudoDog  
+agent.run("DROP TABLE users")  # ✅ Intercepted, analyzed, blocked
+                               # 📝 Logged: "Agent attempted DROP TABLE"
+                               # 🚨 Alert: "Destructive SQL detected"
+```
+
+SudoDog doesn't just block—it **understands and explains** what happened.
 
 ## Installation
-
 ```bash
 curl -sL install.sudodog.com | bash
 ```
 
-Or install via pip:
-
+Or install from source:
 ```bash
-pip install sudodog
+git clone https://github.com/SudoDog-official/sudodog
+cd sudodog
+pip install -e .
 ```
 
 ## Quick Start
 
 ### 1. Initialize SudoDog
-
 ```bash
 sudodog init
 ```
 
 ### 2. Run your AI agent
-
 ```bash
 sudodog run python my_agent.py
 ```
@@ -105,17 +135,17 @@ Deploy agents in production with confidence. Rollback capabilities for when thin
 Meet regulatory requirements with immutable logs of all agent actions. Demonstrate due diligence for auditors.
 
 ## How It Works
-
 ```
 AI Agent → SudoDog → Your System
            ↓
         ✓ Intercept
+        ✓ Analyze Intent
         ✓ Policy Check
         ✓ Log Action
         ✓ Allow/Block
 ```
 
-SudoDog sits between your AI agent and your system, intercepting every system call and applying security policies before execution.
+SudoDog sits between your AI agent and your system, intercepting every system call, analyzing the intent, and applying security policies before execution.
 
 ## Features
 
@@ -140,36 +170,37 @@ SudoDog is currently in **alpha**. Core features are working but expect breaking
 
 - [x] Basic CLI interface
 - [x] Local logging
+- [x] Pattern detection (SQL, shell commands)
 - [ ] Process monitoring and sandboxing
 - [ ] Security policy engine
 - [ ] Rollback functionality
-- [ ] Cloud sync (Pro tier)
-- [ ] Web dashboard
-- [ ] Team collaboration features
+- [ ] Cloud sync (Production tier)
+- [ ] Web dashboard (Production tier)
+- [ ] Team collaboration features (Enterprise tier)
 
 ## Contributing
 
 SudoDog is open source! Contributions welcome.
-
 ```bash
-git clone https://github.com/sudodog/sudodog
+git clone https://github.com/SudoDog-official/sudodog
 cd sudodog
 pip install -e .
 ```
 
+See [BETA_TESTING.md](BETA_TESTING.md) for testing guidelines.
+
 ## License
 
-MIT License - see LICENSE file for details
+MIT License - see [LICENSE](LICENSE) file for details
 
 ## Support
 
-- 📖 [Documentation](https://docs.sudodog.com)
-- 💬 [Discord Community](https://discord.gg/sudodog)
-- 🐛 [Report Issues](https://github.com/sudodog/sudodog/issues)
-- 📧 [Email Support](mailto:support@sudodog.com)
+- 🐛 [Report Issues](https://github.com/SudoDog-official/sudodog/issues)
+- 💬 [Discussions](https://github.com/SudoDog-official/sudodog/discussions)
+- 🌐 [Website](https://sudodog.com)
 
 ---
 
 **Built for developers who value security without complexity.**
 
-🐕 [sudodog.com](https://sudodog.com) | [GitHub](https://github.com/sudodog/sudodog) | [Twitter](https://twitter.com/sudodog)
+🐕 [sudodog.com](https://sudodog.com) | [GitHub](https://github.com/SudoDog-official/sudodog)
