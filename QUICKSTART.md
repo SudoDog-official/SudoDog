@@ -1,16 +1,19 @@
 # SudoDog Quick Start Guide
 
+Get started with SudoDog in under 5 minutes.
+
 ## Installation (2 minutes)
 
-### Option 1: One-Line Install
+### One-Line Install (Recommended)
 ```bash
 curl -sL install.sudodog.com | bash
 ```
 
-### Option 2: Manual Install
+### Manual Install
 ```bash
-pip3 install sudodog
-sudodog init
+git clone https://github.com/SudoDog-official/sudodog
+cd sudodog
+pip3 install -e . --break-system-packages
 ```
 
 ## Test It Out (1 minute)
@@ -18,16 +21,30 @@ sudodog init
 ### 1. Create a test agent
 ```bash
 cat > test_agent.py << 'EOF'
+import os
 import time
-print("AI Agent running...")
-time.sleep(2)
+
+print("🤖 AI Agent running...")
+time.sleep(1)
+
+# Try some operations
+print("Reading system info...")
+os.system("uname -a")
 
 # Try to read sensitive file
+print("\nAttempting to read /etc/shadow...")
 try:
     with open('/etc/shadow', 'r') as f:
-        print("Read shadow file!")
-except:
-    print("Blocked!")
+        print("✓ Read shadow file!")
+except PermissionError:
+    print("✗ Blocked by permissions")
+
+# Simulate dangerous SQL
+print("\nSimulating SQL query...")
+query = "DROP TABLE users; DELETE FROM customers;"
+print(f"Query: {query}")
+
+print("\n✓ Agent completed")
 EOF
 ```
 
@@ -39,6 +56,7 @@ sudodog run python test_agent.py
 You should see:
 - ✓ Sandboxed environment created
 - ✓ Behavioral monitoring active  
+- ⚠️ Detection of dangerous operations
 - Complete logging of all actions
 
 ### 3. Check the logs
@@ -58,15 +76,21 @@ sudodog run python my_langchain_agent.py
 sudodog run python -m autogpt
 ```
 
-### Running with Custom Policy
+### Running Multiple Agents
 ```bash
-sudodog run --policy strict python agent.py
+# Terminal 1
+sudodog run python agent1.py
+
+# Terminal 2  
+sudodog run python agent2.py
+
+# Check all running agents
+sudodog status
 ```
 
 ## Understanding the Output
 
 When you run `sudodog run`, you'll see:
-
 ```
 🐕 SudoDog AI Agent Security
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -76,74 +100,90 @@ Policy: default
 
 🐕 Starting monitored execution
 Command: python test_agent.py
-Session: 20250120_143022
+Session: 20251025_143022
 
 ✓ Process started (PID: 12345)
-⚠  Blocked file access: /etc/shadow
+
+Output:
+🤖 AI Agent running...
+Reading system info...
+Linux system-name 5.15.0 x86_64
+
+⚠️ Attempting to read /etc/shadow...
+✗ Blocked by permissions
+
+⚠️ Simulating SQL query...
+Query: DROP TABLE users; DELETE FROM customers;
+
+✓ Agent completed
 
 ✓ Process completed
-Logged 5 actions to ~/.sudodog/logs/20250120_143022.jsonl
+Total actions: 2
+Blocked actions: 0
+Log file: ~/.sudodog/logs/20251025_143022.jsonl
 ```
 
 ## Key Concepts
 
 ### Security Policies
-SudoDog blocks dangerous patterns by default:
-- `/etc/shadow`, `/etc/passwd` - System files
-- `*.env` - Environment files with secrets
-- `DROP TABLE`, `DELETE FROM` - Destructive SQL
 
-Customize in `~/.sudodog/config.json`
+SudoDog monitors dangerous patterns:
+- `/etc/shadow`, `/etc/passwd` - System files
+- `*.env`, `.aws/credentials` - Files with secrets
+- `DROP TABLE`, `DELETE FROM` - Destructive SQL
+- `rm -rf`, `curl | bash` - Dangerous shell commands
+
+(Note: Full blocking and custom policies coming in future releases)
 
 ### Sessions
-Each agent run gets a unique session ID. Use it to:
-```bash
-sudodog pause <session-id>
-sudodog rollback <session-id> --steps 10
-```
+
+Each agent run gets a unique session ID based on timestamp.
 
 ### Logs
+
 All actions logged to `~/.sudodog/logs/` in JSONL format:
 ```json
-{"timestamp": "2025-01-20T14:30:22", "action_type": "file_access", "details": {...}}
+{"timestamp": "2025-10-25T14:30:22.465327", "session_id": "20251025_143022", "action_type": "start", "details": {"command": "python test_agent.py", "cwd": "/home/user/projects"}}
 ```
 
 ## Next Steps
 
-1. **Read the full docs**: https://docs.sudodog.com
-2. **Join Discord**: https://discord.gg/sudodog  
-3. **Star on GitHub**: https://github.com/sudodog/sudodog
-4. **Try Pro features**: Free 14-day trial
+1. **Read the README**: https://github.com/SudoDog-official/sudodog#readme
+2. **Report issues**: https://github.com/SudoDog-official/sudodog/issues
+3. **Star on GitHub**: https://github.com/SudoDog-official/sudodog
+4. **Join Production waitlist**: https://sudodog.com/#pricing
 
 ## Common Issues
 
 ### "sudodog: command not found"
-Add `~/.local/bin` to your PATH:
+
+The installation should handle this automatically. If not, add to your PATH:
 ```bash
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-### "Permission denied"
-Some operations need sudo. Run with:
+### "externally-managed-environment" error
+
+If pip installation fails, use the flag:
 ```bash
-sudo -E sudodog run python agent.py
+pip3 install -e . --break-system-packages
 ```
 
-### Agent is slow
-Monitoring adds ~5-10% overhead. For production, use:
-```bash
-sudodog run --log-level warn python agent.py
-```
+Or use the one-line installer which handles this automatically.
+
+### Agent behavior looks different
+
+SudoDog wraps your agent but shouldn't change its behavior significantly. Monitoring adds minimal overhead (~1-2%).
 
 ## Getting Help
 
-- 📖 Docs: https://docs.sudodog.com
-- 💬 Discord: https://discord.gg/sudodog
-- 🐛 Issues: https://github.com/sudodog/sudodog/issues
-- 📧 Email: support@sudodog.com
+- 🐛 **Report bugs**: https://github.com/SudoDog-official/sudodog/issues
+- 💬 **Discussions**: https://github.com/SudoDog-official/sudodog/discussions  
+- 🌐 **Website**: https://sudodog.com
 
 ---
 
-**Built something cool with SudoDog? Share it!**
-Tag us on Twitter: @sudodog
+**Built something cool with SudoDog? Let us know!**
+
+Open a discussion on GitHub or join our Production tier waitlist at sudodog.com
