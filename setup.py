@@ -7,11 +7,16 @@ setup(
     name="sudodog",
     version="0.1.0",
     author="SudoDog",
-    author_email="hello@sudodog.com",
-    description="Sandboxing and monitoring for AI agents in one command",
+    author_email="support@sudodog.com",  # Or use your GitHub email
+    description="Secure sandbox for AI agents. Blocks dangerous operations, monitors behavior, full audit trail.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/sudodog/sudodog",
+    url="https://github.com/SudoDog-official/sudodog",
+    project_urls={
+        "Bug Tracker": "https://github.com/SudoDog-official/sudodog/issues",
+        "Documentation": "https://github.com/SudoDog-official/sudodog#readme",
+        "Homepage": "https://sudodog.com",
+    },
     packages=find_packages(),
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -24,8 +29,10 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "Operating System :: POSIX :: Linux",
     ],
+    keywords="ai-agents security sandbox monitoring audit-trail langchain",
     python_requires=">=3.8",
     install_requires=[
         "click>=8.1.0",
