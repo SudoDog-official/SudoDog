@@ -199,6 +199,13 @@ MIT License - see [LICENSE](LICENSE) file for details
 - 💬 [Discussions](https://github.com/SudoDog-official/sudodog/discussions)
 - 🌐 [Website](https://sudodog.com)
 
+- ## 📧 Contact
+
+- **Support**: support@sudodog.com
+- **Security Issues**: security@sudodog.com  
+- **General Inquiries**: contact@sudodog.com
+- **GitHub Issues**: https://github.com/SudoDog-official/sudodog/issues
+
 ---
 
 **Built for developers who value security without complexity.**
