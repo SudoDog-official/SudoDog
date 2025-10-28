@@ -1,0 +1,10 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/install.sh", "destination": "https://raw.githubusercontent.com/SudoDog-official/sudodog/main/install.sh" },
+    { "source": "/", "destination": "/website/index.html" },
+    { "source": "/styles.css", "destination": "/website/styles.css" },
+    { "source": "/assets/(.*)", "destination": "/website/assets/$1" }
+  ]
+}
