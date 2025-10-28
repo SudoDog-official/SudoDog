@@ -1,9 +1,3 @@
 {
-  "redirects": [
-    {
-      "source": "/",
-      "destination": "https://raw.githubusercontent.com/SudoDog-official/sudodog/main/install.sh",
-      "permanent": true
-    }
-  ]
+  "cleanUrls": true
 }
