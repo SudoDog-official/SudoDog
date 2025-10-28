@@ -199,7 +199,7 @@ MIT License - see [LICENSE](LICENSE) file for details
 - 💬 [Discussions](https://github.com/SudoDog-official/sudodog/discussions)
 - 🌐 [Website](https://sudodog.com)
 
-## 📧 Contact
+## Contact
 
 - **Support**: support@sudodog.com
 - **Security Issues**: security@sudodog.com  
