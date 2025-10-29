@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 SudoDog - Security for AI Agents
-CLI Interface
+CLI Interface (Improved with working rollback)
 """
 
 import click
@@ -27,7 +27,7 @@ def cli():
 @click.option('--log-level', '-l', default='info', help='Logging level')
 def run(command, policy, log_level):
     """Run an AI agent with SudoDog protection"""
-    from .monitor import AgentMonitor
+    from .monitor import AgentMonitor, AgentSession
     
     console.print("\n[cyan]🐕 SudoDog AI Agent Security[/cyan]")
     console.print("[cyan]" + "━" * 40 + "[/cyan]")
@@ -41,7 +41,15 @@ def run(command, policy, log_level):
     
     # Run with monitoring
     monitor = AgentMonitor(cmd_string, policy=policy)
-    exit_code = monitor.run()
+    
+    # Add to active sessions
+    AgentSession.add_session(monitor.session_id, cmd_string, 0)
+    
+    try:
+        exit_code = monitor.run()
+    finally:
+        # Remove from active sessions
+        AgentSession.remove_session(monitor.session_id)
     
     sys.exit(exit_code)
 
@@ -82,25 +90,57 @@ def init():
     logs_dir = config_dir / 'logs'
     logs_dir.mkdir(exist_ok=True)
     
+    # Create backups directory
+    backups_dir = config_dir / 'backups'
+    backups_dir.mkdir(exist_ok=True)
+    
+    # Create sessions file
+    sessions_file = config_dir / 'sessions.json'
+    if not sessions_file.exists():
+        with open(sessions_file, 'w') as f:
+            json.dump([], f)
+    
     console.print(f"[green]✓[/green] Config directory: {config_dir}")
     console.print(f"[green]✓[/green] Logs directory: {logs_dir}")
+    console.print(f"[green]✓[/green] Backups directory: {backups_dir}")
     console.print(f"[green]✓[/green] Default policy created")
     console.print("\n[green]SudoDog initialized! Run 'sudodog run <command>' to start.[/green]\n")
 
 @cli.command()
 def status():
     """Show status of running agents"""
+    from .monitor import AgentSession
+    
     console.print("\n[cyan]🤖 Agent Status[/cyan]")
     console.print("[cyan]" + "━" * 40 + "[/cyan]\n")
     
-    # This will read from active sessions
-    # For now, showing structure
-    console.print("[yellow]No active agents[/yellow]")
-    console.print("[dim]Run 'sudodog run <command>' to start an agent[/dim]\n")
+    sessions = AgentSession.list_active()
+    
+    if not sessions:
+        console.print("[yellow]No active agents[/yellow]")
+        console.print("[dim]Run 'sudodog run <command>' to start an agent[/dim]\n")
+        return
+    
+    table = Table(box=box.ROUNDED)
+    table.add_column("Session ID", style="cyan")
+    table.add_column("Command", style="white")
+    table.add_column("Started", style="dim")
+    
+    for session in sessions:
+        started = datetime.fromisoformat(session['started']).strftime('%Y-%m-%d %H:%M:%S')
+        table.add_row(
+            session['session_id'],
+            session['command'][:50] + "..." if len(session['command']) > 50 else session['command'],
+            started
+        )
+    
+    console.print(table)
+    console.print()
 
 @cli.command()
 @click.option('--last', '-n', default=10, help='Number of recent actions to show')
-def logs(last):
+@click.option('--session', '-s', help='Show logs for specific session')
+def logs(last, session):
     """View agent activity logs"""
     console.print("\n[cyan]📋 Recent Agent Activity[/cyan]")
     console.print("[cyan]" + "─" * 40 + "[/cyan]\n")
@@ -111,8 +151,14 @@ def logs(last):
         console.print("[yellow]No logs found. Run 'sudodog init' first.[/yellow]\n")
         return
     
-    # Get all log files, sorted by modification time
-    log_files = sorted(logs_dir.glob('*.jsonl'), key=lambda x: x.stat().st_mtime, reverse=True)
+    # Get log files
+    if session:
+        log_files = [logs_dir / f'{session}.jsonl']
+        if not log_files[0].exists():
+            console.print(f"[red]No logs found for session {session}[/red]\n")
+            return
+    else:
+        log_files = sorted(logs_dir.glob('*.jsonl'), key=lambda x: x.stat().st_mtime, reverse=True)
     
     if not log_files:
         console.print("[yellow]No logged activities yet[/yellow]\n")
@@ -150,6 +196,8 @@ def logs(last):
                         console.print(f"[green]✓[/green] [{time_str}] Completed - {details.get('total_actions', 0)} actions, {details.get('blocked_actions', 0)} blocked")
                     elif action_type == 'file_access':
                         console.print(f"[blue]📁[/blue] [{time_str}] File: {details.get('path', 'Unknown')} ({details.get('mode', 'Unknown')})")
+                    elif action_type == 'blocked':
+                        console.print(f"[red]🚨[/red] [{time_str}] BLOCKED: {details.get('reason', 'Unknown')}")
                     else:
                         console.print(f"[dim]  [{time_str}] {action_type}: {details}[/dim]")
                     
@@ -162,38 +210,52 @@ def logs(last):
     else:
         console.print(f"\n[dim]Showing {total_shown} most recent actions[/dim]")
         console.print(f"[dim]Log files: {logs_dir}[/dim]\n")
+
+@cli.command()
+@click.argument('session_id')
+@click.option('--steps', '-n', default=None, type=int, help='Number of actions to rollback (default: all)')
+def rollback(session_id, steps):
+    """Rollback agent actions"""
+    from .blocker import FileRollback
     
-    # This will read actual logs
-    # For now, showing structure
-    console.print(f"[dim]Showing last {last} actions...[/dim]\n")
-    console.print("[yellow]No logged activities yet[/yellow]\n")
+    console.print("\n[yellow]⏪[/yellow]  Rolling back actions...")
+    console.print(f"[dim]Session: {session_id}[/dim]\n")
+    
+    # Check if backup directory exists
+    backup_dir = Path.home() / '.sudodog' / 'backups' / session_id
+    
+    if not backup_dir.exists():
+        console.print(f"[red]✗[/red] No backups found for session {session_id}")
+        console.print("[dim]Rollback requires file backups to exist[/dim]\n")
+        return
+    
+    # Perform rollback
+    rollback_handler = FileRollback(session_id)
+    
+    try:
+        rolled_back, errors = rollback_handler.rollback(steps)
+        
+        if rolled_back > 0:
+            console.print(f"[green]✓[/green] Successfully rolled back {rolled_back} file operation(s)")
+        else:
+            console.print("[yellow]No operations to rollback[/yellow]")
+        
+        if errors:
+            console.print(f"\n[red]Errors occurred:[/red]")
+            for error in errors:
+                console.print(f"[red]  • {error}[/red]")
+        
+        console.print()
+        
+    except Exception as e:
+        console.print(f"[red]✗[/red] Rollback failed: {str(e)}\n")
 
 @cli.command()
 @click.argument('session_id', required=False)
 def pause(session_id):
     """Pause a running agent"""
-    console.print("\n[yellow]⏸[/yellow]  Pausing agent...")
-    
-    if not session_id:
-        console.print("[red]Error: No session ID provided[/red]")
-        console.print("[dim]Use 'sudodog status' to see active sessions[/dim]\n")
-        return
-    
-    console.print(f"[green]✓[/green] Agent {session_id} paused\n")
-
-@cli.command()
-@click.argument('session_id', required=False)
-@click.option('--steps', '-n', default=10, help='Number of actions to rollback')
-def rollback(session_id, steps):
-    """Rollback agent actions"""
-    console.print("\n[yellow]⏪[/yellow]  Rolling back actions...")
-    
-    if not session_id:
-        console.print("[red]Error: No session ID provided[/red]")
-        console.print("[dim]Use 'sudodog status' to see active sessions[/dim]\n")
-        return
-    
-    console.print(f"[green]✓[/green] Rolled back {steps} actions for session {session_id}\n")
+    console.print("\n[yellow]⏸[/yellow]  Feature coming soon...")
+    console.print("[dim]Pause/resume requires process signal handling[/dim]\n")
 
 @cli.command()
 def policies():
