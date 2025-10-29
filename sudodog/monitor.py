@@ -71,6 +71,33 @@ class AgentMonitor:
             'user': os.getenv('USER')
         })
         
+        # Check command for dangerous patterns BEFORE execution
+        console.print(f"[cyan]🔍 Checking command for dangerous patterns...[/cyan]")
+        should_block, reason, patterns = self.blocker.check_command(self.command)
+        
+        if should_block:
+            self.blocked_count += 1
+            console.print(f"[red]🚨 BLOCKED:[/red] {reason}")
+            console.print(f"[red]   Command: {self.command}[/red]")
+            console.print(f"[red]   Matched patterns: {', '.join(patterns[:3])}[/red]\n")
+            
+            # Log the blocked command
+            self.log_action('blocked', {
+                'command': self.command,
+                'reason': reason,
+                'patterns': patterns
+            }, allowed=False)
+            
+            self.log_action('complete', {
+                'exit_code': 1,
+                'total_actions': len(self.actions),
+                'blocked_actions': self.blocked_count
+            })
+            
+            return 1  # Exit with error code
+        
+        console.print(f"[green]✓[/green] Command passed safety checks\n")
+        
         try:
             # Start the process
             self.process = subprocess.Popen(
