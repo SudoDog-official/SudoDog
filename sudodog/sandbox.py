@@ -39,48 +39,10 @@ class Sandbox:
         self.temp_dir = None
         
     def build_unshare_command(self, command: str) -> List[str]:
-        """
-        Build unshare command with appropriate flags
-        
-        Args:
-            command: The command to run in sandbox
-            
-        Returns:
-            List of command arguments for unshare
-        """
         unshare_args = ['unshare']
-
-        cat > /tmp/sandbox_update.txt << 'EOF'
-
-    def build_unshare_command(self, command: str) -> List[str]:
-        """
-        Build unshare command with appropriate flags
-        """
-        unshare_args = ['unshare']
-        
+    
         # CRITICAL: Add --user first to enable unprivileged namespaces
         unshare_args.append('--user')
-        
-        # Add namespace isolation flags
-        if self.isolate_network:
-            unshare_args.append('--net')
-            
-        if self.isolate_pid:
-            unshare_args.extend(['--pid', '--fork'])
-            
-        if self.isolate_ipc:
-            unshare_args.append('--ipc')
-        
-        # Mount namespace for filesystem isolation
-        unshare_args.append('--mount')
-        
-        # Add the actual command
-        unshare_args.extend(['--', 'sh', '-c', command])
-        
-        return unshare_args
-EOF
-
-cat /tmp/sandbox_update.txt
         
         # Add namespace isolation flags
         if self.isolate_network:
