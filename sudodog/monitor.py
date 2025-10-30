@@ -100,15 +100,17 @@ class AgentMonitor:
         console.print(f"[green]✓[/green] Command passed safety checks\n")
         
         try:
-            # Start the process
-            self.process = subprocess.Popen(
-                self.command,
-                shell=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True
-            )
-            
+            # Start the process (sandboxed or normal)
+            if self.sandbox:
+                self.process = self.sandbox.run_sandboxed(self.command)
+            else:
+                self.process = subprocess.Popen(
+                    self.command,
+                    shell=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True
+                )            
             # Monitor the process
             psutil_process = psutil.Process(self.process.pid)
             
