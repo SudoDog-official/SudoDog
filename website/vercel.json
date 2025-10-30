@@ -7,14 +7,27 @@
       "permanent": false
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/(.*)",
-      "dest": "/install.sh",
-      "headers": {
-        "content-type": "text/plain; charset=utf-8"
-      },
-      "host": "install.sudodog.com"
+      "source": "/:path*",
+      "destination": "/install.sh",
+      "has": [
+        {
+          "type": "host",
+          "value": "install.sudodog.com"
+        }
+      ]
+    }
+  ],
+  "headers": [
+    {
+      "source": "/install.sh",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        }
+      ]
     }
   ]
 }
