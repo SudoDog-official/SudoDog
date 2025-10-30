@@ -65,7 +65,28 @@ class AgentBlocker:
     
     def __init__(self, policy='default'):
         self.policy = policy
-        self.compiled_patterns = [re.compile(p, re.IGNORECASE) for p in self.DANGEROUS_PATTERNS]
+        self.config = self._load_config()
+        self.policy_config = self._get_policy_config(policy)
+    
+        # Load patterns from policy or use defaults
+        patterns = self.policy_config.get('block_patterns', self.DANGEROUS_PATTERNS)
+        self.compiled_patterns = [re.compile(p, re.IGNORECASE) for p in patterns]
+
+    def _load_config(self):
+        """Load config from ~/.sudodog/config.json"""
+        import json
+        from pathlib import Path
+    
+        config_file = Path.home() / '.sudodog' / 'config.json'
+        if not config_file.exists():
+            return {'policies': {'default': {}}}
+    
+        with open(config_file, 'r') as f:
+            return json.load(f)
+
+    def _get_policy_config(self, policy_name):
+        """Get specific policy configuration"""
+        return self.config.get('policies', {}).get(policy_name, {})
     
     def check_file_read(self, path: str) -> Tuple[bool, Optional[str]]:
         """
