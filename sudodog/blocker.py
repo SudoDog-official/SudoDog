@@ -126,9 +126,9 @@ class AgentBlocker:
         
         if matched_patterns:
             reason = f"Command contains dangerous patterns: {', '.join(matched_patterns[:2])}"
-            return False, reason, matched_patterns
+            return True, reason, matched_patterns
         
-        return True, None, []
+        return False, None, []
     
     def should_block(self, action_type: str, target: str) -> Tuple[bool, Optional[str]]:
         """
