@@ -30,7 +30,7 @@ Unlike general-purpose sandboxing tools (Sandboxie, Firejail, Docker), SudoDog i
 | **Behavioral Monitoring** | ❌ | ✅ Tracks patterns over time |
 | **Session-Based Audit** | ❌ | ✅ Links conversations → actions |
 | **Semantic Rollback** | ❌ | ✅ Undo by logical operation |
-| **AI Anomaly Detection** | ❌ | ✅ Excessive API calls, data exfiltration |
+| **Network Isolation** | ⚠️ Manual | ✅ Automatic per-agent |
 
 ### The Key Difference
 
@@ -52,11 +52,6 @@ agent.run("DROP TABLE users")  # ✅ Intercepted, analyzed, blocked
 SudoDog doesn't just block—it **understands and explains** what happened.
 
 ## Installation
-```bash
-curl -sL install.sudodog.com | bash
-```
-
-Or install from source:
 ```bash
 git clone https://github.com/SudoDog-official/sudodog
 cd sudodog
@@ -81,7 +76,13 @@ That's it! SudoDog will monitor and protect your agent automatically.
 
 ### Run an agent
 ```bash
+# Run with default policy
 sudodog run python agent.py
+
+# Run with custom policy
+sudodog run --policy strict python agent.py
+
+# Run any command
 sudodog run node agent.js
 sudodog run ./agent.sh
 ```
@@ -95,27 +96,140 @@ sudodog status
 ```bash
 sudodog logs
 sudodog logs --last 20
+sudodog logs --session 20251030_133048
 ```
 
-### Pause an agent
+### List security policies
 ```bash
-sudodog pause <session-id>
+sudodog policies
 ```
 
 ### Rollback actions
 ```bash
+# Rollback all operations in a session
+sudodog rollback <session-id>
+
+# Rollback last N operations
 sudodog rollback <session-id> --steps 10
 ```
 
 ## Security Policies
 
 SudoDog comes with sensible defaults that block:
-- Access to sensitive files (`/etc/shadow`, `/etc/passwd`, `.env` files)
-- Destructive database operations (`DROP TABLE`, `DELETE FROM`)
-- Excessive file writes
-- Suspicious network connections
+- Access to sensitive files (`/etc/shadow`, `/etc/passwd`, `.env` files, SSH keys)
+- Destructive database operations (`DROP TABLE`, `DELETE FROM`, `TRUNCATE`)
+- Dangerous file operations (`rm -rf /`, `chmod 777`)
+- System-level changes (`mkfs`, fork bombs)
+- Network exfiltration attempts
 
-Customize policies in `~/.sudodog/config.json`
+### Custom Policies
+
+Create custom policies in `~/.sudodog/config.json`:
+
+```json
+{
+  "policies": {
+    "strict": {
+      "block_patterns": [
+        "DROP\\s+TABLE",
+        "DELETE\\s+FROM",
+        "rm\\s+-rf",
+        "curl",
+        "wget",
+        "eval"
+      ],
+      "allow_network": false,
+      "max_file_writes": 10
+    },
+    "permissive": {
+      "block_patterns": [
+        "DROP\\s+TABLE",
+        "rm\\s+-rf\\s+/"
+      ],
+      "allow_network": true,
+      "max_file_writes": 1000
+    }
+  }
+}
+```
+
+Then use your custom policy:
+```bash
+sudodog run --policy strict python agent.py
+```
+
+## How It Works
+
+```
+AI Agent → SudoDog → Your System
+           ↓
+        ✓ Pattern Analysis
+        ✓ Policy Check
+        ✓ Sandbox Isolation
+        ✓ Log Action
+        ✓ Allow/Block
+```
+
+SudoDog provides multiple layers of protection:
+
+1. **Pre-execution Analysis** - Scans commands for dangerous patterns before execution
+2. **Namespace Isolation** - Runs agents in isolated Linux namespaces (network, PID, IPC)
+3. **Behavioral Monitoring** - Tracks file access and system calls during execution
+4. **Audit Logging** - Records all actions with timestamps to `~/.sudodog/logs/`
+5. **Rollback Support** - Creates backups of modified files for instant recovery
+
+## Features
+
+### ✅ Implemented
+
+- 🔒 **Linux Namespace Sandboxing** - Network isolation, PID isolation, user namespaces
+- 🛡️ **Pattern-based Blocking** - SQL injection, dangerous commands, file operations
+- 👁️ **Behavioral Monitoring** - Track every file access and system call
+- 📊 **Complete Audit Trail** - Immutable logs with timestamps in JSONL format
+- ⏪ **File Rollback** - Automatic backups and instant recovery
+- 🎯 **Security Policy Engine** - Customizable policies loaded from config
+- 💻 **Rich CLI** - Beautiful colored output with multiple commands
+- 📋 **Session Management** - Track and manage multiple agent sessions
+
+### 🚧 Roadmap
+
+- [ ] Resource limits (CPU, memory, disk I/O)
+- [ ] Docker container support as alternative to namespaces
+- [ ] Real-time process monitoring with psutil
+- [ ] Advanced anomaly detection (excessive API calls, unusual patterns)
+- [ ] Web dashboard for monitoring
+- [ ] Team collaboration features
+- [ ] Cloud sync for logs
+- [ ] Integration with LLM providers (OpenAI, Anthropic, etc.)
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────┐
+│              SudoDog CLI                    │
+├─────────────────────────────────────────────┤
+│  ┌──────────────┐  ┌──────────────────┐    │
+│  │   Monitor    │  │  Policy Engine   │    │
+│  │              │  │                  │    │
+│  │ • Logging    │  │ • Pattern Match  │    │
+│  │ • Tracking   │  │ • File Checks    │    │
+│  │ • Sessions   │  │ • Load Configs   │    │
+│  └──────────────┘  └──────────────────┘    │
+│                                             │
+│  ┌──────────────┐  ┌──────────────────┐    │
+│  │   Sandbox    │  │    Rollback      │    │
+│  │              │  │                  │    │
+│  │ • Namespaces │  │ • File Backup    │    │
+│  │ • Isolation  │  │ • Restore        │    │
+│  │ • unshare    │  │ • Operations     │    │
+│  └──────────────┘  └──────────────────┘    │
+└─────────────────────────────────────────────┘
+                    ↓
+        ┌───────────────────────┐
+        │    User's Command     │
+        │  (Python, Node, etc)  │
+        └───────────────────────┘
+```
 
 ## Use Cases
 
@@ -134,60 +248,71 @@ Deploy agents in production with confidence. Rollback capabilities for when thin
 
 Meet regulatory requirements with immutable logs of all agent actions. Demonstrate due diligence for auditors.
 
-## How It Works
+## Examples
+
+### Block SQL Injection
+```bash
+$ sudodog run echo "DROP TABLE users"
+
+🚨 BLOCKED: Command contains dangerous patterns: DROP\s+TABLE
+   Command: echo DROP TABLE users
+   Matched patterns: DROP\s+TABLE
 ```
-AI Agent → SudoDog → Your System
-           ↓
-        ✓ Intercept
-        ✓ Analyze Intent
-        ✓ Policy Check
-        ✓ Log Action
-        ✓ Allow/Block
+
+### Sandbox with Network Isolation
+```bash
+$ sudodog run python agent.py
+
+🔒 Creating sandbox environment...
+Isolated: network, PID
+✓ Sandboxed process started (PID: 12345)
 ```
 
-SudoDog sits between your AI agent and your system, intercepting every system call, analyzing the intent, and applying security policies before execution.
+### Rollback File Changes
+```bash
+$ sudodog run ./modify_files.sh
+# ... agent modifies files ...
 
-## Features
-
-- 🔒 **Automatic Sandboxing** - Isolated execution per agent
-- 👁️ **Behavioral Monitoring** - Track every file access and network request
-- 🛡️ **Granular Permissions** - Define exactly what agents can do
-- ⏪ **Instant Rollback** - Undo mistakes with one command
-- 📊 **Complete Audit Trail** - Immutable logs of every action
-- ⚡ **Zero Code Changes** - Wrap existing agents, no SDK needed
+$ sudodog rollback 20251030_133048
+⏪ Rolling back actions...
+✓ Successfully rolled back 3 file operation(s)
+```
 
 ## Requirements
 
-- Linux (Ubuntu, Debian, Arch, Fedora)
+- Linux (Ubuntu, Debian, Arch, Fedora, etc.)
 - Python 3.8+
-- Root access for full sandboxing features
+- `unshare` command (part of util-linux, pre-installed on most Linux systems)
+- User namespace support (enabled by default on modern Linux)
 
 ## Development Status
 
-SudoDog is currently in **alpha**. Core features are working but expect breaking changes.
+SudoDog is currently in **beta**. Core features are working and stable:
 
-## Roadmap
-
-- [x] Basic CLI interface
-- [x] Local logging
-- [x] Pattern detection (SQL, shell commands)
-- [ ] Process monitoring and sandboxing
-- [ ] Security policy engine
-- [ ] Rollback functionality
-- [ ] Cloud sync (Production tier)
-- [ ] Web dashboard (Production tier)
-- [ ] Team collaboration features (Enterprise tier)
+- ✅ Pattern-based blocking
+- ✅ Linux namespace sandboxing  
+- ✅ Behavioral monitoring
+- ✅ Audit logging
+- ✅ File rollback
+- ✅ Policy engine
 
 ## Contributing
 
 SudoDog is open source! Contributions welcome.
+
 ```bash
 git clone https://github.com/SudoDog-official/sudodog
 cd sudodog
 pip install -e .
+
+# Run tests
+python -m pytest tests/
+
+# Test the CLI
+sudodog run echo "test"
 ```
 
-See [BETA_TESTING.md](BETA_TESTING.md) for testing guidelines.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
 
 ## License
 
