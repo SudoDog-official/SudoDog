@@ -19,7 +19,7 @@ console = Console()
 class AgentMonitor:
     """Monitor AI agent execution"""
     
-    def __init__(self, command, policy='default', session_id=None):
+    def __init__(self, command, policy='default', session_id=None, use_sandbox=True):
         self.command = command
         self.policy = policy
         self.session_id = session_id or datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -29,6 +29,8 @@ class AgentMonitor:
         self.blocker = AgentBlocker(policy)
         self.rollback = FileRollback(self.session_id)
         self.blocked_count = 0
+        self.use_sandbox = use_sandbox
+        self.sandbox = SandboxPresets.standard() if use_sandbox else None
         
     def log_action(self, action_type, details, allowed=True):
         """Log an action to file"""
@@ -110,7 +112,8 @@ class AgentMonitor:
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
                     text=True
-                )            
+                )
+            
             # Monitor the process
             psutil_process = psutil.Process(self.process.pid)
             
