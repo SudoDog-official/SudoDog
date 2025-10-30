@@ -53,6 +53,11 @@ SudoDog doesn't just block—it **understands and explains** what happened.
 
 ## Installation
 ```bash
+curl -sL https://sudodog.com/install.sh | bash
+```
+
+Or install from source:
+```bash
 git clone https://github.com/SudoDog-official/sudodog
 cd sudodog
 pip install -e .
@@ -125,7 +130,6 @@ SudoDog comes with sensible defaults that block:
 ### Custom Policies
 
 Create custom policies in `~/.sudodog/config.json`:
-
 ```json
 {
   "policies": {
@@ -159,7 +163,6 @@ sudodog run --policy strict python agent.py
 ```
 
 ## How It Works
-
 ```
 AI Agent → SudoDog → Your System
            ↓
@@ -203,7 +206,6 @@ SudoDog provides multiple layers of protection:
 - [ ] Integration with LLM providers (OpenAI, Anthropic, etc.)
 
 ## Architecture
-
 ```
 ┌─────────────────────────────────────────────┐
 │              SudoDog CLI                    │
@@ -299,7 +301,6 @@ SudoDog is currently in **beta**. Core features are working and stable:
 ## Contributing
 
 SudoDog is open source! Contributions welcome.
-
 ```bash
 git clone https://github.com/SudoDog-official/sudodog
 cd sudodog
