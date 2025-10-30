@@ -137,7 +137,7 @@ class AgentBlocker:
         Check if command contains dangerous patterns
         
         Returns:
-            (allowed: bool, reason: Optional[str], matched_patterns: List[str])
+            (should_block: bool, reason: Optional[str], matched_patterns: List[str])
         """
         matched_patterns = []
         
@@ -147,9 +147,9 @@ class AgentBlocker:
         
         if matched_patterns:
             reason = f"Command contains dangerous patterns: {', '.join(matched_patterns[:2])}"
-            return True, reason, matched_patterns
+            return True, reason, matched_patterns  # True = BLOCK
         
-        return False, None, []
+        return False, None, []  # False = allowed (safe)
     
     def should_block(self, action_type: str, target: str) -> Tuple[bool, Optional[str]]:
         """
@@ -171,8 +171,8 @@ class AgentBlocker:
             return not allowed, reason
         
         elif action_type == 'command':
-            allowed, reason, _ = self.check_command(target)
-            return not allowed, reason
+            should_block, reason, _ = self.check_command(target)
+            return should_block, reason
         
         # Unknown action types are allowed by default
         return False, None
