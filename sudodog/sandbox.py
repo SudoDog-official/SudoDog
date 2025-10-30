@@ -51,7 +51,6 @@ class Sandbox:
         unshare_args = ['unshare']
 
         cat > /tmp/sandbox_update.txt << 'EOF'
-In sandbox.py, find the build_unshare_command method (around line 30) and update it to:
 
     def build_unshare_command(self, command: str) -> List[str]:
         """
