@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 SudoDog - Security for AI Agents
-CLI Interface (Improved with working rollback)
+CLI Interface (with Docker + Daemon support)
 """
 
 import click
@@ -25,7 +25,10 @@ def cli():
 @click.argument('command', nargs=-1, required=True)
 @click.option('--policy', '-p', default='default', help='Security policy to use')
 @click.option('--log-level', '-l', default='info', help='Logging level')
-def run(command, policy, log_level):
+@click.option('--docker', is_flag=True, help='Use Docker sandbox (stronger isolation)')
+@click.option('--cpu-limit', default=1.0, help='CPU limit (cores)')
+@click.option('--memory-limit', default='512m', help='Memory limit (e.g., 512m, 1g)')
+def run(command, policy, log_level, docker, cpu_limit, memory_limit):
     """Run an AI agent with SudoDog protection"""
     from .monitor import AgentMonitor, AgentSession
     
@@ -35,23 +38,53 @@ def run(command, policy, log_level):
     # Convert command tuple to string
     cmd_string = ' '.join(command)
     
-    console.print(f"[green]✓[/green] Sandboxed environment created")
-    console.print(f"[green]✓[/green] Behavioral monitoring active")
-    console.print(f"[dim]Policy: {policy}[/dim]")
-    
-    # Run with monitoring
-    monitor = AgentMonitor(cmd_string, policy=policy)
-    
-    # Add to active sessions
-    AgentSession.add_session(monitor.session_id, cmd_string, 0)
-    
-    try:
-        exit_code = monitor.run()
-    finally:
-        # Remove from active sessions
-        AgentSession.remove_session(monitor.session_id)
-    
-    sys.exit(exit_code)
+    if docker:
+        console.print(f"[cyan]🐳 Using Docker sandbox[/cyan]")
+        from .docker_sandbox import DockerSandbox
+        from datetime import datetime
+        
+        session_id = datetime.now().strftime('%Y%m%d_%H%M%S')
+        
+        try:
+            with DockerSandbox(session_id, cpu_limit=cpu_limit, memory_limit=memory_limit) as sandbox:
+                # Create and start container
+                sandbox.create_container(cmd_string)
+                sandbox.start()
+                
+                # Wait for completion
+                result = sandbox.wait(timeout=300)  # 5 minute timeout
+                
+                console.print(f"\n{result['output']}")
+                console.print(f"\n[green]✓[/green] Container exited with code {result['exit_code']}")
+                
+                # Get final stats
+                stats = sandbox.get_stats()
+                if stats:
+                    console.print(f"[dim]CPU: {stats['cpu_percent']}% | Memory: {stats['memory_usage_mb']}MB[/dim]\n")
+                
+                sys.exit(result['exit_code'])
+        except Exception as e:
+            console.print(f"\n[red]✗[/red] Docker error: {e}\n")
+            sys.exit(1)
+    else:
+        # Original namespace-based execution
+        console.print(f"[green]✓[/green] Sandboxed environment created")
+        console.print(f"[green]✓[/green] Behavioral monitoring active")
+        console.print(f"[dim]Policy: {policy}[/dim]")
+        
+        # Run with monitoring
+        monitor = AgentMonitor(cmd_string, policy=policy)
+        
+        # Add to active sessions
+        AgentSession.add_session(monitor.session_id, cmd_string, 0)
+        
+        try:
+            exit_code = monitor.run()
+        finally:
+            # Remove from active sessions
+            AgentSession.remove_session(monitor.session_id)
+        
+        sys.exit(exit_code)
 
 @cli.command()
 def init():
@@ -285,6 +318,85 @@ def policies():
     
     console.print(table)
     console.print()
+
+@cli.group()
+def daemon():
+    """Manage SudoDog background daemon"""
+    pass
+
+@daemon.command('start')
+@click.option('--foreground', '-f', is_flag=True, help='Run in foreground (don\'t daemonize)')
+@click.option('--interval', '-i', default=5, help='Check interval in seconds')
+def daemon_start(foreground, interval):
+    """Start the monitoring daemon"""
+    try:
+        from .daemon import SudoDogDaemon
+        
+        d = SudoDogDaemon(check_interval=interval)
+        d.start(foreground=foreground)
+    except ImportError:
+        console.print("[red]✗[/red] Daemon module not found")
+        console.print("[dim]Run the setup script to install daemon support[/dim]\n")
+    except Exception as e:
+        console.print(f"[red]✗[/red] Failed to start daemon: {e}\n")
+
+@daemon.command('stop')
+def daemon_stop():
+    """Stop the monitoring daemon"""
+    try:
+        from .daemon import SudoDogDaemon
+        
+        d = SudoDogDaemon()
+        d.stop()
+    except ImportError:
+        console.print("[red]✗[/red] Daemon module not found\n")
+    except Exception as e:
+        console.print(f"[red]✗[/red] Failed to stop daemon: {e}\n")
+
+@daemon.command('status')
+def daemon_status():
+    """Show daemon status"""
+    try:
+        from .daemon import SudoDogDaemon
+        
+        d = SudoDogDaemon()
+        status = d.status()
+        
+        if not status['running']:
+            console.print(f"\n[yellow]⚠[/yellow]  {status['message']}\n")
+            return
+        
+        console.print(f"\n[green]✓[/green] Daemon is running (PID: {status['pid']})")
+        
+        state = status.get('state', {})
+        if state:
+            console.print(f"[dim]Last check: {state.get('last_check', 'Unknown')}[/dim]")
+            console.print(f"[dim]Active containers: {state.get('active_containers', 0)}[/dim]\n")
+            
+            if state.get('containers'):
+                table = Table(box=box.ROUNDED)
+                table.add_column("Container", style="cyan")
+                table.add_column("Session", style="white")
+                table.add_column("CPU%", style="yellow")
+                table.add_column("Memory%", style="yellow")
+                table.add_column("Alerts", style="red")
+                
+                for c in state['containers']:
+                    stats = c.get('stats', {})
+                    table.add_row(
+                        c['container_id'],
+                        c['session_id'][:16],
+                        str(stats.get('cpu_percent', 'N/A')),
+                        str(stats.get('memory_percent', 'N/A')),
+                        str(c.get('alerts', 0))
+                    )
+                
+                console.print(table)
+        console.print()
+    except ImportError:
+        console.print("\n[red]✗[/red] Daemon module not found\n")
+    except Exception as e:
+        console.print(f"\n[red]✗[/red] Error getting daemon status: {e}\n")
 
 @cli.command()
 def version():
