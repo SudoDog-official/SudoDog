@@ -12,6 +12,7 @@ from datetime import datetime
 import json
 from rich.console import Console
 from .blocker import AgentBlocker, FileRollback
+from .sandbox import SandboxPresets
 
 console = Console()
 
