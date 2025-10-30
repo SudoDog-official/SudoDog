@@ -54,8 +54,8 @@ class Sandbox:
         if self.isolate_ipc:
             unshare_args.append('--ipc')  # IPC namespace
         
-        # Mount namespace for filesystem isolation
-        unshare_args.append('--mount')
+        # Mount namespace for filesystem isolation (disabled - requires privileges)
+        # unshare_args.append('--mount')
         
         # Add the actual command
         unshare_args.extend(['--', 'sh', '-c', command])
