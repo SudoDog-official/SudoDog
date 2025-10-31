@@ -10,9 +10,9 @@ class handler(BaseHTTPRequestHandler):
     
     def do_POST(self):
         """Handle POST requests from SudoDog clients"""
-    
+        
         # Accept any POST path (Vercel routes to this function)
-        # No path checking needed            return
+        # No path checking needed
         
         try:
             # Read request body
@@ -38,7 +38,6 @@ class handler(BaseHTTPRequestHandler):
                 return
             
             # Store event (for now, just log it)
-            # TODO: Add database storage (e.g., Vercel Postgres, MongoDB, etc.)
             self._store_event(event)
             
             # Return success
@@ -75,14 +74,7 @@ class handler(BaseHTTPRequestHandler):
         1. Store in a database (Vercel Postgres, MongoDB, etc.)
         2. Send to analytics platform (PostHog, Mixpanel, etc.)
         3. Aggregate stats for dashboard
+        """
         
-        Example with Vercel Postgres:
-        
-        import psycopg2
-        conn = psycopg2.connect(os.environ['POSTGRES_URL'])
-        cursor = conn.cursor()
-        cursor.execute(
-            "INSERT INTO telemetry_events (anonymous_id, event_type, timestamp, version, properties) VALUES (%s, %s, %s, %s, %s)",
-            (event['anonymous_id'], event['event_type'], event['timestamp'], event['version'], json.dumps(event.get('properties', {})))
-        )
-        conn.commit()
+        # For now, just log it (visible in Vercel logs)
+        print(f"[TELEMETRY] {event['event_type']} from {event['anonymous_id'][:12]}... at {event['timestamp']}")
