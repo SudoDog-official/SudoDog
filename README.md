@@ -1,6 +1,6 @@
 # SudoDog 🐕
 
-**Secure sandbox for AI agents. Docker isolation, real-time monitoring, complete audit trail.**
+**Secure sandbox for AI agents. Custom Docker images, real-time monitoring, complete audit trail.**
 
 Deploy agents safely with automatic sandboxing, behavioral monitoring, resource limits, and rollback capabilities.
 
@@ -11,12 +11,13 @@ AI agents can delete databases, leak customer data, and rack up massive API bill
 ## The Solution
 
 SudoDog wraps your AI agents in a secure sandbox that:
-- ✅ **Docker container isolation** - Strong sandboxing with resource limits
+- ✅ **Custom Docker images** - Use your own images with all dependencies
+- ✅ **Resource limits** - CPU and memory caps per agent
 - ✅ **Real-time monitoring** - Background daemon tracks all agents
 - ✅ **Pattern detection** - Blocks dangerous SQL and shell commands
 - ✅ **Complete audit trail** - Logs every action with timestamps
 - ✅ **Instant rollback** - Undo file operations by session
-- ✅ **Resource limits** - CPU and memory caps per agent
+- ✅ **Privacy-first telemetry** - Optional anonymous analytics
 
 ## How is SudoDog Different?
 
@@ -26,6 +27,7 @@ Unlike general-purpose sandboxing tools (Sandboxie, Firejail, Docker), SudoDog i
 
 | Feature | General Sandboxes | SudoDog |
 |---------|------------------|---------|
+| **Custom Images** | ⚠️ Manual | ✅ Built-in support with `--image` flag |
 | **SQL Injection Detection** | ❌ | ✅ Detects `DROP TABLE`, `DELETE FROM`, etc. |
 | **Shell Command Analysis** | ❌ | ✅ Flags `rm -rf`, `curl \| bash`, etc. |
 | **Real-time Monitoring** | ❌ | ✅ Background daemon tracks CPU/memory |
@@ -40,19 +42,24 @@ Unlike general-purpose sandboxing tools (Sandboxie, Firejail, Docker), SudoDog i
 
 **SudoDog** understands *agent intent*—it's like having a security guard who reads what the agent is trying to do and makes intelligent decisions.
 
-### Example: SQL Query
-```python
-# Traditional sandbox
-agent.run("DROP TABLE users")  # ❌ Blocked: no database access
+### Example: Custom Image with Dependencies
+```bash
+# Build your agent image with all dependencies
+docker build -t my-langchain-agent .
 
-# SudoDog  
-agent.run("DROP TABLE users")  # ✅ Intercepted, analyzed, blocked
-                               # 📝 Logged: "Agent attempted DROP TABLE"
-                               # 🚨 Alert: "Destructive SQL detected"
-                               # 📊 Daemon: Real-time stats tracked
+# Run with SudoDog - automatic isolation + monitoring
+sudodog run --docker --image my-langchain-agent:latest \
+  --cpu-limit 2.0 --memory-limit 1g python agent.py
+
+# SudoDog handles:
+# ✅ Container isolation
+# ✅ Resource limits
+# ✅ Real-time monitoring
+# ✅ Pattern detection
+# ✅ Audit logging
 ```
 
-SudoDog doesn't just block—it **understands and explains** what happened.
+SudoDog doesn't just isolate—it **monitors, protects, and explains** what happened.
 
 ## Installation
 
@@ -79,7 +86,14 @@ sudodog init
 ```bash
 git clone https://github.com/SudoDog-official/sudodog
 cd sudodog
-pip3 install -e . --break-system-packages
+
+# Option 1: Virtual environment (recommended)
+python3 -m venv venv
+source venv/bin/activate
+pip install -e .
+
+# Option 2: System-wide
+pip install -e . --break-system-packages
 ```
 
 ## Quick Start
@@ -96,9 +110,14 @@ sudodog init
 sudodog run python my_agent.py
 ```
 
-**Docker (stronger isolation + resource limits):**
+**Docker with default image:**
 ```bash
 sudodog run --docker python my_agent.py
+```
+
+**Custom Docker image (v0.2.0):**
+```bash
+sudodog run --docker --image my-agent:latest python agent.py
 ```
 
 **With resource limits:**
@@ -120,6 +139,37 @@ sudodog daemon status
 
 That's it! SudoDog will monitor and protect your agents automatically.
 
+## 🐳 Using Custom Docker Images (v0.2.0)
+
+For agents with dependencies, create a custom Docker image:
+
+### 1. Create a Dockerfile
+```dockerfile
+FROM python:3.11-slim
+
+# Install your dependencies
+RUN pip install langchain openai anthropic requests
+
+WORKDIR /app
+```
+
+### 2. Build the image
+```bash
+docker build -t my-agent:latest .
+```
+
+### 3. Run with SudoDog
+```bash
+sudodog run --docker --image my-agent:latest python agent.py
+```
+
+### Pre-built Examples
+
+See `examples/dockerfiles/` for ready-to-use Dockerfiles:
+- `langchain-agent/` - LangChain with OpenAI
+- `autogpt/` - AutoGPT setup
+- `minimal/` - Minimal Python with requests
+
 ## Usage
 
 ### Run an agent
@@ -129,6 +179,9 @@ sudodog run python agent.py
 
 # Run with Docker (stronger isolation)
 sudodog run --docker python agent.py
+
+# Run with custom image (v0.2.0)
+sudodog run --docker --image my-agent:latest python agent.py
 
 # Run with resource limits
 sudodog run --docker --cpu-limit 2.0 --memory-limit 1g python agent.py
@@ -181,7 +234,7 @@ sudodog rollback <session-id>
 sudodog rollback <session-id> --steps 10
 ```
 
-### Telemetry
+### Telemetry (v0.2.0)
 ```bash
 # Enable anonymous analytics
 sudodog telemetry enable
@@ -196,7 +249,7 @@ sudodog telemetry status
 sudodog telemetry info
 ```
 
-## 📊 Telemetry & Privacy
+## 📊 Telemetry & Privacy (v0.2.0)
 
 SudoDog includes **optional anonymous telemetry** to help improve the software.
 
@@ -240,6 +293,7 @@ All data is anonymous and helps the entire community by improving security for e
 | Feature | Namespace (default) | Docker (--docker) |
 |---------|-------------------|-------------------|
 | Isolation strength | Basic | Strong |
+| Custom images | ❌ | ✅ Via `--image` flag |
 | Resource limits | ❌ | ✅ CPU & Memory |
 | Network isolation | ⚠️ Basic | ✅ Configurable |
 | Escape prevention | ⚠️ Possible | ✅ Very difficult |
@@ -247,7 +301,7 @@ All data is anonymous and helps the entire community by improving security for e
 | Speed | Fast | Slightly slower (first run) |
 | Real-time monitoring | ❌ | ✅ Via daemon |
 
-**Recommendation:** Use `--docker` for production agents, namespace for quick testing.
+**Recommendation:** Use `--docker` with custom images for production agents, namespace for quick testing.
 
 ## Real-Time Monitoring with Daemon
 
@@ -257,21 +311,21 @@ The SudoDog daemon monitors all Docker containers in real-time:
 $ sudodog daemon start
 
 # In another terminal, run agents
-$ sudodog run --docker python agent1.py
-$ sudodog run --docker python agent2.py
+$ sudodog run --docker --image my-agent:v1 python agent1.py
+$ sudodog run --docker --image my-agent:v2 python agent2.py
 
 # Check status - see live stats!
 $ sudodog daemon status
 
 ✓ Daemon is running (PID: 95100)
-Last check: 2025-10-30T16:42:40.984222
+Last check: 2025-10-31T16:42:40.984222
 Active containers: 2
 
 ┌─────────────┬──────────────────┬───────┬──────────┬────────┐
 │ Container   │ Session          │ CPU%  │ Memory%  │ Alerts │
 ├─────────────┼──────────────────┼───────┼──────────┼────────┤
-│ c3b2d252a7e8│ 20251030_164230  │ 2.3   │ 15.4     │ 0      │
-│ a1b3c4d5e6f7│ 20251030_164301  │ 45.8  │ 78.2     │ 1      │
+│ c3b2d252a7e8│ 20251031_164230  │ 2.3   │ 15.4     │ 0      │
+│ a1b3c4d5e6f7│ 20251031_164301  │ 45.8  │ 78.2     │ 1      │
 └─────────────┴──────────────────┴───────┴──────────┴────────┘
 ```
 
@@ -322,19 +376,20 @@ Create custom policies in `~/.sudodog/config.json`:
 
 Then use your custom policy:
 ```bash
-sudodog run --policy strict python agent.py
+sudodog run --policy strict --docker --image my-agent:latest python agent.py
 ```
 
 ## How It Works
 
 ### Architecture
 ```
-AI Agent → SudoDog CLI → Docker Container
+AI Agent → SudoDog CLI → Docker Container (Custom Image)
               ↓              ↓
         Pattern Analysis   Isolated Execution
         Policy Check       Resource Limits
         Daemon Monitoring  Network Isolation
         Audit Logging      
+        Telemetry (opt-in)
               ↓
         Allow/Block Decision
 ```
@@ -347,49 +402,13 @@ SudoDog provides multiple layers of protection:
 4. **Behavioral Monitoring** - Tracks file access and system calls during execution
 5. **Audit Logging** - Records all actions with timestamps to `~/.sudodog/logs/`
 6. **Rollback Support** - Creates backups of modified files for instant recovery
-
-### System Architecture
-```
-┌─────────────────────────────────────────────────┐
-│            SudoDog Daemon (Background)          │
-│  - Real-time container monitoring               │
-│  - CPU/Memory tracking                          │
-│  - Alert system                                 │
-│  - Multi-container management                   │
-└─────────────────────────────────────────────────┘
-                    ↓
-┌─────────────────────────────────────────────────┐
-│              SudoDog CLI                        │
-├─────────────────────────────────────────────────┤
-│  ┌──────────────┐  ┌──────────────────┐        │
-│  │   Monitor    │  │  Policy Engine   │        │
-│  │              │  │                  │        │
-│  │ • Logging    │  │ • Pattern Match  │        │
-│  │ • Tracking   │  │ • File Checks    │        │
-│  │ • Sessions   │  │ • Load Configs   │        │
-│  └──────────────┘  └──────────────────┘        │
-│                                                 │
-│  ┌──────────────┐  ┌──────────────────┐        │
-│  │Docker Sandbox│  │    Rollback      │        │
-│  │              │  │                  │        │
-│  │ • Containers │  │ • File Backup    │        │
-│  │ • Isolation  │  │ • Restore        │        │
-│  │ • Resources  │  │ • Operations     │        │
-│  └──────────────┘  └──────────────────┘        │
-└─────────────────────────────────────────────────┘
-                    ↓
-        ┌───────────────────────┐
-        │   Docker Containers   │
-        │  Agent 1 | Agent 2    │
-        │  (isolated, limited)  │
-        └───────────────────────┘
-```
+7. **Anonymous Telemetry** - Optional privacy-first analytics to improve security
 
 ## Features
 
-### ✅ Production Ready
+### ✅ Production Ready (v0.2.0)
 
-- 🐳 **Docker Container Isolation** - Strong isolation with full filesystem separation
+- 🐳 **Custom Docker Images** - Use your own images via `--image` flag
 - 💪 **Resource Limits** - CPU and memory caps per agent
 - 👁️ **Background Daemon** - Real-time monitoring of all containers
 - 📊 **Real-time Stats** - Live CPU/Memory tracking with alerts
@@ -422,6 +441,28 @@ Meet regulatory requirements with immutable logs of all agent actions. Demonstra
 
 ## Examples
 
+### Custom Docker Image with Dependencies
+```bash
+$ sudodog run --docker --image my-langchain-agent:latest python agent.py
+
+🐕 SudoDog AI Agent Security
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🐳 Using Docker sandbox
+🐳 Creating Docker container...
+   Image: my-langchain-agent:latest
+   Network: enabled
+   CPU limit: 2.0 cores
+   Memory limit: 1g
+✓ Container created: d2dcfb3e93d6
+▶ Starting container d2dcfb3e93d6...
+✓ Container running
+
+[Agent output...]
+
+✓ Container exited with code 0
+CPU: 15.3% | Memory: 245.8MB
+```
+
 ### Block Dangerous Commands
 ```bash
 $ sudodog run echo "DROP TABLE users"
@@ -437,57 +478,19 @@ Total actions: 2
 Blocked actions: 1
 ```
 
-### Docker Sandbox with Resource Limits
-```bash
-$ sudodog run --docker --cpu-limit 2.0 --memory-limit 1g python agent.py
-
-🐕 SudoDog AI Agent Security
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🐳 Using Docker sandbox
-🐳 Creating Docker container...
-   Network: enabled
-   CPU limit: 2.0 cores
-   Memory limit: 1g
-✓ Container created: d2dcfb3e93d6
-▶ Starting container d2dcfb3e93d6...
-✓ Container running
-
-[Agent output...]
-
-✓ Container exited with code 0
-CPU: 15.3% | Memory: 245.8MB
-```
-
 ### Real-Time Monitoring
 ```bash
-$ sudodog daemon start --foreground
-
-✓ SudoDog daemon started (PID: 95100)
-Monitoring interval: 5s
-
-[Monitoring containers in real-time...]
-
 $ sudodog daemon status
 
 ✓ Daemon is running (PID: 95100)
-Last check: 2025-10-30T16:42:40.984222
+Last check: 2025-10-31T16:42:40.984222
 Active containers: 1
 
 ┌─────────────┬──────────────────┬───────┬──────────┬────────┐
 │ Container   │ Session          │ CPU%  │ Memory%  │ Alerts │
 ├─────────────┼──────────────────┼───────┼──────────┼────────┤
-│ c3b2d252a7e8│ 20251030_164230  │ 2.3   │ 15.4     │ 0      │
+│ c3b2d252a7e8│ 20251031_164230  │ 2.3   │ 15.4     │ 0      │
 └─────────────┴──────────────────┴───────┴──────────┴────────┘
-```
-
-### Rollback File Changes
-```bash
-$ sudodog run ./modify_files.sh
-# ... agent modifies files ...
-
-$ sudodog rollback 20251030_133048
-⏪ Rolling back actions...
-✓ Successfully rolled back 3 file operation(s)
 ```
 
 ## Requirements
@@ -506,9 +509,9 @@ $ sudodog rollback 20251030_133048
 
 ## Development Status
 
-SudoDog is currently in **production beta**. Core features are working and stable:
+SudoDog v0.2.0 is **production-ready**. All core features are stable:
 
-- ✅ Docker container isolation
+- ✅ Custom Docker image support
 - ✅ Real-time monitoring daemon
 - ✅ Resource limits (CPU, memory)
 - ✅ Pattern-based detection
@@ -529,7 +532,7 @@ pip3 install -e . --break-system-packages
 
 # Test the CLI
 sudodog init
-sudodog run --docker python -c "print('Hello from Docker!')"
+sudodog run --docker python --version
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
@@ -539,14 +542,15 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
 - **Quick Start**: See [QUICKSTART.md](QUICKSTART.md) for a 5-minute guide
 - **Privacy Policy**: [PRIVACY.md](PRIVACY.md)
 - **Telemetry Details**: [TELEMETRY.md](TELEMETRY.md)
-- **Examples**: See `examples/` directory for sample agents
+- **Examples**: See `examples/dockerfiles/` for custom image examples
 - **Website**: [sudodog.com](https://sudodog.com)
+- **Changelog**: [CHANGELOG.md](CHANGELOG.md)
 
 ## License
 
 MIT License with Telemetry Addendum - see [LICENSE](LICENSE) file for details.
 
-TL;DR: Fully open source, but forks must maintain the same privacy transparency if they keep telemetry.
+**TL;DR:** Fully open source, but forks must maintain the same privacy transparency if they keep telemetry.
 
 ## Support
 
@@ -565,4 +569,4 @@ TL;DR: Fully open source, but forks must maintain the same privacy transparency 
 
 **Built for developers who value security without complexity.**
 
-🐕 [sudodog.com](https://sudodog.com) | [GitHub](https://github.com/SudoDog-official/sudodog) | [Docs](https://sudodog.com/docs)
+🐕 [sudodog.com](https://sudodog.com) | [GitHub](https://github.com/SudoDog-official/sudodog) | [Docs](https://sudodog.com/docs) | **v0.2.0**
