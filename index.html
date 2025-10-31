@@ -52,20 +52,21 @@
 
     <section class="code container" id="demo">
       <h2>See It In Action</h2>
-      <p class="sub center">Real example: Docker isolation with real-time monitoring</p>
+      <p class="sub center">Real example: Custom Docker images with resource limits</p>
       <div class="hero-terminal card">
         <div class="term-top">
           <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-          <span class="title">bash • sudodog run --docker python test_agent.py</span>
+          <span class="title">bash • sudodog run --docker --image my-agent:latest python agent.py</span>
         </div>
-<pre class="tty"><code><span class="prompt">user@prod:~$</span> <span class="cmd">sudodog run --docker python test_agent.py</span>
+<pre class="tty"><code><span class="prompt">user@prod:~$</span> <span class="cmd">sudodog run --docker --image my-agent:latest python agent.py</span>
 <span class="out">🐕 SudoDog AI Agent Security</span>
 <span class="out">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
 <span class="out">🐳 Using Docker sandbox</span>
 <span class="out">🐳 Creating Docker container...</span>
+<span class="out">   Image: my-agent:latest</span>
 <span class="out">   Network: enabled</span>
-<span class="out">   CPU limit: 1.0 cores</span>
-<span class="out">   Memory limit: 512m</span>
+<span class="out">   CPU limit: 2.0 cores</span>
+<span class="out">   Memory limit: 1g</span>
 <span class="okline">✓ Container created: d2dcfb3e93d6</span>
 <span class="okline">▶ Starting container d2dcfb3e93d6...</span>
 <span class="okline">✓ Container running</span>
@@ -82,7 +83,7 @@
 <span class="warning">  ⚠️ Pattern detected by SudoDog!</span>
 
 <span class="out">✓ Container exited with code 0</span>
-<span class="out">CPU: 2.3% | Memory: 45.2MB</span>
+<span class="out">CPU: 15.3% | Memory: 245.8MB</span>
 <span class="out">⏹ Stopping container d2dcfb3e93d6...</span>
 <span class="okline">✓ Container removed</span>
 
@@ -95,12 +96,12 @@
     <section class="features container" id="features">
       <h2>Complete Sandbox & Security Platform</h2>
       <div class="grid grid-3">
-        <article class="feature card hoverlift"><div class="icbox">🐳</div><h3>Docker Isolation</h3><p>Strong container isolation with full filesystem separation. Each agent runs in its own Docker container, completely isolated from your system.</p></article>
+        <article class="feature card hoverlift"><div class="icbox">🐳</div><h3>Custom Docker Images</h3><p>Use your own Docker images with all dependencies pre-installed. Support for LangChain, AutoGPT, or any custom agent. Zero vendor lock-in.</p></article>
         <article class="feature card hoverlift"><div class="icbox">💪</div><h3>Resource Limits</h3><p>Set CPU and memory limits per agent. Prevent runaway processes from consuming all system resources. Configurable limits per container.</p></article>
         <article class="feature card hoverlift"><div class="icbox">👁️</div><h3>Real-Time Monitoring</h3><p>Background daemon tracks all containers. Live CPU and memory stats. Alerts when thresholds exceeded. Monitor multiple agents from one dashboard.</p></article>
         <article class="feature card hoverlift"><div class="icbox">🛡️</div><h3>Pattern Detection</h3><p>Detects dangerous SQL (DROP TABLE, DELETE FROM) and shell commands (rm -rf, curl | bash) before execution using smart pattern matching.</p></article>
         <article class="feature card hoverlift"><div class="icbox">📊</div><h3>Complete Audit Trail</h3><p>Immutable logs of every agent action in JSONL format. Track CPU, memory, and all operations. Perfect for compliance and debugging.</p></article>
-        <article class="feature card hoverlift"><div class="icbox">⚡</div><h3>Zero Code Changes</h3><p>Wrap existing agents with one command. No SDK to integrate. Works with LangChain, AutoGPT, custom agents. Any language, any framework.</p></article>
+        <article class="feature card hoverlift"><div class="icbox">🔒</div><h3>Privacy-First Telemetry</h3><p>Optional anonymous analytics to improve threat detection. Fully transparent, opt-in only. See exactly what's collected. MIT License with Telemetry Addendum.</p></article>
       </div>
     </section>
 
@@ -114,12 +115,13 @@
           <p>Production-grade security, free forever</p>
           <ul>
             <li>Unlimited agents</li>
-            <li><strong>Docker container isolation</strong></li>
+            <li><strong>Custom Docker images</strong> (v0.2.0)</li>
             <li><strong>CPU & memory limits</strong></li>
             <li><strong>Real-time daemon monitoring</strong></li>
             <li>Pattern detection (SQL, shell)</li>
             <li>Local logging & audit trail</li>
             <li>File rollback</li>
+            <li>Optional anonymous telemetry</li>
             <li>Open source (MIT)</li>
             <li>Community support</li>
           </ul>
@@ -129,15 +131,17 @@
           <div class="flag">Coming Soon</div>
           <h3>Production</h3>
           <p class="price-coming">Join Waitlist</p>
-          <p>Your control center for production agents</p>
+          <p>Threat intelligence from 10,000+ agents</p>
           <ul>
             <li>Everything in Development</li>
             <li><strong>Web dashboard</strong> - see all agents, all servers</li>
+            <li><strong>Threat intelligence feed</strong> - patterns from community</li>
+            <li><strong>Anomaly detection</strong> - ML-trained on your behavior</li>
             <li><strong>Email/Slack alerts</strong> - instant notifications</li>
             <li><strong>Cloud logging</strong> - never lose logs, search everything</li>
-            <li><strong>Historical analytics</strong> - spot trends and anomalies</li>
-            <li><strong>Multi-server support</strong> - manage agents anywhere</li>
-            <li>Network monitoring</li>
+            <li><strong>Historical analytics</strong> - spot trends</li>
+            <li><strong>Cost optimization</strong> - API spend tracking</li>
+            <li>Multi-server support</li>
             <li>Team collaboration</li>
             <li>Priority support</li>
           </ul>
@@ -148,16 +152,18 @@
           <div class="flag-muted">Coming Soon</div>
           <h3>Enterprise</h3>
           <p class="price-coming">Join Waitlist</p>
-          <p>For teams with compliance requirements</p>
+          <p>Compliance automation & security analyst reviews</p>
           <ul>
             <li>Everything in Production</li>
+            <li><strong>SOC 2 compliance reports</strong> - auto-generated</li>
+            <li><strong>Security analyst reviews</strong> - weekly incident analysis</li>
+            <li><strong>Breach insurance</strong> - up to $1M coverage</li>
             <li>SSO integration (SAML, OAuth)</li>
             <li>Custom data retention</li>
-            <li>Compliance reports (SOC 2, HIPAA)</li>
+            <li>SIEM integration (Splunk, Datadog)</li>
             <li>On-premise deployment option</li>
             <li>Custom integrations</li>
             <li>Dedicated support & SLA</li>
-            <li>Custom pricing</li>
           </ul>
           <a class="btn ghost" href="https://forms.gle/mJuyEqe5cHnrAdu27">Join Waitlist</a>
           <p class="pricing-note">Custom pricing for your team</p>
@@ -177,11 +183,15 @@ curl -fsSL https://get.docker.com | sudo sh
 # Initialize
 sudodog init
 
-# Run with Docker isolation
-sudodog run --docker python your-agent.py
+# Run with custom image and resource limits
+sudodog run --docker --image my-agent:latest \
+  --cpu-limit 2.0 --memory-limit 1g python agent.py
 
 # Start background monitoring
-sudodog daemon start</code></pre>
+sudodog daemon start
+
+# Check telemetry status
+sudodog telemetry status</code></pre>
       <p class="sub center">Works on Ubuntu, Debian, Arch, Fedora, and most Linux distributions.</p>
       <p class="sub center" style="margin-top: 20px;"><strong>Open Source:</strong> <a href="https://github.com/SudoDog-official/sudodog" style="color: #667eea;">View on GitHub</a> • MIT License</p>
     </section>
@@ -200,6 +210,7 @@ sudodog daemon start</code></pre>
     <nav class="links">
       <a href="https://github.com/SudoDog-official/sudodog">GitHub</a>
       <a href="https://github.com/SudoDog-official/sudodog#readme">Documentation</a>
+      <a href="https://github.com/SudoDog-official/sudodog/blob/main/PRIVACY.md">Privacy</a>
       <a href="mailto:support@sudodog.com">Support</a>
       <a href="mailto:contact@sudodog.com">Contact</a>
     </nav>
