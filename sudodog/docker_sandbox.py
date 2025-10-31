@@ -84,7 +84,7 @@ class DockerSandbox:
         # Container configuration
         container_config = {
             'image': self.image,
-            'command': ['sh', '-c', command],
+            'command': ['/bin/sh', '-c', command],
             'working_dir': working_dir,
             'detach': True,
             'network_mode': network_mode,
