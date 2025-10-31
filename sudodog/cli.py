@@ -31,6 +31,15 @@ def cli():
 def run(command, policy, log_level, docker, cpu_limit, memory_limit):
     """Run an AI agent with SudoDog protection"""
     from .monitor import AgentMonitor, AgentSession
+    from .telemetry import get_telemetry
+    
+    # Track command usage
+    telemetry = get_telemetry()
+    telemetry.track_command('run', {
+        'docker': docker,
+        'cpu_limit': cpu_limit if docker else None,
+        'memory_limit': memory_limit if docker else None,
+    })
     
     console.print("\n[cyan]🐕 SudoDog AI Agent Security[/cyan]")
     console.print("[cyan]" + "━" * 40 + "[/cyan]")
@@ -64,6 +73,8 @@ def run(command, policy, log_level, docker, cpu_limit, memory_limit):
                 
                 sys.exit(result['exit_code'])
         except Exception as e:
+            # Track error
+            telemetry.track_error(type(e).__name__, str(e))
             console.print(f"\n[red]✗[/red] Docker error: {e}\n")
             sys.exit(1)
     else:
@@ -80,6 +91,10 @@ def run(command, policy, log_level, docker, cpu_limit, memory_limit):
         
         try:
             exit_code = monitor.run()
+        except Exception as e:
+            # Track error
+            telemetry.track_error(type(e).__name__, str(e))
+            raise
         finally:
             # Remove from active sessions
             AgentSession.remove_session(monitor.session_id)
@@ -89,6 +104,9 @@ def run(command, policy, log_level, docker, cpu_limit, memory_limit):
 @cli.command()
 def init():
     """Initialize SudoDog in current directory"""
+    from .telemetry_ui import show_telemetry_prompt
+    from .telemetry import get_telemetry
+    
     console.print("\n[cyan]🐕 SudoDog Initialization[/cyan]")
     console.print("[cyan]" + "━" * 40 + "[/cyan]\n")
     
@@ -137,7 +155,18 @@ def init():
     console.print(f"[green]✓[/green] Logs directory: {logs_dir}")
     console.print(f"[green]✓[/green] Backups directory: {backups_dir}")
     console.print(f"[green]✓[/green] Default policy created")
-    console.print("\n[green]SudoDog initialized! Run 'sudodog run <command>' to start.[/green]\n")
+    console.print("\n[green]SudoDog initialized![/green]")
+    
+    # Show telemetry opt-in prompt
+    console.print()
+    response = show_telemetry_prompt()
+    
+    if response:
+        telemetry = get_telemetry()
+        telemetry.enable()
+        telemetry.track_install()
+    
+    console.print("\n[green]Ready to use! Run 'sudodog run <command>' to start.[/green]\n")
 
 @cli.command()
 def status():
@@ -250,6 +279,7 @@ def logs(last, session):
 def rollback(session_id, steps):
     """Rollback agent actions"""
     from .blocker import FileRollback
+    from .telemetry import get_telemetry
     
     console.print("\n[yellow]⏪[/yellow]  Rolling back actions...")
     console.print(f"[dim]Session: {session_id}[/dim]\n")
@@ -268,6 +298,13 @@ def rollback(session_id, steps):
     try:
         rolled_back, errors = rollback_handler.rollback(steps)
         
+        # Track rollback
+        telemetry = get_telemetry()
+        telemetry.track_command('rollback', {
+            'rollback': True,
+            'steps': rolled_back,
+        })
+        
         if rolled_back > 0:
             console.print(f"[green]✓[/green] Successfully rolled back {rolled_back} file operation(s)")
         else:
@@ -281,6 +318,8 @@ def rollback(session_id, steps):
         console.print()
         
     except Exception as e:
+        telemetry = get_telemetry()
+        telemetry.track_error(type(e).__name__, str(e))
         console.print(f"[red]✗[/red] Rollback failed: {str(e)}\n")
 
 @cli.command()
@@ -403,6 +442,10 @@ def version():
     """Show SudoDog version"""
     console.print("\n[cyan]🐕 SudoDog v0.1.0[/cyan]")
     console.print("[dim]Security for AI agents that actually works[/dim]\n")
+
+# Add telemetry commands
+from .cli_telemetry import add_telemetry_commands
+add_telemetry_commands(cli)
 
 if __name__ == '__main__':
     cli()
