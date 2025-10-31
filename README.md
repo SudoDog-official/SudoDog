@@ -181,6 +181,60 @@ sudodog rollback <session-id>
 sudodog rollback <session-id> --steps 10
 ```
 
+### Telemetry
+```bash
+# Enable anonymous analytics
+sudodog telemetry enable
+
+# Disable analytics
+sudodog telemetry disable
+
+# Check status
+sudodog telemetry status
+
+# See what's collected
+sudodog telemetry info
+```
+
+## 📊 Telemetry & Privacy
+
+SudoDog includes **optional anonymous telemetry** to help improve the software.
+
+### What We Collect (When You Opt In)
+
+- ✅ Which commands you use (e.g., `run`, `logs`, `daemon`)
+- ✅ Error messages (sanitized, no file paths or personal data)
+- ✅ Performance metrics (execution time)
+- ✅ Threat patterns detected (helps improve detection)
+
+### What We NEVER Collect
+
+- ❌ Your agent code or file contents
+- ❌ File paths or directory structures
+- ❌ Command arguments or outputs
+- ❌ API keys, credentials, or secrets
+- ❌ Personally identifiable information
+
+### Privacy-First Design
+
+- **Opt-in only**: Disabled by default, you choose to enable it
+- **Anonymous**: Uses anonymous ID only (e.g., `anon-a1b2c3d4...`)
+- **Transparent**: See exactly what's collected in [TELEMETRY.md](TELEMETRY.md)
+- **Respectful**: Easy to disable at any time with `sudodog telemetry disable`
+
+**Full Privacy Policy**: [PRIVACY.md](PRIVACY.md)  
+**Technical Details**: [TELEMETRY.md](TELEMETRY.md)
+
+### Why We Collect Data
+
+Anonymous telemetry helps us:
+1. **Improve threat detection** - See what patterns users encounter
+2. **Fix bugs faster** - Know which errors affect users most
+3. **Prioritize features** - Build what users actually need
+4. **Understand usage** - Make better product decisions
+
+All data is anonymous and helps the entire community by improving security for everyone.
+
 ## Docker vs Namespace Isolation
 
 | Feature | Namespace (default) | Docker (--docker) |
@@ -198,7 +252,6 @@ sudodog rollback <session-id> --steps 10
 ## Real-Time Monitoring with Daemon
 
 The SudoDog daemon monitors all Docker containers in real-time:
-
 ```bash
 # Start daemon
 $ sudodog daemon start
@@ -334,7 +387,7 @@ SudoDog provides multiple layers of protection:
 
 ## Features
 
-### ✅ Implemented (Production Ready)
+### ✅ Production Ready
 
 - 🐳 **Docker Container Isolation** - Strong isolation with full filesystem separation
 - 💪 **Resource Limits** - CPU and memory caps per agent
@@ -348,24 +401,7 @@ SudoDog provides multiple layers of protection:
 - 💻 **Rich CLI** - Beautiful colored output with multiple commands
 - 📝 **Session Management** - Track and manage multiple agent sessions
 - 🔒 **Namespace Sandboxing** - Lightweight alternative to Docker
-
-### ✅ Recently Added
-
-- [x] Docker container support with resource limits
-- [x] Background daemon for real-time monitoring
-- [x] CPU and memory usage tracking
-- [x] Alert system for threshold breaches
-- [x] Multi-container management
-
-### 🚧 Roadmap (Coming Soon)
-
-- [ ] **Web Dashboard** - Visual interface with charts and graphs
-- [ ] **Email/Slack Alerts** - Real-time notifications when issues detected
-- [ ] **Multi-server Support** - Monitor agents across multiple machines
-- [ ] **Advanced Anomaly Detection** - ML-based pattern recognition
-- [ ] **Cost Monitoring** - Track API spend per agent
-- [ ] **Team Collaboration** - Multi-user access with permissions
-- [ ] **Cloud Sync** - Centralized log storage and analysis
+- 📊 **Anonymous Telemetry** - Optional usage analytics (opt-in, privacy-first)
 
 ## Use Cases
 
@@ -481,11 +517,11 @@ SudoDog is currently in **production beta**. Core features are working and stabl
 - ✅ Audit logging
 - ✅ File rollback
 - ✅ Policy engine
+- ✅ Anonymous telemetry (opt-in)
 
 ## Contributing
 
 SudoDog is open source! Contributions welcome.
-
 ```bash
 git clone https://github.com/SudoDog-official/sudodog
 cd sudodog
@@ -501,12 +537,16 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
 ## Documentation
 
 - **Quick Start**: See [QUICKSTART.md](QUICKSTART.md) for a 5-minute guide
+- **Privacy Policy**: [PRIVACY.md](PRIVACY.md)
+- **Telemetry Details**: [TELEMETRY.md](TELEMETRY.md)
 - **Examples**: See `examples/` directory for sample agents
 - **Website**: [sudodog.com](https://sudodog.com)
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) file for details
+MIT License with Telemetry Addendum - see [LICENSE](LICENSE) file for details.
+
+TL;DR: Fully open source, but forks must maintain the same privacy transparency if they keep telemetry.
 
 ## Support
 
