@@ -269,7 +269,7 @@ def get_telemetry() -> Telemetry:
     global _telemetry_instance
     if _telemetry_instance is None:
         _telemetry_instance = Telemetry()
-    return _telemetry_instance"""
+    return _telemetry_instance
 SudoDog - Telemetry Module
 Privacy-first anonymous usage analytics
 """
