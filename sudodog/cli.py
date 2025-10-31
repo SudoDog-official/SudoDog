@@ -26,10 +26,18 @@ def cli():
 @click.option('--policy', '-p', default='default', help='Security policy to use')
 @click.option('--log-level', '-l', default='info', help='Logging level')
 @click.option('--docker', is_flag=True, help='Use Docker sandbox (stronger isolation)')
-@click.option('--cpu-limit', default=1.0, help='CPU limit (cores)')
-@click.option('--memory-limit', default='512m', help='Memory limit (e.g., 512m, 1g)')
-def run(command, policy, log_level, docker, cpu_limit, memory_limit):
-    """Run an AI agent with SudoDog protection"""
+@click.option('--image', default='python:3.11-slim', help='Docker image to use (requires --docker)')
+@click.option('--cpu-limit', type=float, default=None, help='CPU limit in cores (e.g., 2.0)')
+@click.option('--memory-limit', default=None, help='Memory limit (e.g., 512m, 1g)')
+def run(command, policy, log_level, docker, image, cpu_limit, memory_limit):
+    """Run an AI agent with SudoDog protection
+    
+    Examples:
+        sudodog run python agent.py
+        sudodog run --docker python agent.py
+        sudodog run --docker --image my-agent:latest python agent.py
+        sudodog run --docker --cpu-limit 2.0 --memory-limit 1g python agent.py
+    """
     from .monitor import AgentMonitor, AgentSession
     from .telemetry import get_telemetry
     
@@ -37,8 +45,9 @@ def run(command, policy, log_level, docker, cpu_limit, memory_limit):
     telemetry = get_telemetry()
     telemetry.track_command('run', {
         'docker': docker,
-        'cpu_limit': cpu_limit if docker else None,
-        'memory_limit': memory_limit if docker else None,
+        'custom_image': image != 'python:3.11-slim',
+        'has_cpu_limit': cpu_limit is not None,
+        'has_memory_limit': memory_limit is not None,
     })
     
     console.print("\n[cyan]🐕 SudoDog AI Agent Security[/cyan]")
@@ -55,7 +64,12 @@ def run(command, policy, log_level, docker, cpu_limit, memory_limit):
         session_id = datetime.now().strftime('%Y%m%d_%H%M%S')
         
         try:
-            with DockerSandbox(session_id, cpu_limit=cpu_limit, memory_limit=memory_limit) as sandbox:
+            with DockerSandbox(
+                session_id, 
+                image=image,
+                cpu_limit=cpu_limit, 
+                memory_limit=memory_limit
+            ) as sandbox:
                 # Create and start container
                 sandbox.create_container(cmd_string)
                 sandbox.start()
@@ -442,10 +456,6 @@ def version():
     """Show SudoDog version"""
     console.print("\n[cyan]🐕 SudoDog v0.1.0[/cyan]")
     console.print("[dim]Security for AI agents that actually works[/dim]\n")
-
-# Add telemetry commands
-from .cli_telemetry import add_telemetry_commands
-add_telemetry_commands(cli)
 
 # Add telemetry commands
 from .cli_telemetry import add_telemetry_commands
