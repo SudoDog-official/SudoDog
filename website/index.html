@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SudoDog — AI Agent Sandbox & Security Monitoring</title>
-  <meta name="description" content="Sandbox for AI agents. Blocks dangerous operations, monitors behavior in real-time, alerts instantly. Deploy agents safely with comprehensive security.">
+  <meta name="description" content="Docker-isolated sandbox for AI agents. Real-time monitoring, resource limits, complete audit trail. Deploy agents safely with production-grade security.">
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,8 +33,8 @@
     <section class="hero container">
       <div class="hero-copy center">
         <img class="hero-logo" src="assets/hero_logo.png" alt="SudoDog logo">
-        <p class="lead">Secure sandbox for AI agents. Monitor in real-time. Deploy confidently.</p>
-        <p class="lede-sub">AI agents need sandboxed execution to prevent disasters. SudoDog blocks dangerous file access, detects risky SQL and shell commands, and monitors agent behavior in real-time so you know immediately when something goes wrong.</p>
+        <p class="lead">Production-grade sandbox for AI agents. Docker isolation. Real-time monitoring.</p>
+        <p class="lede-sub">AI agents need strong isolation to prevent disasters. SudoDog runs agents in Docker containers with resource limits, detects dangerous SQL and shell commands, and monitors behavior in real-time with a background daemon.</p>
         <div class="cta-row">
           <a class="btn primary lg" href="#install">Get Started Free</a>
           <a class="btn ghost lg" href="#demo">See It In Action</a>
@@ -52,71 +52,74 @@
 
     <section class="code container" id="demo">
       <h2>See It In Action</h2>
-      <p class="sub center">Real example: Detecting dangerous operations before they execute</p>
+      <p class="sub center">Real example: Docker isolation with real-time monitoring</p>
       <div class="hero-terminal card">
         <div class="term-top">
           <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-          <span class="title">bash • sudodog run python test_agent.py</span>
+          <span class="title">bash • sudodog run --docker python test_agent.py</span>
         </div>
-<pre class="tty"><code><span class="prompt">user@prod:~$</span> <span class="cmd">sudodog run python test_agent.py</span>
+<pre class="tty"><code><span class="prompt">user@prod:~$</span> <span class="cmd">sudodog run --docker python test_agent.py</span>
 <span class="out">🐕 SudoDog AI Agent Security</span>
 <span class="out">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-<span class="okline">✓ Sandboxed environment created</span>
-<span class="okline">✓ Behavioral monitoring active</span>
-<span class="out">Policy: default</span>
+<span class="out">🐳 Using Docker sandbox</span>
+<span class="out">🐳 Creating Docker container...</span>
+<span class="out">   Network: enabled</span>
+<span class="out">   CPU limit: 1.0 cores</span>
+<span class="out">   Memory limit: 512m</span>
+<span class="okline">✓ Container created: d2dcfb3e93d6</span>
+<span class="okline">▶ Starting container d2dcfb3e93d6...</span>
+<span class="okline">✓ Container running</span>
 
 <span class="out">🤖 AI Agent Starting...</span>
 <span class="okline">[Safe Operation] Reading OS information...</span>
 <span class="okline">[Safe Operation] Creating temporary file...</span>
 
 <span class="alert">[Dangerous Operation] Attempting to read /etc/shadow...</span>
-<span class="alert">  ✓ Blocked by system permissions</span>
+<span class="alert">  ✓ Blocked by container isolation</span>
 
 <span class="alert">[Dangerous Operation] Simulating database query...</span>
 <span class="alert">  Query: DROP TABLE customers;</span>
-<span class="warning">  ⚠️ This pattern detected by SudoDog!</span>
+<span class="warning">  ⚠️ Pattern detected by SudoDog!</span>
 
-<span class="alert">[Dangerous Operation] Simulating file deletion...</span>
-<span class="alert">  Command: rm -rf /important/data</span>
-<span class="warning">  ⚠️ This pattern detected by SudoDog!</span>
+<span class="out">✓ Container exited with code 0</span>
+<span class="out">CPU: 2.3% | Memory: 45.2MB</span>
+<span class="out">⏹ Stopping container d2dcfb3e93d6...</span>
+<span class="okline">✓ Container removed</span>
 
-<span class="out">✓ Process completed</span>
-<span class="out">Total actions: 7</span>
-<span class="out">Blocked actions: 3</span>
-<span class="out">Log file: ~/.sudodog/logs/20251023_110220.jsonl</span>
-
-<span class="prompt">user@prod:~$</span> <span class="cmd">sudodog logs</span>
-<span class="out">Full audit trail with timestamps and risk levels</span><span class="cursor"></span></code></pre>
+<span class="prompt">user@prod:~$</span> <span class="cmd">sudodog daemon status</span>
+<span class="out">✓ Daemon is running (PID: 95100)</span>
+<span class="out">Active containers: 3 | CPU avg: 12.5% | Memory avg: 28.3%</span><span class="cursor"></span></code></pre>
       </div>
     </section>
 
     <section class="features container" id="features">
       <h2>Complete Sandbox & Security Platform</h2>
       <div class="grid grid-3">
-        <article class="feature card hoverlift"><div class="icbox">🔒</div><h3>Sandboxed Execution</h3><p>Isolated environment for each agent. Blocks access to sensitive files like passwords, SSH keys, AWS credentials, and .env files automatically.</p></article>
-        <article class="feature card hoverlift"><div class="icbox">👁️</div><h3>Behavioral Monitoring</h3><p>Track every file access and system call during execution. Full visibility into what your agents are actually doing in real-time.</p></article>
-        <article class="feature card hoverlift"><div class="icbox">🛡️</div><h3>Pattern Detection</h3><p>Detects dangerous SQL (DROP TABLE, DELETE FROM) and shell commands (rm -rf, sudo operations) before execution using smart pattern matching.</p></article>
-        <article class="feature card hoverlift"><div class="icbox">⏪</div><h3>File Rollback</h3><p>Rollback file modifications and creations. Undo mistakes with a single command. Automatic backups of all modified files.</p></article>
-        <article class="feature card hoverlift"><div class="icbox">📊</div><h3>Complete Audit Trail</h3><p>Immutable logs of every agent action in JSONL format. Perfect for compliance, debugging, and incident response.</p></article>
-        <article class="feature card hoverlift"><div class="icbox">⚡</div><h3>Zero Code Changes</h3><p>Wrap existing agents with one command. No SDK to integrate, works with any framework or language. Works with LangChain, AutoGPT, custom agents.</p></article>
+        <article class="feature card hoverlift"><div class="icbox">🐳</div><h3>Docker Isolation</h3><p>Strong container isolation with full filesystem separation. Each agent runs in its own Docker container, completely isolated from your system.</p></article>
+        <article class="feature card hoverlift"><div class="icbox">💪</div><h3>Resource Limits</h3><p>Set CPU and memory limits per agent. Prevent runaway processes from consuming all system resources. Configurable limits per container.</p></article>
+        <article class="feature card hoverlift"><div class="icbox">👁️</div><h3>Real-Time Monitoring</h3><p>Background daemon tracks all containers. Live CPU and memory stats. Alerts when thresholds exceeded. Monitor multiple agents from one dashboard.</p></article>
+        <article class="feature card hoverlift"><div class="icbox">🛡️</div><h3>Pattern Detection</h3><p>Detects dangerous SQL (DROP TABLE, DELETE FROM) and shell commands (rm -rf, curl | bash) before execution using smart pattern matching.</p></article>
+        <article class="feature card hoverlift"><div class="icbox">📊</div><h3>Complete Audit Trail</h3><p>Immutable logs of every agent action in JSONL format. Track CPU, memory, and all operations. Perfect for compliance and debugging.</p></article>
+        <article class="feature card hoverlift"><div class="icbox">⚡</div><h3>Zero Code Changes</h3><p>Wrap existing agents with one command. No SDK to integrate. Works with LangChain, AutoGPT, custom agents. Any language, any framework.</p></article>
       </div>
     </section>
 
     <section class="pricing container" id="pricing">
       <h2>Simple Pricing That Scales With You</h2>
-      <p class="sub center">Start free today, upgrade when you're ready for production</p>
+      <p class="sub center">Start free today, upgrade when you're ready for production features</p>
       <div class="plans plans-3">
         <article class="plan card hoverlift">
           <h3>Development</h3>
           <p class="price">$0 <span>/ forever</span></p>
-          <p>Perfect for testing and personal projects</p>
+          <p>Production-grade security, free forever</p>
           <ul>
             <li>Unlimited agents</li>
-            <li>File access blocking</li>
+            <li><strong>Docker container isolation</strong></li>
+            <li><strong>CPU & memory limits</strong></li>
+            <li><strong>Real-time daemon monitoring</strong></li>
             <li>Pattern detection (SQL, shell)</li>
-            <li>Local logging</li>
+            <li>Local logging & audit trail</li>
             <li>File rollback</li>
-            <li>Full audit trail</li>
             <li>Open source (MIT)</li>
             <li>Community support</li>
           </ul>
@@ -130,9 +133,10 @@
           <ul>
             <li>Everything in Development</li>
             <li><strong>Web dashboard</strong> - see all agents, all servers</li>
-            <li><strong>Real-time alerts</strong> - email, Slack, webhooks</li>
+            <li><strong>Email/Slack alerts</strong> - instant notifications</li>
             <li><strong>Cloud logging</strong> - never lose logs, search everything</li>
             <li><strong>Historical analytics</strong> - spot trends and anomalies</li>
+            <li><strong>Multi-server support</strong> - manage agents anywhere</li>
             <li>Network monitoring</li>
             <li>Team collaboration</li>
             <li>Priority support</li>
@@ -163,9 +167,21 @@
 
     <section class="container code" id="install">
       <h2>Get Started in 30 Seconds</h2>
-      <p class="sub center">One command. Zero configuration.</p>
-<pre class="codeblock"><code class="lang">curl -sL https://sudodog.com/install.sh | bash</code></pre>
-      <p class="sub center">Then wrap any AI agent: <code class="inl">sudodog run your-agent.py</code></p>
+      <p class="sub center">Install SudoDog and Docker, then run any agent securely.</p>
+<pre class="codeblock"><code class="lang"># Install SudoDog
+curl -sL https://sudodog.com/install.sh | bash
+
+# Install Docker (optional, for stronger isolation)
+curl -fsSL https://get.docker.com | sudo sh
+
+# Initialize
+sudodog init
+
+# Run with Docker isolation
+sudodog run --docker python your-agent.py
+
+# Start background monitoring
+sudodog daemon start</code></pre>
       <p class="sub center">Works on Ubuntu, Debian, Arch, Fedora, and most Linux distributions.</p>
       <p class="sub center" style="margin-top: 20px;"><strong>Open Source:</strong> <a href="https://github.com/SudoDog-official/sudodog" style="color: #667eea;">View on GitHub</a> • MIT License</p>
     </section>
@@ -177,7 +193,7 @@
       <img class="logo sm" src="assets/logo.png" alt="SudoDog logo small">
       <div>
         <strong>SudoDog</strong><br>
-        <small>Security for AI agents that actually works</small><br>
+        <small>Production-grade security for AI agents</small><br>
         <small>© <span id="y"></span> SudoDog. MIT License.</small>
       </div>
     </div>
