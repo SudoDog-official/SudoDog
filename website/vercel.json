@@ -1,5 +1,4 @@
 {
-  "cleanUrls": true,
   "redirects": [
     {
       "source": "/install.sh",
@@ -8,10 +7,6 @@
     }
   ],
   "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "/api/:path*"
-    },
     {
       "source": "/:path*",
       "destination": "/install.sh",
@@ -30,19 +25,6 @@
         {
           "key": "Content-Type",
           "value": "text/plain; charset=utf-8"
-        }
-      ]
-    },
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET, POST, OPTIONS"
         }
       ]
     }
