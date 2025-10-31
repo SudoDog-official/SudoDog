@@ -9,12 +9,8 @@
   ],
   "rewrites": [
     {
-      "source": "/api/telemetry/v1/events",
-      "destination": "/api/telemetry.py"
-    },
-    {
-      "source": "/api/telemetry",
-      "destination": "/api/telemetry.py"
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
     },
     {
       "source": "/:path*",
@@ -34,6 +30,19 @@
         {
           "key": "Content-Type",
           "value": "text/plain; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, OPTIONS"
         }
       ]
     }
