@@ -70,7 +70,7 @@ class AgentBlocker:
     
         # Load patterns from policy or use defaults
         patterns = self.policy_config.get('block_patterns', self.DANGEROUS_PATTERNS)
-        self.compiled_patterns = [re.compile(p, re.IGNORECASE) for p in patterns]
+        self.compiled_patterns = [re.compile(p, re.IGNORECASE) for p in patterns if p and p.strip()]
 
     def _load_config(self):
         """Load config from ~/.sudodog/config.json"""
