@@ -19,21 +19,24 @@ class DockerSandbox:
     
     def __init__(self, 
                  session_id: str,
+                 image: str = 'python:3.11-slim',
                  network_enabled: bool = True,
                  allowed_domains: List[str] = None,
-                 cpu_limit: float = 1.0,
-                 memory_limit: str = "512m"):
+                 cpu_limit: float = None,
+                 memory_limit: str = None):
         """
         Initialize Docker sandbox
         
         Args:
             session_id: Unique session identifier
+            image: Docker image to use (default: python:3.11-slim)
             network_enabled: Allow network access
             allowed_domains: List of allowed domains (if network enabled)
-            cpu_limit: CPU limit (1.0 = 1 core)
-            memory_limit: Memory limit (e.g., "512m", "1g")
+            cpu_limit: CPU limit in cores (e.g., 2.0 = 2 cores, None = no limit)
+            memory_limit: Memory limit (e.g., "512m", "1g", None = no limit)
         """
         self.session_id = session_id
+        self.image = image
         self.network_enabled = network_enabled
         self.allowed_domains = allowed_domains or []
         self.cpu_limit = cpu_limit
@@ -60,6 +63,10 @@ class DockerSandbox:
         """
         console.print(f"[cyan]🐳 Creating Docker container...[/cyan]")
         
+        # Show image info
+        if self.image != 'python:3.11-slim':
+            console.print(f"[dim]   Image: {self.image}[/dim]")
+        
         # Network configuration
         if self.network_enabled:
             network_mode = "bridge"
@@ -69,26 +76,26 @@ class DockerSandbox:
             console.print(f"[dim]   Network: isolated[/dim]")
         
         # Resource limits
-        console.print(f"[dim]   CPU limit: {self.cpu_limit} cores[/dim]")
-        console.print(f"[dim]   Memory limit: {self.memory_limit}[/dim]")
+        if self.cpu_limit:
+            console.print(f"[dim]   CPU limit: {self.cpu_limit} cores[/dim]")
+        if self.memory_limit:
+            console.print(f"[dim]   Memory limit: {self.memory_limit}[/dim]")
         
         # Container configuration
         container_config = {
-            'image': 'python:3.11-slim',  # Base Python image
+            'image': self.image,
             'command': ['sh', '-c', command],
             'working_dir': working_dir,
             'detach': True,
             'network_mode': network_mode,
-            'mem_limit': self.memory_limit,
-            'cpu_quota': int(self.cpu_limit * 100000),  # Convert to CPU quota
-            'cpu_period': 100000,
             'read_only': False,  # Allow writes to temp directories
             'security_opt': ['no-new-privileges'],  # Security hardening
             'cap_drop': ['ALL'],  # Drop all capabilities
             'cap_add': ['NET_BIND_SERVICE'] if self.network_enabled else [],
             'labels': {
                 'sudodog.session_id': self.session_id,
-                'sudodog.managed': 'true'
+                'sudodog.managed': 'true',
+                'sudodog.image': self.image
             },
             # Mount working directory
             'volumes': {
@@ -101,13 +108,27 @@ class DockerSandbox:
             }
         }
         
+        # Add resource limits if specified
+        if self.memory_limit:
+            container_config['mem_limit'] = self.memory_limit
+        
+        if self.cpu_limit:
+            container_config['cpu_quota'] = int(self.cpu_limit * 100000)
+            container_config['cpu_period'] = 100000
+        
         try:
             # Ensure image exists
             try:
-                self.client.images.get('python:3.11-slim')
+                self.client.images.get(self.image)
             except docker.errors.ImageNotFound:
-                console.print(f"[yellow]⚠[/yellow]  Pulling Python image (first time only)...")
-                self.client.images.pull('python:3.11-slim')
+                console.print(f"[yellow]⚠[/yellow]  Pulling image: {self.image} (this may take a moment)...")
+                try:
+                    self.client.images.pull(self.image)
+                    console.print(f"[green]✓[/green] Image pulled successfully")
+                except docker.errors.APIError as e:
+                    console.print(f"[red]✗[/red] Failed to pull image: {e}")
+                    console.print(f"[yellow]Tip:[/yellow] Make sure the image exists: docker pull {self.image}")
+                    raise
             
             # Create container
             self.container = self.client.containers.create(**container_config)
@@ -244,6 +265,7 @@ class DockerSandboxManager:
         return [{
             'container_id': c.id[:12],
             'session_id': c.labels.get('sudodog.session_id'),
+            'image': c.labels.get('sudodog.image', 'unknown'),
             'status': c.status,
             'created': c.attrs['Created']
         } for c in containers]
