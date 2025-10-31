@@ -26,7 +26,7 @@ class Telemetry:
     def __init__(self, endpoint: Optional[str] = None):
         self.config_dir = Path.home() / '.sudodog'
         self.config_file = self.config_dir / 'config.json'
-        self.telemetry_endpoint = endpoint or 'https://sudodog.com/api/telemetry'        
+        self.telemetry_endpoint = endpoint or 'https://www.sudodog.com/api/telemetry'
         # Load config
         self.config = self._load_config()
         self.enabled = self.config.get('telemetry_enabled', False)
