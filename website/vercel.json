@@ -1,32 +1,17 @@
 {
-  "redirects": [
+  "routes": [
     {
-      "source": "/install.sh",
-      "destination": "https://raw.githubusercontent.com/SudoDog-official/sudodog/main/install.sh",
-      "permanent": false
-    }
-  ],
-  "rewrites": [
+      "src": "/api/telemetry",
+      "dest": "/api/telemetry.py"
+    },
     {
-      "source": "/:path*",
-      "destination": "/install.sh",
-      "has": [
-        {
-          "type": "host",
-          "value": "install.sudodog.com"
-        }
-      ]
-    }
-  ],
-  "headers": [
+      "src": "/install.sh",
+      "dest": "https://raw.githubusercontent.com/SudoDog-official/sudodog/main/install.sh",
+      "status": 307
+    },
     {
-      "source": "/install.sh",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/plain; charset=utf-8"
-        }
-      ]
+      "src": "/(.*)",
+      "dest": "/$1"
     }
   ]
 }
