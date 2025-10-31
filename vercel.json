@@ -8,10 +8,6 @@
       "src": "/install.sh",
       "dest": "https://raw.githubusercontent.com/SudoDog-official/sudodog/main/install.sh",
       "status": 307
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
     }
   ]
 }
