@@ -210,43 +210,40 @@ class DockerSandbox:
         """Get container resource usage stats"""
         if not self.container:
             return {}
-    
+        
         try:
             stats = self.container.stats(stream=False)
-        
+            
             # Calculate CPU usage percentage (handle missing system_cpu_usage)
             cpu_stats = stats.get('cpu_stats', {})
             precpu_stats = stats.get('precpu_stats', {})
-        
+            
             cpu_delta = cpu_stats.get('cpu_usage', {}).get('total_usage', 0) - \
                        precpu_stats.get('cpu_usage', {}).get('total_usage', 0)
-        
+            
             system_delta = cpu_stats.get('system_cpu_usage', 0) - \
                           precpu_stats.get('system_cpu_usage', 0)
-        
+            
             if system_delta > 0 and cpu_delta > 0:
                 cpu_percent = (cpu_delta / system_delta) * 100.0
             else:
-               cpu_percent = 0.0
-        
+                cpu_percent = 0.0
+            
             # Memory usage
             memory_stats = stats.get('memory_stats', {})
             memory_usage = memory_stats.get('usage', 0)
             memory_limit = memory_stats.get('limit', 1)
             memory_percent = (memory_usage / memory_limit) * 100.0 if memory_limit > 0 else 0.0
-        
+            
             return {
                 'cpu_percent': round(cpu_percent, 2),
                 'memory_usage_mb': round(memory_usage / (1024 * 1024), 2),
                 'memory_percent': round(memory_percent, 2),
                 'container_id': self.container_id
             }
-        
-    except Exception as e:
-        # Silently fail - stats are nice to have but not critical
-        return {}            
+            
         except Exception as e:
-            console.print(f"[yellow]⚠[/yellow]  Could not get stats: {e}")
+            # Silently fail - stats are nice to have but not critical
             return {}
     
     def __enter__(self):
