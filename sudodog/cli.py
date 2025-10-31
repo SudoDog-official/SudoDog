@@ -21,8 +21,8 @@ def cli():
     """🐕 SudoDog - Sandboxing and monitoring for AI agents in one command"""
     pass
 
-@cli.command()
-@click.argument('command', nargs=-1, required=True)
+@cli.command(context_settings=dict(ignore_unknown_options=True))
+@click.argument('command', nargs=-1, required=True, type=click.UNPROCESSED)
 @click.option('--policy', '-p', default='default', help='Security policy to use')
 @click.option('--log-level', '-l', default='info', help='Logging level')
 @click.option('--docker', is_flag=True, help='Use Docker sandbox (stronger isolation)')
