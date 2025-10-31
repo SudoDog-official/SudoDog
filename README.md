@@ -1,8 +1,8 @@
 # SudoDog 🐕
 
-**Secure sandbox for AI agents. Blocks dangerous operations, monitors behavior, full audit trail.**
+**Secure sandbox for AI agents. Docker isolation, real-time monitoring, complete audit trail.**
 
-Deploy agents safely with automatic sandboxing, behavioral monitoring, and rollback capabilities.
+Deploy agents safely with automatic sandboxing, behavioral monitoring, resource limits, and rollback capabilities.
 
 ## The Problem
 
@@ -11,11 +11,12 @@ AI agents can delete databases, leak customer data, and rack up massive API bill
 ## The Solution
 
 SudoDog wraps your AI agents in a secure sandbox that:
-- ✅ Intercepts all system calls
-- ✅ Applies security policies automatically  
-- ✅ Logs every action with full audit trail
-- ✅ Blocks dangerous operations before they execute
-- ✅ Provides instant rollback capabilities
+- ✅ **Docker container isolation** - Strong sandboxing with resource limits
+- ✅ **Real-time monitoring** - Background daemon tracks all agents
+- ✅ **Pattern detection** - Blocks dangerous SQL and shell commands
+- ✅ **Complete audit trail** - Logs every action with timestamps
+- ✅ **Instant rollback** - Undo file operations by session
+- ✅ **Resource limits** - CPU and memory caps per agent
 
 ## How is SudoDog Different?
 
@@ -27,10 +28,11 @@ Unlike general-purpose sandboxing tools (Sandboxie, Firejail, Docker), SudoDog i
 |---------|------------------|---------|
 | **SQL Injection Detection** | ❌ | ✅ Detects `DROP TABLE`, `DELETE FROM`, etc. |
 | **Shell Command Analysis** | ❌ | ✅ Flags `rm -rf`, `curl \| bash`, etc. |
-| **Behavioral Monitoring** | ❌ | ✅ Tracks patterns over time |
+| **Real-time Monitoring** | ❌ | ✅ Background daemon tracks CPU/memory |
+| **Resource Limits** | ⚠️ Manual | ✅ Automatic per-agent (CPU, memory) |
 | **Session-Based Audit** | ❌ | ✅ Links conversations → actions |
 | **Semantic Rollback** | ❌ | ✅ Undo by logical operation |
-| **Network Isolation** | ⚠️ Manual | ✅ Automatic per-agent |
+| **Multi-Container Management** | ❌ | ✅ Monitor all agents from one dashboard |
 
 ### The Key Difference
 
@@ -47,20 +49,37 @@ agent.run("DROP TABLE users")  # ❌ Blocked: no database access
 agent.run("DROP TABLE users")  # ✅ Intercepted, analyzed, blocked
                                # 📝 Logged: "Agent attempted DROP TABLE"
                                # 🚨 Alert: "Destructive SQL detected"
+                               # 📊 Daemon: Real-time stats tracked
 ```
 
 SudoDog doesn't just block—it **understands and explains** what happened.
 
 ## Installation
+
+### Quick Install
 ```bash
 curl -sL https://sudodog.com/install.sh | bash
 ```
 
-Or install from source:
+### With Docker Support (Recommended for Production)
+```bash
+# Install SudoDog
+curl -sL https://sudodog.com/install.sh | bash
+
+# Install Docker
+curl -fsSL https://get.docker.com | sudo sh
+sudo usermod -aG docker $USER
+# Log out and log back in
+
+# Initialize SudoDog
+sudodog init
+```
+
+### From Source
 ```bash
 git clone https://github.com/SudoDog-official/sudodog
 cd sudodog
-pip install -e .
+pip3 install -e . --break-system-packages
 ```
 
 ## Quick Start
@@ -71,18 +90,48 @@ sudodog init
 ```
 
 ### 2. Run your AI agent
+
+**Basic (namespace isolation):**
 ```bash
 sudodog run python my_agent.py
 ```
 
-That's it! SudoDog will monitor and protect your agent automatically.
+**Docker (stronger isolation + resource limits):**
+```bash
+sudodog run --docker python my_agent.py
+```
+
+**With resource limits:**
+```bash
+sudodog run --docker --cpu-limit 2.0 --memory-limit 1g python my_agent.py
+```
+
+### 3. Start background monitoring
+```bash
+# Start daemon in foreground (see logs)
+sudodog daemon start --foreground
+
+# Or start in background
+sudodog daemon start
+
+# Check status
+sudodog daemon status
+```
+
+That's it! SudoDog will monitor and protect your agents automatically.
 
 ## Usage
 
 ### Run an agent
 ```bash
-# Run with default policy
+# Run with default security (namespace)
 sudodog run python agent.py
+
+# Run with Docker (stronger isolation)
+sudodog run --docker python agent.py
+
+# Run with resource limits
+sudodog run --docker --cpu-limit 2.0 --memory-limit 1g python agent.py
 
 # Run with custom policy
 sudodog run --policy strict python agent.py
@@ -92,16 +141,30 @@ sudodog run node agent.js
 sudodog run ./agent.sh
 ```
 
+### Background monitoring
+```bash
+# Start daemon
+sudodog daemon start                  # Background
+sudodog daemon start --foreground     # Foreground (see logs)
+
+# Check status (shows all running containers with stats)
+sudodog daemon status
+
+# Stop daemon
+sudodog daemon stop
+```
+
 ### Check status
 ```bash
-sudodog status
+sudodog status        # Active sessions
+sudodog daemon status # Daemon + container stats
 ```
 
 ### View logs
 ```bash
-sudodog logs
-sudodog logs --last 20
-sudodog logs --session 20251030_133048
+sudodog logs                      # Last 10 actions
+sudodog logs --last 50            # Last 50 actions
+sudodog logs --session <id>       # Specific session
 ```
 
 ### List security policies
@@ -118,14 +181,61 @@ sudodog rollback <session-id>
 sudodog rollback <session-id> --steps 10
 ```
 
+## Docker vs Namespace Isolation
+
+| Feature | Namespace (default) | Docker (--docker) |
+|---------|-------------------|-------------------|
+| Isolation strength | Basic | Strong |
+| Resource limits | ❌ | ✅ CPU & Memory |
+| Network isolation | ⚠️ Basic | ✅ Configurable |
+| Escape prevention | ⚠️ Possible | ✅ Very difficult |
+| Setup required | None | Docker install |
+| Speed | Fast | Slightly slower (first run) |
+| Real-time monitoring | ❌ | ✅ Via daemon |
+
+**Recommendation:** Use `--docker` for production agents, namespace for quick testing.
+
+## Real-Time Monitoring with Daemon
+
+The SudoDog daemon monitors all Docker containers in real-time:
+
+```bash
+# Start daemon
+$ sudodog daemon start
+
+# In another terminal, run agents
+$ sudodog run --docker python agent1.py
+$ sudodog run --docker python agent2.py
+
+# Check status - see live stats!
+$ sudodog daemon status
+
+✓ Daemon is running (PID: 95100)
+Last check: 2025-10-30T16:42:40.984222
+Active containers: 2
+
+┌─────────────┬──────────────────┬───────┬──────────┬────────┐
+│ Container   │ Session          │ CPU%  │ Memory%  │ Alerts │
+├─────────────┼──────────────────┼───────┼──────────┼────────┤
+│ c3b2d252a7e8│ 20251030_164230  │ 2.3   │ 15.4     │ 0      │
+│ a1b3c4d5e6f7│ 20251030_164301  │ 45.8  │ 78.2     │ 1      │
+└─────────────┴──────────────────┴───────┴──────────┴────────┘
+```
+
+Features:
+- **Real-time stats** - CPU and memory usage per container
+- **Alert system** - Triggers when thresholds exceeded (80% CPU/memory)
+- **Multi-container tracking** - See all agents at once
+- **Alert history** - Logged to `~/.sudodog/alerts.jsonl`
+
 ## Security Policies
 
-SudoDog comes with sensible defaults that block:
+SudoDog comes with sensible defaults that detect:
 - Access to sensitive files (`/etc/shadow`, `/etc/passwd`, `.env` files, SSH keys)
 - Destructive database operations (`DROP TABLE`, `DELETE FROM`, `TRUNCATE`)
 - Dangerous file operations (`rm -rf /`, `chmod 777`)
 - System-level changes (`mkfs`, fork bombs)
-- Network exfiltration attempts
+- Dangerous shell patterns (`curl | bash`, `wget | sh`)
 
 ### Custom Policies
 
@@ -163,75 +273,99 @@ sudodog run --policy strict python agent.py
 ```
 
 ## How It Works
+
+### Architecture
 ```
-AI Agent → SudoDog → Your System
-           ↓
-        ✓ Pattern Analysis
-        ✓ Policy Check
-        ✓ Sandbox Isolation
-        ✓ Log Action
-        ✓ Allow/Block
+AI Agent → SudoDog CLI → Docker Container
+              ↓              ↓
+        Pattern Analysis   Isolated Execution
+        Policy Check       Resource Limits
+        Daemon Monitoring  Network Isolation
+        Audit Logging      
+              ↓
+        Allow/Block Decision
 ```
 
 SudoDog provides multiple layers of protection:
 
 1. **Pre-execution Analysis** - Scans commands for dangerous patterns before execution
-2. **Namespace Isolation** - Runs agents in isolated Linux namespaces (network, PID, IPC)
-3. **Behavioral Monitoring** - Tracks file access and system calls during execution
-4. **Audit Logging** - Records all actions with timestamps to `~/.sudodog/logs/`
-5. **Rollback Support** - Creates backups of modified files for instant recovery
+2. **Container Isolation** - Runs agents in isolated Docker containers with resource limits
+3. **Real-time Monitoring** - Background daemon tracks CPU, memory, and alerts on thresholds
+4. **Behavioral Monitoring** - Tracks file access and system calls during execution
+5. **Audit Logging** - Records all actions with timestamps to `~/.sudodog/logs/`
+6. **Rollback Support** - Creates backups of modified files for instant recovery
+
+### System Architecture
+```
+┌─────────────────────────────────────────────────┐
+│            SudoDog Daemon (Background)          │
+│  - Real-time container monitoring               │
+│  - CPU/Memory tracking                          │
+│  - Alert system                                 │
+│  - Multi-container management                   │
+└─────────────────────────────────────────────────┘
+                    ↓
+┌─────────────────────────────────────────────────┐
+│              SudoDog CLI                        │
+├─────────────────────────────────────────────────┤
+│  ┌──────────────┐  ┌──────────────────┐        │
+│  │   Monitor    │  │  Policy Engine   │        │
+│  │              │  │                  │        │
+│  │ • Logging    │  │ • Pattern Match  │        │
+│  │ • Tracking   │  │ • File Checks    │        │
+│  │ • Sessions   │  │ • Load Configs   │        │
+│  └──────────────┘  └──────────────────┘        │
+│                                                 │
+│  ┌──────────────┐  ┌──────────────────┐        │
+│  │Docker Sandbox│  │    Rollback      │        │
+│  │              │  │                  │        │
+│  │ • Containers │  │ • File Backup    │        │
+│  │ • Isolation  │  │ • Restore        │        │
+│  │ • Resources  │  │ • Operations     │        │
+│  └──────────────┘  └──────────────────┘        │
+└─────────────────────────────────────────────────┘
+                    ↓
+        ┌───────────────────────┐
+        │   Docker Containers   │
+        │  Agent 1 | Agent 2    │
+        │  (isolated, limited)  │
+        └───────────────────────┘
+```
 
 ## Features
 
-### ✅ Implemented
+### ✅ Implemented (Production Ready)
 
-- 🔒 **Linux Namespace Sandboxing** - Network isolation, PID isolation, user namespaces
-- 🛡️ **Pattern-based Blocking** - SQL injection, dangerous commands, file operations
+- 🐳 **Docker Container Isolation** - Strong isolation with full filesystem separation
+- 💪 **Resource Limits** - CPU and memory caps per agent
+- 👁️ **Background Daemon** - Real-time monitoring of all containers
+- 📊 **Real-time Stats** - Live CPU/Memory tracking with alerts
+- 🛡️ **Pattern-based Detection** - SQL injection, dangerous commands, file operations
 - 👁️ **Behavioral Monitoring** - Track every file access and system call
-- 📊 **Complete Audit Trail** - Immutable logs with timestamps in JSONL format
+- 📋 **Complete Audit Trail** - Immutable logs with timestamps in JSONL format
 - ⏪ **File Rollback** - Automatic backups and instant recovery
 - 🎯 **Security Policy Engine** - Customizable policies loaded from config
 - 💻 **Rich CLI** - Beautiful colored output with multiple commands
-- 📋 **Session Management** - Track and manage multiple agent sessions
+- 📝 **Session Management** - Track and manage multiple agent sessions
+- 🔒 **Namespace Sandboxing** - Lightweight alternative to Docker
 
-### 🚧 Roadmap
+### ✅ Recently Added
 
-- [ ] Resource limits (CPU, memory, disk I/O)
-- [ ] Docker container support as alternative to namespaces
-- [ ] Real-time process monitoring with psutil
-- [ ] Advanced anomaly detection (excessive API calls, unusual patterns)
-- [ ] Web dashboard for monitoring
-- [ ] Team collaboration features
-- [ ] Cloud sync for logs
-- [ ] Integration with LLM providers (OpenAI, Anthropic, etc.)
+- [x] Docker container support with resource limits
+- [x] Background daemon for real-time monitoring
+- [x] CPU and memory usage tracking
+- [x] Alert system for threshold breaches
+- [x] Multi-container management
 
-## Architecture
-```
-┌─────────────────────────────────────────────┐
-│              SudoDog CLI                    │
-├─────────────────────────────────────────────┤
-│  ┌──────────────┐  ┌──────────────────┐    │
-│  │   Monitor    │  │  Policy Engine   │    │
-│  │              │  │                  │    │
-│  │ • Logging    │  │ • Pattern Match  │    │
-│  │ • Tracking   │  │ • File Checks    │    │
-│  │ • Sessions   │  │ • Load Configs   │    │
-│  └──────────────┘  └──────────────────┘    │
-│                                             │
-│  ┌──────────────┐  ┌──────────────────┐    │
-│  │   Sandbox    │  │    Rollback      │    │
-│  │              │  │                  │    │
-│  │ • Namespaces │  │ • File Backup    │    │
-│  │ • Isolation  │  │ • Restore        │    │
-│  │ • unshare    │  │ • Operations     │    │
-│  └──────────────┘  └──────────────────┘    │
-└─────────────────────────────────────────────┘
-                    ↓
-        ┌───────────────────────┐
-        │    User's Command     │
-        │  (Python, Node, etc)  │
-        └───────────────────────┘
-```
+### 🚧 Roadmap (Coming Soon)
+
+- [ ] **Web Dashboard** - Visual interface with charts and graphs
+- [ ] **Email/Slack Alerts** - Real-time notifications when issues detected
+- [ ] **Multi-server Support** - Monitor agents across multiple machines
+- [ ] **Advanced Anomaly Detection** - ML-based pattern recognition
+- [ ] **Cost Monitoring** - Track API spend per agent
+- [ ] **Team Collaboration** - Multi-user access with permissions
+- [ ] **Cloud Sync** - Centralized log storage and analysis
 
 ## Use Cases
 
@@ -243,7 +377,7 @@ Test agents safely in development with automatic sandboxing that catches dangero
 ### For CTOs
 "AI agents with an undo button and full audit trail."
 
-Deploy agents in production with confidence. Rollback capabilities for when things go wrong. Complete audit trail of every action.
+Deploy agents in production with confidence. Docker isolation, resource limits, and real-time monitoring. Rollback capabilities for when things go wrong.
 
 ### For Compliance
 "Prove exactly what your AI did (and didn't do)."
@@ -252,22 +386,62 @@ Meet regulatory requirements with immutable logs of all agent actions. Demonstra
 
 ## Examples
 
-### Block SQL Injection
+### Block Dangerous Commands
 ```bash
 $ sudodog run echo "DROP TABLE users"
 
-🚨 BLOCKED: Command contains dangerous patterns: DROP\s+TABLE
+🐕 SudoDog AI Agent Security
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔍 Checking command for dangerous patterns...
+🚨 BLOCKED: Command contains dangerous patterns
    Command: echo DROP TABLE users
-   Matched patterns: DROP\s+TABLE
+   Matched patterns: DROP TABLE
+
+Total actions: 2
+Blocked actions: 1
 ```
 
-### Sandbox with Network Isolation
+### Docker Sandbox with Resource Limits
 ```bash
-$ sudodog run python agent.py
+$ sudodog run --docker --cpu-limit 2.0 --memory-limit 1g python agent.py
 
-🔒 Creating sandbox environment...
-Isolated: network, PID
-✓ Sandboxed process started (PID: 12345)
+🐕 SudoDog AI Agent Security
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🐳 Using Docker sandbox
+🐳 Creating Docker container...
+   Network: enabled
+   CPU limit: 2.0 cores
+   Memory limit: 1g
+✓ Container created: d2dcfb3e93d6
+▶ Starting container d2dcfb3e93d6...
+✓ Container running
+
+[Agent output...]
+
+✓ Container exited with code 0
+CPU: 15.3% | Memory: 245.8MB
+```
+
+### Real-Time Monitoring
+```bash
+$ sudodog daemon start --foreground
+
+✓ SudoDog daemon started (PID: 95100)
+Monitoring interval: 5s
+
+[Monitoring containers in real-time...]
+
+$ sudodog daemon status
+
+✓ Daemon is running (PID: 95100)
+Last check: 2025-10-30T16:42:40.984222
+Active containers: 1
+
+┌─────────────┬──────────────────┬───────┬──────────┬────────┐
+│ Container   │ Session          │ CPU%  │ Memory%  │ Alerts │
+├─────────────┼──────────────────┼───────┼──────────┼────────┤
+│ c3b2d252a7e8│ 20251030_164230  │ 2.3   │ 15.4     │ 0      │
+└─────────────┴──────────────────┴───────┴──────────┴────────┘
 ```
 
 ### Rollback File Changes
@@ -282,17 +456,27 @@ $ sudodog rollback 20251030_133048
 
 ## Requirements
 
+### Basic Requirements
 - Linux (Ubuntu, Debian, Arch, Fedora, etc.)
 - Python 3.8+
+
+### For Docker Support (Recommended)
+- Docker 20.10+
+- User added to `docker` group
+
+### For Namespace Mode
 - `unshare` command (part of util-linux, pre-installed on most Linux systems)
 - User namespace support (enabled by default on modern Linux)
 
 ## Development Status
 
-SudoDog is currently in **beta**. Core features are working and stable:
+SudoDog is currently in **production beta**. Core features are working and stable:
 
-- ✅ Pattern-based blocking
-- ✅ Linux namespace sandboxing  
+- ✅ Docker container isolation
+- ✅ Real-time monitoring daemon
+- ✅ Resource limits (CPU, memory)
+- ✅ Pattern-based detection
+- ✅ Namespace sandboxing  
 - ✅ Behavioral monitoring
 - ✅ Audit logging
 - ✅ File rollback
@@ -301,19 +485,24 @@ SudoDog is currently in **beta**. Core features are working and stable:
 ## Contributing
 
 SudoDog is open source! Contributions welcome.
+
 ```bash
 git clone https://github.com/SudoDog-official/sudodog
 cd sudodog
-pip install -e .
-
-# Run tests
-python -m pytest tests/
+pip3 install -e . --break-system-packages
 
 # Test the CLI
-sudodog run echo "test"
+sudodog init
+sudodog run --docker python -c "print('Hello from Docker!')"
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
+
+## Documentation
+
+- **Quick Start**: See [QUICKSTART.md](QUICKSTART.md) for a 5-minute guide
+- **Examples**: See `examples/` directory for sample agents
+- **Website**: [sudodog.com](https://sudodog.com)
 
 ## License
 
@@ -336,4 +525,4 @@ MIT License - see [LICENSE](LICENSE) file for details
 
 **Built for developers who value security without complexity.**
 
-🐕 [sudodog.com](https://sudodog.com) | [GitHub](https://github.com/SudoDog-official/sudodog)
+🐕 [sudodog.com](https://sudodog.com) | [GitHub](https://github.com/SudoDog-official/sudodog) | [Docs](https://sudodog.com/docs)
