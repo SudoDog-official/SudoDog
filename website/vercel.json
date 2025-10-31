@@ -9,6 +9,14 @@
   ],
   "rewrites": [
     {
+      "source": "/api/telemetry/v1/events",
+      "destination": "/api/telemetry.py"
+    },
+    {
+      "source": "/api/telemetry",
+      "destination": "/api/telemetry.py"
+    },
+    {
       "source": "/:path*",
       "destination": "/install.sh",
       "has": [
@@ -17,14 +25,6 @@
           "value": "install.sudodog.com"
         }
       ]
-    },
-    {
-      "source": "/api/telemetry",
-      "destination": "/api/telemetry"
-    },
-    {
-      "source": "/api/telemetry/v1/events",
-      "destination": "/api/telemetry"
     }
   ],
   "headers": [
@@ -37,11 +37,5 @@
         }
       ]
     }
-  ],
-  "functions": {
-    "api/telemetry.py": {
-      "memory": 1024,
-      "maxDuration": 10
-    }
-  }
+  ]
 }
