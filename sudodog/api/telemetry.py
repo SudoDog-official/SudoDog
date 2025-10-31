@@ -10,11 +10,9 @@ class handler(BaseHTTPRequestHandler):
     
     def do_POST(self):
         """Handle POST requests from SudoDog clients"""
-        
-        # Only accept POST to /v1/events
-        if not self.path.startswith('/v1/events'):
-            self.send_error(404, "Not Found")
-            return
+    
+        # Accept any POST path (Vercel routes to this function)
+        # No path checking needed            return
         
         try:
             # Read request body
