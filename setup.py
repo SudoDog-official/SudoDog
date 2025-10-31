@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="sudodog",
-    version="0.1.0",
+    version="0.2.0",
     author="SudoDog",
     author_email="support@sudodog.com",  # Or use your GitHub email
     description="Secure sandbox for AI agents. Blocks dangerous operations, monitors behavior, full audit trail.",
