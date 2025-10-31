@@ -7,12 +7,11 @@ import click
 from rich.console import Console
 from rich.panel import Panel
 from rich import box
-
 from .telemetry import get_telemetry
 from .telemetry_ui import (
     show_telemetry_prompt,
     show_telemetry_status,
-    show_what_we_collect
+    show_telemetry_info
 )
 
 console = Console()
@@ -30,18 +29,15 @@ def telemetry_enable():
     telemetry = get_telemetry()
     
     if telemetry.is_enabled():
-        console.print("[yellow]✓[/yellow] Analytics are already enabled")
+        console.print("\n[yellow]✓[/yellow] Analytics are already enabled\n")
         return
     
-    console.print()
     telemetry.enable()
     
-    console.print("[green]✓[/green] Anonymous analytics enabled")
-    console.print(f"[dim]Anonymous ID: {telemetry.anonymous_id}[/dim]")
-    console.print()
+    console.print("\n[green]✓[/green] Anonymous analytics enabled")
+    console.print(f"[dim]Anonymous ID: {telemetry.anonymous_id}[/dim]\n")
     console.print("[dim]View what we collect: sudodog telemetry info[/dim]")
-    console.print("[dim]Check status: sudodog telemetry status[/dim]")
-    console.print()
+    console.print("[dim]Check status: sudodog telemetry status[/dim]\n")
 
 
 @telemetry_group.command(name='disable')
@@ -50,17 +46,14 @@ def telemetry_disable():
     telemetry = get_telemetry()
     
     if not telemetry.is_enabled():
-        console.print("[yellow]○[/yellow] Analytics are already disabled")
+        console.print("\n[yellow]○[/yellow] Analytics are already disabled\n")
         return
     
-    console.print()
     telemetry.disable()
     
-    console.print("[green]✓[/green] Anonymous analytics disabled")
-    console.print()
+    console.print("\n[green]✓[/green] Anonymous analytics disabled\n")
     console.print("We're no longer collecting any data.")
-    console.print("[dim]You can re-enable anytime with: sudodog telemetry enable[/dim]")
-    console.print()
+    console.print("[dim]You can re-enable anytime with: sudodog telemetry enable[/dim]\n")
 
 
 @telemetry_group.command(name='status')
@@ -69,16 +62,13 @@ def telemetry_status():
     telemetry = get_telemetry()
     status = telemetry.get_status()
     
-    show_telemetry_status(
-        enabled=status['enabled'],
-        anonymous_id=status.get('anonymous_id')
-    )
+    show_telemetry_status(status)
 
 
 @telemetry_group.command(name='info')
 def telemetry_info():
     """Show detailed information about telemetry"""
-    show_what_we_collect()
+    show_telemetry_info()
 
 
 @telemetry_group.command(name='opt-in')
@@ -88,12 +78,12 @@ def telemetry_opt_in(force):
     telemetry = get_telemetry()
     
     if telemetry.is_enabled():
-        console.print("[green]✓[/green] Analytics are already enabled")
+        console.print("\n[green]✓[/green] Analytics are already enabled\n")
         return
     
     if force:
         telemetry.enable()
-        console.print("[green]✓[/green] Anonymous analytics enabled")
+        console.print("\n[green]✓[/green] Anonymous analytics enabled\n")
         return
     
     # Show the interactive prompt
