@@ -447,5 +447,9 @@ def version():
 from .cli_telemetry import add_telemetry_commands
 add_telemetry_commands(cli)
 
+# Add telemetry commands
+from .cli_telemetry import add_telemetry_commands
+add_telemetry_commands(cli)
+
 if __name__ == '__main__':
     cli()
