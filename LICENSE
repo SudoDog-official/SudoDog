@@ -19,3 +19,59 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+================================================================================
+TELEMETRY ADDENDUM
+================================================================================
+
+This software includes optional anonymous telemetry collection as described in
+TELEMETRY.md and PRIVACY.md. The following terms apply to telemetry:
+
+1. TRANSPARENCY REQUIREMENTS
+   If you distribute a modified version of this software (fork, derivative work,
+   or redistribution), you MUST:
+   
+   a) Retain the telemetry opt-in prompt shown during installation/setup
+   b) Keep all privacy disclosures (PRIVACY.md, TELEMETRY.md) intact
+   c) Display telemetry status clearly in CLI (e.g., `sudodog telemetry status`)
+   d) Maintain telemetry as OPT-IN (disabled by default)
+
+2. PERMITTED MODIFICATIONS
+   You MAY:
+   
+   a) Completely remove all telemetry code from your fork
+   b) Disable telemetry by default
+   c) Add your own separate telemetry system (with separate disclosure)
+   d) Modify the telemetry backend endpoint to your own infrastructure
+
+3. PROHIBITED MODIFICATIONS
+   You MAY NOT:
+   
+   a) Enable telemetry by default without explicit user consent
+   b) Hide the existence of telemetry from users
+   c) Collect personally identifiable information (PII) through telemetry
+   d) Remove privacy disclosures while keeping telemetry code
+   e) Modify telemetry to be less transparent than the original
+
+4. ATTRIBUTION
+   If you operate a fork with modified telemetry:
+   
+   a) Clearly state that your fork collects different telemetry data
+   b) Provide your own PRIVACY.md describing what you collect
+   c) Do not imply that your fork is endorsed by the original authors
+
+5. COMPLIANCE
+   Violation of these telemetry terms does not revoke the MIT License, but:
+   
+   a) You may be asked to comply or remove telemetry features
+   b) You must clearly label your fork as "unofficial" or "modified"
+   c) Original authors reserve the right to public disclosure of violations
+
+6. RATIONALE
+   This addendum protects users' privacy rights while allowing the original
+   authors to maintain a competitive advantage through proprietary usage data.
+   Forks are encouraged, but must maintain the same privacy standards.
+
+For questions about telemetry compliance, see: TELEMETRY.md
+For privacy policy, see: PRIVACY.md
+For source code, see: https://github.com/SudoDog-official/sudodog
