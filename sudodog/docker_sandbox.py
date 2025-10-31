@@ -240,7 +240,7 @@ class DockerSandbox:
                 'memory_usage_mb': round(memory_usage / (1024 * 1024), 2),
                 'memory_percent': round(memory_percent, 2),
                 'container_id': self.container_id
-        }
+            }
         
     except Exception as e:
         # Silently fail - stats are nice to have but not critical
