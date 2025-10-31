@@ -70,7 +70,18 @@ class AgentBlocker:
     
         # Load patterns from policy or use defaults
         patterns = self.policy_config.get('block_patterns', self.DANGEROUS_PATTERNS)
-        self.compiled_patterns = [re.compile(p, re.IGNORECASE) for p in patterns if p and p.strip()]
+        
+        # Filter and validate patterns before compiling
+        valid_patterns = []
+        for p in patterns:
+            if p and p.strip():
+                try:
+                    re.compile(p, re.IGNORECASE)  # Test compile
+                    valid_patterns.append(p)
+                except re.error:
+                    print(f"Warning: Skipping invalid regex pattern: {p}")
+                    
+        self.compiled_patterns = [re.compile(p, re.IGNORECASE) for p in valid_patterns]
 
     def _load_config(self):
         """Load config from ~/.sudodog/config.json"""
