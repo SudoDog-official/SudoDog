@@ -39,6 +39,10 @@
           <a class="btn primary lg" href="#install">Get Started Free</a>
           <a class="btn ghost lg" href="#demo">See It In Action</a>
         </div>
+        <p class="sub center" style="margin-top: 20px;">
+          <a href="https://github.com/SudoDog-official/sudodog/blob/main/QUICKSTART.md" style="color: #667eea; text-decoration: underline;">📖 Read the 5-Minute Tutorial</a> •
+          <a href="https://github.com/SudoDog-official/sudodog#readme" style="color: #667eea; text-decoration: underline;">📚 Full Documentation</a>
+        </p>
       </div>
       <div class="hero-terminal card">
         <div class="term-top">
@@ -115,6 +119,7 @@
           <p>Production-grade security, free forever</p>
           <ul>
             <li>Unlimited agents</li>
+            <li><strong>Sample agents included</strong> - ready to run</li>
             <li><strong>Custom Docker images</strong> (v0.2.0)</li>
             <li><strong>CPU & memory limits</strong></li>
             <li><strong>Real-time daemon monitoring</strong></li>
@@ -173,27 +178,43 @@
 
     <section class="container code" id="install">
       <h2>Get Started in 30 Seconds</h2>
-      <p class="sub center">Install SudoDog and Docker, then run any agent securely.</p>
-<pre class="codeblock"><code class="lang"># Install SudoDog
+      <p class="sub center">Install SudoDog, run your first agent, see the security features in action.</p>
+<pre class="codeblock"><code class="lang"># Step 1: Install SudoDog (creates sample agents in ~/sudodog-examples)
 curl -sL https://sudodog.com/install.sh | bash
 
-# Install Docker (optional, for stronger isolation)
-curl -fsSL https://get.docker.com | sudo sh
-
-# Initialize
+# Step 2: Initialize SudoDog
 sudodog init
+
+# Step 3: Run your first agent!
+sudodog run python ~/sudodog-examples/hello_agent.py
+
+# Step 4: View the security audit trail
+sudodog logs
+</code></pre>
+
+      <h3 style="margin-top: 60px; text-align: center;">Advanced: Docker + Real-time Monitoring</h3>
+      <p class="sub center">For production-grade isolation, install Docker and unlock all features</p>
+<pre class="codeblock"><code class="lang"># Install Docker (one-time setup)
+curl -fsSL https://get.docker.com | sudo sh
+sudo usermod -aG docker $USER
+# Log out and back in for docker group to take effect
+
+# Run agent with Docker isolation
+sudodog run --docker python ~/sudodog-examples/demo_agent.py
+
+# Start real-time monitoring daemon
+sudodog daemon start
 
 # Run with custom image and resource limits
 sudodog run --docker --image my-agent:latest \
   --cpu-limit 2.0 --memory-limit 1g python agent.py
 
-# Start background monitoring
-sudodog daemon start
-
-# Check telemetry status
-sudodog telemetry status</code></pre>
+# Check container stats
+sudodog daemon status
+</code></pre>
       <p class="sub center">Works on Ubuntu, Debian, Arch, Fedora, and most Linux distributions.</p>
-      <p class="sub center" style="margin-top: 20px;"><strong>Open Source:</strong> <a href="https://github.com/SudoDog-official/sudodog" style="color: #667eea;">View on GitHub</a> • MIT License</p>
+      <p class="sub center" style="margin-top: 20px;"><strong>📚 Full Documentation:</strong> <a href="https://github.com/SudoDog-official/sudodog#readme" style="color: #667eea;">Quick Start Guide</a> • <a href="https://github.com/SudoDog-official/sudodog/blob/main/QUICKSTART.md" style="color: #667eea;">5-Minute Tutorial</a></p>
+      <p class="sub center"><strong>Open Source:</strong> <a href="https://github.com/SudoDog-official/sudodog" style="color: #667eea;">View on GitHub</a> • MIT License</p>
     </section>
   </main>
 

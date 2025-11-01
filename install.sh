@@ -93,9 +93,100 @@ fi
 echo ""
 echo "✅ SudoDog installed successfully!"
 echo ""
-echo "Quick start:"
-echo "  sudodog init          # Initialize SudoDog"
-echo "  sudodog run python your_agent.py"
+
+# Create examples directory with sample agents
+echo "📝 Creating sample agents..."
+mkdir -p ~/sudodog-examples
+cd ~/sudodog-examples
+
+# Create hello world agent
+cat > hello_agent.py << 'EOF'
+#!/usr/bin/env python3
+"""Simple Hello World Agent - Your First SudoDog Agent"""
+import time
+
+print("🤖 Hello from your AI agent!")
+print("✓ SudoDog is protecting this execution\n")
+
+print("Performing safe operations...")
+time.sleep(0.5)
+
+with open('/tmp/sudodog_hello.txt', 'w') as f:
+    f.write("Hello from SudoDog!\n")
+    f.write(f"Timestamp: {time.time()}\n")
+
+print("✓ Created file: /tmp/sudodog_hello.txt\n")
+print("Success! Your SudoDog installation is working.")
+print("Next steps:")
+print("  1. Run: sudodog logs")
+print("  2. Try: sudodog run python ~/sudodog-examples/demo_agent.py")
+EOF
+
+# Create demo agent
+cat > demo_agent.py << 'EOF'
+#!/usr/bin/env python3
+"""Demo AI Agent - Shows SudoDog security features in action"""
+import time
+import sys
+
+print("🤖 AI Agent Starting...")
+time.sleep(1)
+
+print("\n[Safe Operation] Reading OS information...")
+try:
+    with open('/etc/os-release', 'r') as f:
+        lines = f.readlines()[:3]
+        for line in lines:
+            print(f"  {line.strip()}")
+except Exception as e:
+    print(f"  Error: {e}")
+time.sleep(1)
+
+print("\n[Safe Operation] Creating temporary file...")
+with open('/tmp/sudodog_test.txt', 'w') as f:
+    f.write("AI agent was here\n")
+print(f"  ✓ Created: /tmp/sudodog_test.txt")
+time.sleep(1)
+
+print("\n[Dangerous Operation] Attempting to read /etc/shadow...")
+try:
+    with open('/etc/shadow', 'r') as f:
+        content = f.read()
+except PermissionError:
+    print("  ✓ Blocked by container isolation")
+except Exception as e:
+    print(f"  ✓ Blocked: {type(e).__name__}")
+time.sleep(1)
+
+print("\n[Dangerous Operation] Simulating database query...")
+print("  Query: DROP TABLE customers;")
+print("  ⚠️ Pattern detected by SudoDog!")
+
+print("\n✓ Demo complete! Run 'sudodog logs' to see the audit trail")
+sys.exit(0)
+EOF
+
+chmod +x hello_agent.py demo_agent.py
+echo "  ✓ Created ~/sudodog-examples/"
+
 echo ""
-echo "Documentation: https://github.com/SudoDog-official/sudodog"
-echo "Support: support@sudodog.com"
+echo "🎉 Ready to go! Try these commands:"
+echo ""
+echo "  # 1. Initialize SudoDog"
+echo "  sudodog init"
+echo ""
+echo "  # 2. Run your first agent (basic isolation)"
+echo "  sudodog run python ~/sudodog-examples/hello_agent.py"
+echo ""
+echo "  # 3. Run with Docker (stronger isolation + monitoring)"
+echo "  sudodog run --docker python ~/sudodog-examples/demo_agent.py"
+echo ""
+echo "  # 4. View the security audit trail"
+echo "  sudodog logs"
+echo ""
+echo "📚 Documentation: https://github.com/SudoDog-official/sudodog#readme"
+echo "💡 Need help? support@sudodog.com"
+echo ""
+echo "Note: For Docker features, install Docker first:"
+echo "  curl -fsSL https://get.docker.com | sudo sh"
+echo ""
