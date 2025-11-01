@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SudoDog — AI Agent Sandbox & Security Monitoring</title>
-  <meta name="description" content="Docker-isolated sandbox for AI agents. Real-time monitoring, resource limits, complete audit trail. Deploy agents safely with production-grade security.">
+  <title>SudoDog — Monitor All Your AI Agents In One Place</title>
+  <meta name="description" content="Complete visibility for AI agents. Real-time monitoring, audit logs, pattern detection. Works with LangChain, AutoGPT, CrewAI, any framework. Zero integration.">
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,10 +33,10 @@
     <section class="hero container">
       <div class="hero-copy center">
         <img class="hero-logo" src="assets/hero_logo.png" alt="SudoDog logo">
-        <p class="lead">Secure any AI agent with one command. No code changes. No imports.</p>
-        <p class="lede-sub">Works with LangChain, AutoGPT, CrewAI, or any framework. Just prepend <code style="background: rgba(102, 126, 234, 0.1); padding: 2px 6px; border-radius: 3px;">sudodog run</code> to your existing command. Get Docker isolation, resource limits, pattern detection, and real-time monitoring instantly.</p>
+        <p class="lead">Monitor all your AI agents in one place</p>
+        <p class="lede-sub">See what every agent is doing. Real-time visibility, complete audit trail, resource monitoring. Works with LangChain, AutoGPT, CrewAI, or any framework. No code changes—just prepend <code style="background: rgba(102, 126, 234, 0.1); padding: 2px 6px; border-radius: 3px;">sudodog run</code>.</p>
         <div class="cta-row">
-          <a class="btn primary lg" href="#install">Get Started Free</a>
+          <a class="btn primary lg" href="#install">Start Monitoring Free</a>
           <a class="btn ghost lg" href="#demo">See It In Action</a>
         </div>
         <p class="sub center" style="margin-top: 20px;">
@@ -98,87 +98,85 @@
     </section>
 
     <section class="features container" id="features">
-      <h2>Complete Sandbox & Security Platform</h2>
+      <h2>Complete Visibility & Control For AI Agents</h2>
       <div class="grid grid-3">
-        <article class="feature card hoverlift"><div class="icbox">🐳</div><h3>Custom Docker Images</h3><p>Use your own Docker images with all dependencies pre-installed. Support for LangChain, AutoGPT, or any custom agent. Zero vendor lock-in.</p></article>
-        <article class="feature card hoverlift"><div class="icbox">💪</div><h3>Resource Limits</h3><p>Set CPU and memory limits per agent. Prevent runaway processes from consuming all system resources. Configurable limits per container.</p></article>
-        <article class="feature card hoverlift"><div class="icbox">👁️</div><h3>Real-Time Monitoring</h3><p>Background daemon tracks all containers. Live CPU and memory stats. Alerts when thresholds exceeded. Monitor multiple agents from one dashboard.</p></article>
-        <article class="feature card hoverlift"><div class="icbox">🛡️</div><h3>Pattern Detection</h3><p>Detects dangerous SQL (DROP TABLE, DELETE FROM) and shell commands (rm -rf, curl | bash) before execution using smart pattern matching.</p></article>
-        <article class="feature card hoverlift"><div class="icbox">📊</div><h3>Complete Audit Trail</h3><p>Immutable logs of every agent action in JSONL format. Track CPU, memory, and all operations. Perfect for compliance and debugging.</p></article>
-        <article class="feature card hoverlift"><div class="icbox">🔒</div><h3>Privacy-First Telemetry</h3><p>Optional anonymous analytics to improve threat detection. Fully transparent, opt-in only. See exactly what's collected. MIT License with Telemetry Addendum.</p></article>
+        <article class="feature card hoverlift"><div class="icbox">👁️</div><h3>Real-Time Monitoring</h3><p>See all agents at once. Live CPU and memory stats. Background daemon tracks every container. Know exactly what each agent is doing right now.</p></article>
+        <article class="feature card hoverlift"><div class="icbox">📊</div><h3>Complete Audit Trail</h3><p>Immutable logs of every agent action in JSONL format. Track all operations with timestamps. Perfect for debugging and compliance.</p></article>
+        <article class="feature card hoverlift"><div class="icbox">🛡️</div><h3>Pattern Detection</h3><p>Detects dangerous operations like SQL injection (DROP TABLE) and shell commands (rm -rf, curl | bash). Know when agents attempt risky actions.</p></article>
+        <article class="feature card hoverlift"><div class="icbox">🚀</div><h3>Framework-Agnostic</h3><p>Works with LangChain, AutoGPT, CrewAI, or any custom agent. Node.js, Python, Ruby—any language. No code changes needed.</p></article>
+        <article class="feature card hoverlift"><div class="icbox">💪</div><h3>Resource Monitoring</h3><p>Track CPU and memory usage per agent. Set resource limits to prevent runaway processes. Get alerts when thresholds are exceeded.</p></article>
+        <article class="feature card hoverlift"><div class="icbox">🐳</div><h3>Docker Isolation</h3><p>Run agents in isolated containers with custom images. Full dependency support. Strong isolation for production deployments.</p></article>
       </div>
     </section>
 
     <section class="pricing container" id="pricing">
-      <h2>Simple Pricing That Scales With You</h2>
-      <p class="sub center">Start free today, upgrade when you're ready for production features</p>
+      <h2>From CLI To Web Dashboard</h2>
+      <p class="sub center">Start monitoring locally, upgrade to web dashboard when you need team visibility</p>
       <div class="plans plans-3">
         <article class="plan card hoverlift">
-          <h3>Development</h3>
-          <p class="price">$0 <span>/ forever</span></p>
-          <p>Production-grade security, free forever</p>
+          <h3>Free</h3>
+          <p class="price-coming">Available Now</p>
+          <p>Monitor agents locally with CLI dashboard</p>
           <ul>
             <li>Unlimited agents</li>
-            <li><strong>Sample agents included</strong> - ready to run</li>
-            <li><strong>Custom Docker images</strong> (v0.2.0)</li>
-            <li><strong>CPU & memory limits</strong></li>
-            <li><strong>Real-time daemon monitoring</strong></li>
+            <li><strong>CLI dashboard</strong> - real-time monitoring</li>
+            <li><strong>Framework-agnostic</strong> - any agent, any language</li>
+            <li><strong>Docker isolation</strong> with custom images</li>
+            <li><strong>Resource monitoring</strong> - CPU & memory tracking</li>
             <li>Pattern detection (SQL, shell)</li>
-            <li>Local logging & audit trail</li>
+            <li>Local audit logs (JSONL)</li>
             <li>File rollback</li>
-            <li>Optional anonymous telemetry</li>
+            <li>Sample agents included</li>
             <li>Open source (MIT)</li>
             <li>Community support</li>
           </ul>
-          <a class="btn primary" href="#install">Get Started Free</a>
+          <a class="btn primary" href="#install">Start Monitoring Free</a>
         </article>
         <article class="plan card popular hoverlift">
           <div class="flag">Coming Soon</div>
-          <h3>Production</h3>
+          <h3>Pro</h3>
           <p class="price-coming">Join Waitlist</p>
-          <p>Threat intelligence from 10,000+ agents</p>
+          <p>Web dashboard for teams monitoring agents</p>
           <ul>
-            <li>Everything in Development</li>
+            <li>Everything in Free</li>
             <li><strong>Web dashboard</strong> - see all agents, all servers</li>
-            <li><strong>Threat intelligence feed</strong> - patterns from community</li>
-            <li><strong>Anomaly detection</strong> - ML-trained on your behavior</li>
+            <li><strong>ML-powered anomaly detection</strong> - trained on community data</li>
+            <li><strong>Threat intelligence feed</strong> - emerging patterns</li>
             <li><strong>Email/Slack alerts</strong> - instant notifications</li>
-            <li><strong>Cloud logging</strong> - never lose logs, search everything</li>
-            <li><strong>Historical analytics</strong> - spot trends</li>
-            <li><strong>Cost optimization</strong> - API spend tracking</li>
+            <li><strong>Cloud logging</strong> - searchable history</li>
+            <li><strong>Historical analytics</strong> - spot trends over time</li>
+            <li><strong>Team collaboration</strong> - up to 5 users</li>
             <li>Multi-server support</li>
-            <li>Team collaboration</li>
+            <li>30-day log retention</li>
             <li>Priority support</li>
           </ul>
           <a class="btn primary" href="https://forms.gle/mJuyEqe5cHnrAdu27">Join Waitlist</a>
-          <p class="pricing-note">Early adopters get 50% off for life</p>
         </article>
         <article class="plan card hoverlift">
           <div class="flag-muted">Coming Soon</div>
           <h3>Enterprise</h3>
           <p class="price-coming">Join Waitlist</p>
-          <p>Compliance automation & security analyst reviews</p>
+          <p>Advanced compliance and security for large teams</p>
           <ul>
-            <li>Everything in Production</li>
+            <li>Everything in Pro</li>
+            <li><strong>Unlimited team members</strong></li>
             <li><strong>SOC 2 compliance reports</strong> - auto-generated</li>
-            <li><strong>Security analyst reviews</strong> - weekly incident analysis</li>
-            <li><strong>Breach insurance</strong> - up to $1M coverage</li>
+            <li><strong>Custom data retention</strong> - 1 year+</li>
             <li>SSO integration (SAML, OAuth)</li>
-            <li>Custom data retention</li>
             <li>SIEM integration (Splunk, Datadog)</li>
             <li>On-premise deployment option</li>
-            <li>Custom integrations</li>
-            <li>Dedicated support & SLA</li>
+            <li>Custom integrations & API</li>
+            <li>Dedicated account manager</li>
+            <li>SLA & premium support</li>
           </ul>
           <a class="btn ghost" href="https://forms.gle/mJuyEqe5cHnrAdu27">Join Waitlist</a>
-          <p class="pricing-note">Custom pricing for your team</p>
         </article>
       </div>
     </section>
 
     <section class="container code" id="install">
       <h2>Zero Integration - Just Prepend One Command</h2>
-      <p class="sub center">Already have an AI agent? Secure it instantly with no code changes.</p>
+      <p class="sub center">Already have an AI agent? Start monitoring it instantly with no code changes.</p>
 
 <pre class="codeblock"><code class="lang"># Before: Your existing agent
 python my_langchain_agent.py
@@ -260,7 +258,7 @@ sudodog daemon status
       <img class="logo sm" src="assets/logo.png" alt="SudoDog logo small">
       <div>
         <strong>SudoDog</strong><br>
-        <small>Production-grade security for AI agents</small><br>
+        <small>Complete visibility and control for AI agents</small><br>
         <small>© <span id="y"></span> SudoDog. MIT License.</small>
       </div>
     </div>
