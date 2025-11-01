@@ -1,46 +1,70 @@
 # SudoDog 🐕
 
-**Secure sandbox for AI agents. Custom Docker images, real-time monitoring, complete audit trail.**
+**Monitor all your AI agents in one place. Real-time visibility, complete audit trail, framework-agnostic.**
 
-Deploy agents safely with automatic sandboxing, behavioral monitoring, resource limits, and rollback capabilities.
+See what every agent is doing. Track CPU, memory, and operations. Works with LangChain, AutoGPT, CrewAI, or any framework.
+
+## Zero Integration - Just Prepend One Command
+
+Already have a LangChain, AutoGPT, or custom AI agent? **No code changes needed.**
+
+```bash
+# Before: Your existing agent
+python my_langchain_agent.py
+
+# After: Monitored with SudoDog (that's it!)
+sudodog run python my_langchain_agent.py
+```
+
+Works with any framework, any language. Just prepend `sudodog run` to your command.
 
 ## The Problem
 
-AI agents can delete databases, leak customer data, and rack up massive API bills in seconds. Traditional security tools treat agents like users—but agents aren't users. They're unpredictable, fast, and need purpose-built protection.
+Your AI agents are running. Can you answer:
+- What is each agent doing right now?
+- Which agent is consuming the most resources?
+- Has any agent attempted dangerous operations?
+- What patterns are emerging across all agents?
+
+Traditional monitoring tools aren't built for AI agents. They don't understand agent behavior, track agent-specific operations, or provide agent-focused insights.
 
 ## The Solution
 
-SudoDog wraps your AI agents in a secure sandbox that:
-- ✅ **Custom Docker images** - Use your own images with all dependencies
-- ✅ **Resource limits** - CPU and memory caps per agent
-- ✅ **Real-time monitoring** - Background daemon tracks all agents
-- ✅ **Pattern detection** - Blocks dangerous SQL and shell commands
+SudoDog gives you complete visibility and control:
+- ✅ **Zero integration** - No code changes, no imports, just prepend a command
+- ✅ **Real-time monitoring** - See all agents with live CPU and memory stats
 - ✅ **Complete audit trail** - Logs every action with timestamps
-- ✅ **Instant rollback** - Undo file operations by session
+- ✅ **Pattern detection** - Detects dangerous SQL and shell commands
+- ✅ **Framework-agnostic** - Works with LangChain, AutoGPT, CrewAI, custom agents
+- ✅ **Resource monitoring** - Track and limit CPU and memory per agent
+- ✅ **Docker isolation** - Run agents in isolated containers with custom images
 - ✅ **Privacy-first telemetry** - Optional anonymous analytics
 
 ## How is SudoDog Different?
 
-Unlike general-purpose sandboxing tools (Sandboxie, Firejail, Docker), SudoDog is **purpose-built for AI agents** with intelligence that understands agent behavior:
+Unlike LangSmith (LangChain-only), Helicone (API calls only), or Datadog (generic monitoring), SudoDog is **purpose-built for AI agent monitoring** across all frameworks:
 
-### AI-Native Security Features
+### AI Agent Monitoring Comparison
 
-| Feature | General Sandboxes | SudoDog |
-|---------|------------------|---------|
-| **Custom Images** | ⚠️ Manual | ✅ Built-in support with `--image` flag |
-| **SQL Injection Detection** | ❌ | ✅ Detects `DROP TABLE`, `DELETE FROM`, etc. |
-| **Shell Command Analysis** | ❌ | ✅ Flags `rm -rf`, `curl \| bash`, etc. |
-| **Real-time Monitoring** | ❌ | ✅ Background daemon tracks CPU/memory |
-| **Resource Limits** | ⚠️ Manual | ✅ Automatic per-agent (CPU, memory) |
-| **Session-Based Audit** | ❌ | ✅ Links conversations → actions |
-| **Semantic Rollback** | ❌ | ✅ Undo by logical operation |
-| **Multi-Container Management** | ❌ | ✅ Monitor all agents from one dashboard |
+| Feature | LangSmith | Helicone | Datadog | **SudoDog** |
+|---------|-----------|----------|---------|-------------|
+| **Framework-Agnostic** | ❌ LangChain only | ✅ | ✅ | ✅ |
+| **Zero Integration** | ❌ Code changes | ✅ | ❌ | ✅ |
+| **Agent Actions (files, shell)** | ✅ | ❌ API only | ⚠️ Generic | ✅ |
+| **Security Patterns** | ❌ | ❌ | ❌ | ✅ |
+| **Real-time Dashboard** | ✅ Web | ✅ Web | ✅ Web | ✅ CLI → Web |
+| **Resource Monitoring** | ❌ | ❌ | ✅ | ✅ |
+| **Affordable** | ⚠️ $39/mo | ✅ | ❌ $100+ | ✅ Free → Pro |
 
 ### The Key Difference
 
-**Traditional sandboxes** isolate processes at the system level—they're like putting code in a locked room.
+**LangSmith**: Great for LangChain agents, but locks you into one framework.
 
-**SudoDog** understands *agent intent*—it's like having a security guard who reads what the agent is trying to do and makes intelligent decisions.
+**Helicone**: Tracks LLM API calls, but doesn't see what agents actually do (file operations, shell commands, etc.).
+
+**Datadog**: Generic monitoring that requires complex setup and doesn't understand agent-specific behavior.
+
+**SudoDog**: Framework-agnostic monitoring built specifically for AI agents. See all agents (LangChain, AutoGPT, CrewAI, custom) in one place with zero code changes.
 
 ### Example: Custom Image with Dependencies
 ```bash
@@ -98,24 +122,64 @@ pip install -e . --break-system-packages
 
 ## Quick Start
 
-### 1. Initialize SudoDog
+### 1. Install (creates sample agents automatically)
+```bash
+curl -sL https://sudodog.com/install.sh | bash
+```
+
+### 2. Initialize SudoDog
 ```bash
 sudodog init
 ```
 
-### 2. Run your AI agent
+### 3. Test with sample agent (verify it works)
+```bash
+sudodog run python ~/sudodog-examples/hello_agent.py
+```
+
+### 4. Run YOUR OWN agent (the real use case!)
+
+**Your existing LangChain agent:**
+```bash
+sudodog run python my_langchain_agent.py
+```
+
+**Your existing AutoGPT agent:**
+```bash
+sudodog run python -m autogpt
+```
+
+**Your CrewAI agent:**
+```bash
+sudodog run python my_crewai_agent.py
+```
+
+**Any framework, any language:**
+```bash
+sudodog run node agent.js        # Node.js
+sudodog run ruby agent.rb         # Ruby
+sudodog run ./agent.sh            # Bash script
+```
+
+### 5. Production: Add Docker for stronger isolation
 
 **Basic (namespace isolation):**
 ```bash
 sudodog run python my_agent.py
 ```
 
-**Docker with default image:**
+**Docker (stronger isolation + resource limits):**
 ```bash
+# Install Docker first (one-time setup)
+curl -fsSL https://get.docker.com | sudo sh
+sudo usermod -aG docker $USER
+# Log out and back in
+
+# Run with Docker
 sudodog run --docker python my_agent.py
 ```
 
-**Custom Docker image (v0.2.0):**
+**Custom Docker image with dependencies:**
 ```bash
 sudodog run --docker --image my-agent:latest python agent.py
 ```
@@ -125,7 +189,7 @@ sudodog run --docker --image my-agent:latest python agent.py
 sudodog run --docker --cpu-limit 2.0 --memory-limit 1g python my_agent.py
 ```
 
-### 3. Start background monitoring
+### 6. Start background monitoring (optional)
 ```bash
 # Start daemon in foreground (see logs)
 sudodog daemon start --foreground
@@ -438,6 +502,58 @@ Deploy agents in production with confidence. Docker isolation, resource limits, 
 "Prove exactly what your AI did (and didn't do)."
 
 Meet regulatory requirements with immutable logs of all agent actions. Demonstrate due diligence for auditors.
+
+## Real-World Framework Examples
+
+### LangChain Agent
+```bash
+# Your existing LangChain code - no changes needed!
+# Just prepend sudodog run
+
+sudodog run python langchain_agent.py
+
+# With Docker isolation
+sudodog run --docker python langchain_agent.py
+
+# With resource limits
+sudodog run --docker --cpu-limit 2.0 --memory-limit 1g python langchain_agent.py
+```
+
+### AutoGPT
+```bash
+# Run AutoGPT with SudoDog protection
+sudodog run python -m autogpt
+
+# With Docker
+sudodog run --docker python -m autogpt
+```
+
+### CrewAI
+```bash
+# Your CrewAI agent
+sudodog run python crewai_agent.py
+
+# Monitor multiple CrewAI agents
+sudodog daemon start
+sudodog run --docker python crewai_agent1.py &
+sudodog run --docker python crewai_agent2.py &
+sudodog daemon status
+```
+
+### Custom Agents (Any Framework)
+```bash
+# Node.js agent
+sudodog run node my_agent.js
+
+# Ruby agent
+sudodog run ruby my_agent.rb
+
+# Shell script agent
+sudodog run ./my_agent.sh
+
+# Any command works!
+sudodog run <your-command-here>
+```
 
 ## Examples
 

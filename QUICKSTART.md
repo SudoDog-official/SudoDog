@@ -2,12 +2,33 @@
 
 Get started with SudoDog in under 5 minutes.
 
+## Zero Integration - Just Prepend One Command
+
+Already have an AI agent? **No code changes needed.**
+
+```bash
+# Before: Your existing agent
+python my_langchain_agent.py
+
+# After: Secured with SudoDog (that's it!)
+sudodog run python my_langchain_agent.py
+```
+
+Works with LangChain, AutoGPT, CrewAI, or any framework. Any language.
+
+**What you'll get:**
+- ✅ SudoDog CLI installed
+- ✅ Sample agents in `~/sudodog-examples/` (for verification)
+- ✅ Configuration in `~/.sudodog/`
+
 ## Installation (2 minutes)
 
 ### One-Line Install (Recommended)
 ```bash
 curl -sL https://sudodog.com/install.sh | bash
 ```
+
+This installs SudoDog and creates sample agents you can run immediately!
 
 ### Manual Install
 ```bash
@@ -37,57 +58,67 @@ This creates:
 
 ## Quick Test (1 minute)
 
-### 1. Create a test agent
+The install script automatically created sample agents in `~/sudodog-examples/`.
+
+### 1. Run your first agent (Basic isolation)
 ```bash
-cat > test_agent.py << 'EOF'
-import os
-import time
-
-print("🤖 AI Agent running...")
-time.sleep(1)
-
-# Try some operations
-print("Reading system info...")
-os.system("uname -a")
-
-# Try to read sensitive file
-print("\nAttempting to read /etc/shadow...")
-try:
-    with open('/etc/shadow', 'r') as f:
-        print("✓ Read shadow file!")
-except PermissionError:
-    print("✗ Blocked by permissions")
-
-# Simulate dangerous SQL
-print("\nSimulating SQL query...")
-query = "DROP TABLE users; DELETE FROM customers;"
-print(f"Query: {query}")
-
-print("\n✓ Agent completed")
-EOF
+sudodog run python ~/sudodog-examples/hello_agent.py
 ```
 
-### 2. Run with SudoDog
-
-**Basic (namespace isolation):**
-```bash
-sudodog run python test_agent.py
+You should see:
+```
+🤖 Hello from your AI agent!
+✓ SudoDog is protecting this execution
+...
 ```
 
-**Docker (stronger isolation + resource limits):**
+### 2. Run with Docker (stronger isolation)
 ```bash
-sudodog run --docker python test_agent.py
+sudodog run --docker python ~/sudodog-examples/demo_agent.py
 ```
 
-**With resource limits:**
+This shows SudoDog detecting dangerous operations like:
+- Attempts to read `/etc/shadow`
+- SQL injection patterns (`DROP TABLE`)
+
+### 3. Run with resource limits
 ```bash
-sudodog run --docker --cpu-limit 2.0 --memory-limit 1g python test_agent.py
+sudodog run --docker --cpu-limit 2.0 --memory-limit 1g python ~/sudodog-examples/demo_agent.py
 ```
 
-### 3. Check the logs
+### 4. Check the logs
 ```bash
 sudodog logs --last 20
 ```
+
+## Run YOUR OWN Agent (The Real Use Case!)
+
+Now that you've verified SudoDog works, secure your existing agents:
+
+### LangChain
+```bash
+sudodog run python my_langchain_agent.py
+```
+
+### AutoGPT
+```bash
+sudodog run python -m autogpt
+```
+
+### CrewAI
+```bash
+sudodog run python my_crewai_agent.py
+```
+
+### Any Framework, Any Language
+```bash
+sudodog run node my_agent.js       # Node.js
+sudodog run ruby my_agent.rb        # Ruby
+sudodog run ./my_agent.sh           # Bash
+sudodog run <your-command-here>     # Anything!
+```
+
+**That's it!** No code changes, no imports, no configuration. Just prepend `sudodog run`.
 
 ## Background Monitoring (New!)
 
