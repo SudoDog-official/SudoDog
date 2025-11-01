@@ -2,9 +2,23 @@
 
 Get started with SudoDog in under 5 minutes.
 
+## Zero Integration - Just Prepend One Command
+
+Already have an AI agent? **No code changes needed.**
+
+```bash
+# Before: Your existing agent
+python my_langchain_agent.py
+
+# After: Secured with SudoDog (that's it!)
+sudodog run python my_langchain_agent.py
+```
+
+Works with LangChain, AutoGPT, CrewAI, or any framework. Any language.
+
 **What you'll get:**
 - ✅ SudoDog CLI installed
-- ✅ Sample agents in `~/sudodog-examples/` (ready to run!)
+- ✅ Sample agents in `~/sudodog-examples/` (for verification)
 - ✅ Configuration in `~/.sudodog/`
 
 ## Installation (2 minutes)
@@ -76,6 +90,35 @@ sudodog run --docker --cpu-limit 2.0 --memory-limit 1g python ~/sudodog-examples
 ```bash
 sudodog logs --last 20
 ```
+
+## Run YOUR OWN Agent (The Real Use Case!)
+
+Now that you've verified SudoDog works, secure your existing agents:
+
+### LangChain
+```bash
+sudodog run python my_langchain_agent.py
+```
+
+### AutoGPT
+```bash
+sudodog run python -m autogpt
+```
+
+### CrewAI
+```bash
+sudodog run python my_crewai_agent.py
+```
+
+### Any Framework, Any Language
+```bash
+sudodog run node my_agent.js       # Node.js
+sudodog run ruby my_agent.rb        # Ruby
+sudodog run ./my_agent.sh           # Bash
+sudodog run <your-command-here>     # Anything!
+```
+
+**That's it!** No code changes, no imports, no configuration. Just prepend `sudodog run`.
 
 ## Background Monitoring (New!)
 

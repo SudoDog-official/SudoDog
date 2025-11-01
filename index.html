@@ -33,8 +33,8 @@
     <section class="hero container">
       <div class="hero-copy center">
         <img class="hero-logo" src="assets/hero_logo.png" alt="SudoDog logo">
-        <p class="lead">Production-grade sandbox for AI agents. Docker isolation. Real-time monitoring.</p>
-        <p class="lede-sub">AI agents need strong isolation to prevent disasters. SudoDog runs agents in Docker containers with resource limits, detects dangerous SQL and shell commands, and monitors behavior in real-time with a background daemon.</p>
+        <p class="lead">Secure any AI agent with one command. No code changes. No imports.</p>
+        <p class="lede-sub">Works with LangChain, AutoGPT, CrewAI, or any framework. Just prepend <code style="background: rgba(102, 126, 234, 0.1); padding: 2px 6px; border-radius: 3px;">sudodog run</code> to your existing command. Get Docker isolation, resource limits, pattern detection, and real-time monitoring instantly.</p>
         <div class="cta-row">
           <a class="btn primary lg" href="#install">Get Started Free</a>
           <a class="btn ghost lg" href="#demo">See It In Action</a>
@@ -56,7 +56,7 @@
 
     <section class="code container" id="demo">
       <h2>See It In Action</h2>
-      <p class="sub center">Real example: Custom Docker images with resource limits</p>
+      <p class="sub center">Zero integration - just prepend <code style="background: rgba(102, 126, 234, 0.1); padding: 2px 6px; border-radius: 3px;">sudodog run</code> to your existing command</p>
       <div class="hero-terminal card">
         <div class="term-top">
           <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
@@ -177,37 +177,73 @@
     </section>
 
     <section class="container code" id="install">
-      <h2>Get Started in 30 Seconds</h2>
-      <p class="sub center">Install SudoDog, run your first agent, see the security features in action.</p>
+      <h2>Zero Integration - Just Prepend One Command</h2>
+      <p class="sub center">Already have an AI agent? Secure it instantly with no code changes.</p>
+
+<pre class="codeblock"><code class="lang"># Before: Your existing agent
+python my_langchain_agent.py
+node my_autogpt_agent.js
+ruby my_agent.rb
+
+# After: Secured with SudoDog (that's it!)
+sudodog run python my_langchain_agent.py
+sudodog run node my_autogpt_agent.js
+sudodog run ruby my_agent.rb
+</code></pre>
+
+      <h3 style="margin-top: 60px; text-align: center;">Installation & First Run</h3>
+      <p class="sub center">Get started in 30 seconds with sample agents included.</p>
 <pre class="codeblock"><code class="lang"># Step 1: Install SudoDog (creates sample agents in ~/sudodog-examples)
 curl -sL https://sudodog.com/install.sh | bash
 
 # Step 2: Initialize SudoDog
 sudodog init
 
-# Step 3: Run your first agent!
+# Step 3: Test with sample agent to verify it works
 sudodog run python ~/sudodog-examples/hello_agent.py
 
-# Step 4: View the security audit trail
+# Step 4: Now run YOUR OWN agent!
+sudodog run python your_agent.py
+
+# Step 5: View the security audit trail
 sudodog logs
 </code></pre>
 
-      <h3 style="margin-top: 60px; text-align: center;">Advanced: Docker + Real-time Monitoring</h3>
+      <h3 style="margin-top: 60px; text-align: center;">Real Framework Examples</h3>
+      <p class="sub center">Works with any AI framework out of the box</p>
+<pre class="codeblock"><code class="lang"># LangChain
+sudodog run python langchain_agent.py
+
+# AutoGPT
+sudodog run python -m autogpt
+
+# CrewAI
+sudodog run python crewai_agent.py
+
+# Custom Python agent
+sudodog run python custom_agent.py
+
+# Any command works!
+sudodog run node agent.js
+sudodog run ./agent.sh
+</code></pre>
+
+      <h3 style="margin-top: 60px; text-align: center;">Production: Docker + Real-time Monitoring</h3>
       <p class="sub center">For production-grade isolation, install Docker and unlock all features</p>
 <pre class="codeblock"><code class="lang"># Install Docker (one-time setup)
 curl -fsSL https://get.docker.com | sudo sh
 sudo usermod -aG docker $USER
 # Log out and back in for docker group to take effect
 
-# Run agent with Docker isolation
-sudodog run --docker python ~/sudodog-examples/demo_agent.py
+# Run YOUR agent with Docker isolation
+sudodog run --docker python your_agent.py
 
 # Start real-time monitoring daemon
 sudodog daemon start
 
 # Run with custom image and resource limits
 sudodog run --docker --image my-agent:latest \
-  --cpu-limit 2.0 --memory-limit 1g python agent.py
+  --cpu-limit 2.0 --memory-limit 1g python your_agent.py
 
 # Check container stats
 sudodog daemon status
