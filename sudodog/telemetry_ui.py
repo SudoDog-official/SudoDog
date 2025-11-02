@@ -25,11 +25,12 @@ Share anonymous usage data to help us:
   [green]•[/green] Improve threat detection
   [green]•[/green] Fix bugs faster
   [green]•[/green] Prioritize features
+  [green]•[/green] Train ML models for anomaly detection
 
 [bold]We collect:[/bold]
   [green]✓[/green] Which features you use
   [green]✓[/green] Error messages (sanitized)
-  [green]✓[/green] Performance metrics
+  [green]✓[/green] Performance metrics (CPU, memory, duration)
   [green]✓[/green] Threat patterns detected
 
 [bold]We NEVER collect:[/bold]
@@ -38,6 +39,12 @@ Share anonymous usage data to help us:
   [red]✗[/red] API keys or credentials
   [red]✗[/red] Command arguments or outputs
   [red]✗[/red] Any personally identifiable data
+
+[bold]Where data goes:[/bold]
+  [cyan]•[/cyan] Performance data sent to sudodog-platform.fly.dev
+  [cyan]•[/cyan] Used to train ML models that detect anomalies
+  [cyan]•[/cyan] Helps paid tier users get better insights
+  [cyan]•[/cyan] All data is anonymous (ID: free-user-xxxxxxxx)
 
 All data is anonymous and helps the entire community.
 
@@ -81,7 +88,8 @@ def show_telemetry_status(telemetry_status: dict) -> None:
     
     if telemetry_status['enabled']:
         console.print(f"[green]Status:[/green] Enabled")
-        console.print(f"[dim]Anonymous ID:[/dim] {telemetry_status['anonymous_id']}\n")
+        console.print(f"[dim]Anonymous ID:[/dim] {telemetry_status['anonymous_id']}")
+        console.print(f"[dim]Platform API:[/dim] sudodog-platform.fly.dev\n")
     else:
         console.print("[yellow]Status:[/yellow] Disabled\n")
     
@@ -89,8 +97,9 @@ def show_telemetry_status(telemetry_status: dict) -> None:
     console.print("[bold]What we collect:[/bold]")
     console.print("  [green]•[/green] Command usage (which features you use)")
     console.print("  [green]•[/green] Error types (helps us fix bugs)")
-    console.print("  [green]•[/green] Performance metrics (execution time)")
-    console.print("  [green]•[/green] Threat patterns (improves detection)\n")
+    console.print("  [green]•[/green] Performance metrics (CPU, memory, execution time)")
+    console.print("  [green]•[/green] Threat patterns (improves detection)")
+    console.print("  [green]•[/green] Agent execution data (trains ML models)\n")
     
     # Show what we DON'T collect
     console.print("[bold]What we DON'T collect:[/bold]")
@@ -135,12 +144,18 @@ def show_telemetry_info() -> None:
    • Command execution time
    • Resource usage (CPU, memory)
    • Container statistics (when using Docker)
-   • NOT linked to any specific user
+   • Sent to platform API for ML training
 
 [green]4. Threat Patterns[/green]
    • Types of threats detected (e.g., "sql_injection")
    • Actions taken (e.g., "blocked", "warned")
    • NOT the actual commands that were blocked
+
+[green]5. Platform Telemetry[/green]
+   • Performance data sent to sudodog-platform.fly.dev
+   • Used to train ML models for anomaly detection
+   • Powers insights for paid tier users
+   • Completely anonymous (ID: free-user-xxxxxxxx)
 
 [bold]What We NEVER Collect:[/bold]
 
@@ -156,18 +171,32 @@ def show_telemetry_info() -> None:
 [bold]Privacy Guarantees:[/bold]
 
 - [green]Opt-in only[/green] - Disabled by default
-- [green]Anonymous[/green] - Uses random ID (e.g., anon-a1b2c3d4...)
+- [green]Anonymous[/green] - Uses random ID (e.g., free-user-a1b2c3d4)
 - [green]Transparent[/green] - See exactly what we collect
 - [green]Respectful[/green] - Easy to disable anytime
+- [green]Beneficial[/green] - Helps train ML models for the community
 
 [bold]How Your Data Helps:[/bold]
 
-Your anonymous usage data helps us:
+Your anonymous usage data helps:
+- Train ML models to detect anomalies in AI agents
 - Improve threat detection patterns
 - Fix bugs and errors faster
 - Understand which features are most valuable
-- Make better product decisions
+- Provide better insights to paid tier users
 - Help the entire community stay secure
+
+[bold]The Value Exchange:[/bold]
+
+Free tier users (you):
+- Share anonymous performance data
+- Help train ML models with real-world patterns
+
+Paid tier users:
+- Get ML-powered anomaly detection
+- Benefit from insights trained on community data
+
+Everyone wins - better security for all!
 
 [bold]Your Rights:[/bold]
 
@@ -176,7 +205,8 @@ Your anonymous usage data helps us:
 - View this info: [cyan]sudodog telemetry info[/cyan]
 
 [dim]Full Privacy Policy: https://sudodog.com/privacy[/dim]
-[dim]Technical Details: https://sudodog.com/telemetry[/dim]"""
+[dim]Technical Details: https://sudodog.com/telemetry[/dim]
+[dim]Platform API: https://sudodog-platform.fly.dev[/dim]"""
     
     console.print()
     console.print(Panel(
