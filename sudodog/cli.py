@@ -40,8 +40,9 @@ def run(command, policy, log_level, docker, image, cpu_limit, memory_limit):
     """
     from .monitor import AgentMonitor, AgentSession
     from .telemetry import get_telemetry
+    from .platform_telemetry import send_platform_telemetry
     
-    # Track command usage
+    # Track command usage (local)
     telemetry = get_telemetry()
     telemetry.track_command('run', {
         'docker': docker,
@@ -55,6 +56,9 @@ def run(command, policy, log_level, docker, image, cpu_limit, memory_limit):
     
     # Convert command tuple to string
     cmd_string = ' '.join(command)
+    
+    # Track execution start
+    start_time = datetime.now()
     
     if docker:
         console.print(f"[cyan]🐳 Using Docker sandbox[/cyan]")
@@ -84,6 +88,20 @@ def run(command, policy, log_level, docker, image, cpu_limit, memory_limit):
                 stats = sandbox.get_stats()
                 if stats:
                     console.print(f"[dim]CPU: {stats['cpu_percent']}% | Memory: {stats['memory_usage_mb']}MB[/dim]\n")
+                    
+                    # Send telemetry to platform
+                    send_platform_telemetry(
+                        event_type='agent_execution',
+                        data={
+                            'cpu_usage': stats['cpu_percent'],
+                            'memory_usage': stats['memory_usage_mb'],
+                            'api_calls': 0,  # Docker doesn't track this yet
+                            'duration': (datetime.now() - start_time).total_seconds(),
+                            'agent_name': 'docker_agent',
+                            'task_type': 'docker_execution',
+                            'exit_code': result['exit_code']
+                        }
+                    )
                 
                 sys.exit(result['exit_code'])
         except Exception as e:
@@ -105,6 +123,21 @@ def run(command, policy, log_level, docker, image, cpu_limit, memory_limit):
         
         try:
             exit_code = monitor.run()
+            
+            # Send telemetry to platform after execution
+            duration = (datetime.now() - start_time).total_seconds()
+            send_platform_telemetry(
+                event_type='agent_execution',
+                data={
+                    'cpu_usage': 0,  # Namespace sandbox doesn't track CPU yet
+                    'memory_usage': 0,  # Add tracking later
+                    'api_calls': 0,  # Add tracking later
+                    'duration': duration,
+                    'agent_name': 'namespace_agent',
+                    'task_type': 'namespace_execution',
+                    'exit_code': exit_code
+                }
+            )
         except Exception as e:
             # Track error
             telemetry.track_error(type(e).__name__, str(e))
@@ -454,7 +487,7 @@ def daemon_status():
 @cli.command()
 def version():
     """Show SudoDog version"""
-    console.print("\n[cyan]🐕 SudoDog v0.1.0[/cyan]")
+    console.print("\n[cyan]🐕 SudoDog v0.2.0[/cyan]")
     console.print("[dim]Security for AI agents that actually works[/dim]\n")
 
 # Add telemetry commands
