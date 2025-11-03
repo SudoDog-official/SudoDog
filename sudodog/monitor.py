@@ -114,13 +114,11 @@ class AgentMonitor:
                     text=True
                 )
             
-            # Monitor the process
-            psutil_process = psutil.Process(self.process.pid)
-            
             console.print(f"[green]✓[/green] Process started (PID: {self.process.pid})")
-            
-            # Monitor file operations
+
+            # Monitor file operations (only works for non-sandboxed processes)
             try:
+                psutil_process = psutil.Process(self.process.pid)
                 open_files = psutil_process.open_files()
                 for f in open_files:
                     allowed = self.check_policy('file_read', f.path)
@@ -128,10 +126,11 @@ class AgentMonitor:
                         'path': f.path,
                         'mode': f.mode
                     }, allowed)
-                    
+
                     if not allowed:
                         console.print(f"[red]⚠[/red]  Blocked file access: {f.path}")
-            except (psutil.AccessDenied, psutil.NoSuchProcess):
+            except (psutil.AccessDenied, psutil.NoSuchProcess, OSError):
+                # Sandboxed processes can't be monitored this way - that's OK
                 pass
             
             # Wait for completion
