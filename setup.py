@@ -40,6 +40,7 @@ setup(
         "psutil>=5.9.0",
         "pyyaml>=6.0",
         "watchdog>=3.0.0",
+        "docker>=6.0.0",
     ],
     entry_points={
         "console_scripts": [

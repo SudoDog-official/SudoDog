@@ -6,6 +6,7 @@ Creates isolated environments using Linux namespaces
 import subprocess
 import os
 import tempfile
+import shlex
 from pathlib import Path
 from typing import List, Optional
 from rich.console import Console
@@ -40,26 +41,27 @@ class Sandbox:
         
     def build_unshare_command(self, command: str) -> List[str]:
         unshare_args = ['unshare']
-    
+
         # CRITICAL: Add --user first to enable unprivileged namespaces
         unshare_args.append('--user')
-        
+
         # Add namespace isolation flags
         if self.isolate_network:
             unshare_args.append('--net')  # Network namespace
-            
+
         if self.isolate_pid:
             unshare_args.extend(['--pid', '--fork'])  # PID namespace
-            
+
         if self.isolate_ipc:
             unshare_args.append('--ipc')  # IPC namespace
-        
+
         # Mount namespace for filesystem isolation (disabled - requires privileges)
         # unshare_args.append('--mount')
-        
-        # Add the actual command
+
+        # Add the actual command - properly escaped for shell
+        # The command is already a string, pass it directly to sh -c
         unshare_args.extend(['--', 'sh', '-c', command])
-        
+
         return unshare_args
     
     def run_sandboxed(self, command: str, cwd: Optional[str] = None) -> subprocess.Popen:
