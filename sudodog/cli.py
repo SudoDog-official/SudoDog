@@ -12,6 +12,7 @@ from rich import box
 from pathlib import Path
 import json
 from datetime import datetime
+import platform
 
 console = Console()
 
@@ -41,8 +42,9 @@ def run(command, policy, log_level, docker, image, cpu_limit, memory_limit):
     from .monitor import AgentMonitor, AgentSession
     from .telemetry import get_telemetry
     from .platform_telemetry import send_platform_telemetry
+    from .sudodog_telemetry import LocalTelemetry
     
-    # Track command usage (local)
+    # Track command usage (local telemetry)
     telemetry = get_telemetry()
     telemetry.track_command('run', {
         'docker': docker,
@@ -50,6 +52,28 @@ def run(command, policy, log_level, docker, image, cpu_limit, memory_limit):
         'has_cpu_limit': cpu_limit is not None,
         'has_memory_limit': memory_limit is not None,
     })
+    
+    # Track in local SQLite telemetry
+    local_telemetry = LocalTelemetry()
+    local_telemetry.track_event('sudodog_run', {
+        'docker': docker,
+        'custom_image': image != 'python:3.11-slim',
+        'has_cpu_limit': cpu_limit is not None,
+        'has_memory_limit': memory_limit is not None,
+        'version': '0.2.0',
+        'platform': platform.system(),
+    })
+    
+    # Track first run (one-time)
+    first_run_path = Path.home() / ".sudodog" / ".first_run_tracked"
+    if not first_run_path.exists():
+        local_telemetry.track_event('first_run', {
+            'docker': docker,
+            'platform': platform.system(),
+            'version': '0.2.0',
+        })
+        first_run_path.parent.mkdir(parents=True, exist_ok=True)
+        first_run_path.touch()
     
     console.print("\n[cyan]🐕 SudoDog AI Agent Security[/cyan]")
     console.print("[cyan]" + "━" * 40 + "[/cyan]")
@@ -107,6 +131,11 @@ def run(command, policy, log_level, docker, image, cpu_limit, memory_limit):
         except Exception as e:
             # Track error
             telemetry.track_error(type(e).__name__, str(e))
+            local_telemetry.track_event('error', {
+                'error_type': type(e).__name__,
+                'command': 'run',
+                'docker': docker,
+            })
             console.print(f"\n[red]✗[/red] Docker error: {e}\n")
             sys.exit(1)
     else:
@@ -141,6 +170,11 @@ def run(command, policy, log_level, docker, image, cpu_limit, memory_limit):
         except Exception as e:
             # Track error
             telemetry.track_error(type(e).__name__, str(e))
+            local_telemetry.track_event('error', {
+                'error_type': type(e).__name__,
+                'command': 'run',
+                'docker': False,
+            })
             raise
         finally:
             # Remove from active sessions
@@ -153,12 +187,14 @@ def init():
     """Initialize SudoDog in current directory"""
     from .telemetry_ui import show_telemetry_prompt
     from .telemetry import get_telemetry
+    from .sudodog_telemetry import LocalTelemetry
     
     console.print("\n[cyan]🐕 SudoDog Initialization[/cyan]")
     console.print("[cyan]" + "━" * 40 + "[/cyan]\n")
     
     # Create config directory
     config_dir = Path.home() / '.sudodog'
+    is_first_time = not config_dir.exists()
     config_dir.mkdir(exist_ok=True)
     
     # Create default config
@@ -203,6 +239,16 @@ def init():
     console.print(f"[green]✓[/green] Backups directory: {backups_dir}")
     console.print(f"[green]✓[/green] Default policy created")
     console.print("\n[green]SudoDog initialized![/green]")
+    
+    # Track first-time initialization in local telemetry
+    if is_first_time:
+        local_telemetry = LocalTelemetry()
+        local_telemetry.track_event('first_time_init', {
+            'version': '0.2.0',
+            'platform': platform.system(),
+            'platform_version': platform.release(),
+            'python_version': platform.python_version(),
+        })
     
     # Show telemetry opt-in prompt
     console.print()
@@ -251,6 +297,15 @@ def status():
 @click.option('--session', '-s', help='Show logs for specific session')
 def logs(last, session):
     """View agent activity logs"""
+    from .sudodog_telemetry import LocalTelemetry
+    
+    # Track logs viewed
+    local_telemetry = LocalTelemetry()
+    local_telemetry.track_event('logs_viewed', {
+        'session_specific': session is not None,
+        'limit': last,
+    })
+    
     console.print("\n[cyan]📋 Recent Agent Activity[/cyan]")
     console.print("[cyan]" + "─" * 40 + "[/cyan]\n")
     
@@ -327,6 +382,7 @@ def rollback(session_id, steps):
     """Rollback agent actions"""
     from .blocker import FileRollback
     from .telemetry import get_telemetry
+    from .sudodog_telemetry import LocalTelemetry
     
     console.print("\n[yellow]⏪[/yellow]  Rolling back actions...")
     console.print(f"[dim]Session: {session_id}[/dim]\n")
@@ -352,6 +408,14 @@ def rollback(session_id, steps):
             'steps': rolled_back,
         })
         
+        # Track in local telemetry
+        local_telemetry = LocalTelemetry()
+        local_telemetry.track_event('rollback_used', {
+            'steps': rolled_back,
+            'version': '0.2.0',
+            'session_id_length': len(session_id),
+        })
+        
         if rolled_back > 0:
             console.print(f"[green]✓[/green] Successfully rolled back {rolled_back} file operation(s)")
         else:
@@ -367,6 +431,13 @@ def rollback(session_id, steps):
     except Exception as e:
         telemetry = get_telemetry()
         telemetry.track_error(type(e).__name__, str(e))
+        
+        local_telemetry = LocalTelemetry()
+        local_telemetry.track_event('error', {
+            'error_type': type(e).__name__,
+            'command': 'rollback',
+        })
+        
         console.print(f"[red]✗[/red] Rollback failed: {str(e)}\n")
 
 @cli.command()
@@ -415,8 +486,18 @@ def daemon():
 @click.option('--interval', '-i', default=5, help='Check interval in seconds')
 def daemon_start(foreground, interval):
     """Start the monitoring daemon"""
+    from .sudodog_telemetry import LocalTelemetry
+    
     try:
         from .daemon import SudoDogDaemon
+        
+        # Track daemon start
+        local_telemetry = LocalTelemetry()
+        local_telemetry.track_event('daemon_started', {
+            'version': '0.2.0',
+            'foreground': foreground,
+            'interval': interval,
+        })
         
         d = SudoDogDaemon(check_interval=interval)
         d.start(foreground=foreground)
@@ -489,6 +570,21 @@ def version():
     """Show SudoDog version"""
     console.print("\n[cyan]🐕 SudoDog v0.2.0[/cyan]")
     console.print("[dim]Security for AI agents that actually works[/dim]\n")
+
+@cli.command(hidden=True)
+def stats():
+    """View local telemetry statistics (admin only)"""
+    from .sudodog_telemetry import LocalTelemetry
+    
+    telemetry = LocalTelemetry()
+    
+    if not telemetry.is_enabled():
+        console.print("\n[yellow]⚠️  Local telemetry is currently DISABLED[/yellow]")
+        console.print("No stats are being collected.")
+        console.print("\nTo enable: sudodog telemetry enable\n")
+        return
+    
+    telemetry.print_stats()
 
 # Add telemetry commands
 from .cli_telemetry import add_telemetry_commands
