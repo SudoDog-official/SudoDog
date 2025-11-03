@@ -87,7 +87,6 @@ def run(command, policy, log_level, docker, image, cpu_limit, memory_limit):
     if docker:
         console.print(f"[cyan]🐳 Using Docker sandbox[/cyan]")
         from .docker_sandbox import DockerSandbox
-        from datetime import datetime
         
         session_id = datetime.now().strftime('%Y%m%d_%H%M%S')
         
@@ -579,12 +578,79 @@ def stats():
     telemetry = LocalTelemetry()
     
     if not telemetry.is_enabled():
-        console.print("\n[yellow]⚠️  Local telemetry is currently DISABLED[/yellow]")
+        console.print("\n[yellow]⚠️  Local telemetry is currently DISABLED (opted out)[/yellow]")
         console.print("No stats are being collected.")
-        console.print("\nTo enable: sudodog telemetry enable\n")
+        console.print("\nTo re-enable: sudodog local-telemetry enable\n")
         return
     
     telemetry.print_stats()
+
+@cli.group(name='local-telemetry')
+def local_telemetry():
+    """Manage local usage statistics (opt-out available)"""
+    pass
+
+@local_telemetry.command('status')
+def local_telemetry_status():
+    """Check local telemetry status"""
+    from .sudodog_telemetry import LocalTelemetry
+    
+    t = LocalTelemetry()
+    
+    console.print("\n[cyan]📊 Local Usage Statistics[/cyan]")
+    console.print("[cyan]" + "━" * 40 + "[/cyan]\n")
+    
+    if t.is_enabled():
+        console.print("[green]✓[/green] Local telemetry is ENABLED (collecting usage stats)")
+        console.print("\n[dim]What's collected:[/dim]")
+        console.print("  • Installation count")
+        console.print("  • Feature usage (Docker, daemon, etc.)")
+        console.print("  • Anonymous usage patterns")
+        console.print("\n[dim]What's NOT collected:[/dim]")
+        console.print("  • Your name or personal info")
+        console.print("  • File paths or code")
+        console.print("  • Command arguments")
+        console.print("\n[dim]All data stored locally in: ~/.sudodog/telemetry.db[/dim]")
+        console.print("\n[dim]To opt-out: sudodog local-telemetry disable[/dim]\n")
+    else:
+        console.print("[yellow]✗[/yellow] Local telemetry is DISABLED (opted out)")
+        console.print("\n[dim]You've opted out of local usage statistics.[/dim]")
+        console.print("[dim]To re-enable: sudodog local-telemetry enable[/dim]\n")
+
+@local_telemetry.command('disable')
+def local_telemetry_disable():
+    """Opt-out of local usage statistics"""
+    from .sudodog_telemetry import LocalTelemetry
+    
+    t = LocalTelemetry()
+    
+    console.print("\n[yellow]Disabling local telemetry...[/yellow]")
+    
+    # Track opt-out before disabling
+    t.track_event('local_telemetry_disabled', {
+        'version': '0.2.0',
+    })
+    
+    t.disable()
+    
+    console.print("[green]✓[/green] Local telemetry disabled (opted out)")
+    console.print("\n[dim]You can re-enable anytime with: sudodog local-telemetry enable[/dim]\n")
+
+@local_telemetry.command('enable')
+def local_telemetry_enable():
+    """Re-enable local usage statistics"""
+    from .sudodog_telemetry import LocalTelemetry
+    
+    t = LocalTelemetry()
+    t.enable()
+    
+    # Track opt-in
+    t.track_event('local_telemetry_enabled', {
+        'version': '0.2.0',
+    })
+    
+    console.print("[green]✓[/green] Local telemetry enabled")
+    console.print("\n[dim]Thanks! This helps improve SudoDog for everyone.[/dim]\n")
 
 # Add telemetry commands
 from .cli_telemetry import add_telemetry_commands
