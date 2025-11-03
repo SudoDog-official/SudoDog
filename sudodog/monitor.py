@@ -24,6 +24,10 @@ class AgentMonitor:
         self.policy = policy
         self.session_id = session_id or datetime.now().strftime('%Y%m%d_%H%M%S')
         self.log_file = Path.home() / '.sudodog' / 'logs' / f'{self.session_id}.jsonl'
+
+        # Ensure log directory exists (auto-create if user didn't run init)
+        self.log_file.parent.mkdir(parents=True, exist_ok=True)
+
         self.process = None
         self.actions = []
         self.blocker = AgentBlocker(policy)
