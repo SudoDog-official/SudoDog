@@ -13,13 +13,14 @@ import json
 from rich.console import Console
 from .blocker import AgentBlocker, FileRollback
 from .sandbox import SandboxPresets
+from .http_interceptor import install_interceptor
 
 console = Console()
 
 class AgentMonitor:
     """Monitor AI agent execution"""
     
-    def __init__(self, command, policy='default', session_id=None, use_sandbox=True):
+    def __init__(self, command, policy='default', session_id=None, use_sandbox=True, enable_http_logging=True):
         self.command = command
         self.policy = policy
         self.session_id = session_id or datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -35,6 +36,10 @@ class AgentMonitor:
         self.blocked_count = 0
         self.use_sandbox = use_sandbox
         self.sandbox = SandboxPresets.standard() if use_sandbox else None
+        
+        # HTTP interceptor
+        self.http_interceptor = None
+        self.enable_http_logging = enable_http_logging
         
     def log_action(self, action_type, details, allowed=True):
         """Log an action to file"""
@@ -71,11 +76,21 @@ class AgentMonitor:
         console.print(f"[dim]Command: {self.command}[/dim]")
         console.print(f"[dim]Session: {self.session_id}[/dim]\n")
         
+        # Install HTTP interceptor if enabled
+        if self.enable_http_logging:
+            try:
+                console.print(f"[cyan]🌐 Installing HTTP interceptor...[/cyan]")
+                self.http_interceptor = install_interceptor(self.session_id)
+                console.print(f"[green]✓[/green] HTTP traffic will be logged\n")
+            except Exception as e:
+                console.print(f"[yellow]⚠[/yellow]  HTTP logging unavailable: {e}\n")
+        
         # Log the start
         self.log_action('start', {
             'command': self.command,
             'cwd': os.getcwd(),
-            'user': os.getenv('USER')
+            'user': os.getenv('USER'),
+            'http_logging': self.enable_http_logging
         })
         
         # Check command for dangerous patterns BEFORE execution
@@ -149,16 +164,31 @@ class AgentMonitor:
                 console.print("\n[yellow]Errors:[/yellow]")
                 console.print(stderr)
             
+            # Get HTTP stats if interceptor was enabled
+            http_stats = {}
+            if self.http_interceptor:
+                http_stats = self.http_interceptor.get_stats()
+            
             # Log completion
             self.log_action('complete', {
                 'exit_code': self.process.returncode,
                 'total_actions': len(self.actions),
-                'blocked_actions': self.blocked_count
+                'blocked_actions': self.blocked_count,
+                'http_requests': http_stats.get('total_requests', 0)
             })
             
             console.print(f"\n[green]✓[/green] Process completed")
             console.print(f"[dim]Total actions: {len(self.actions)}[/dim]")
             console.print(f"[dim]Blocked actions: {self.blocked_count}[/dim]")
+            
+            if http_stats.get('total_requests', 0) > 0:
+                console.print(f"[dim]HTTP requests: {http_stats['total_requests']}[/dim]")
+                if http_stats.get('by_provider'):
+                    for provider, count in http_stats['by_provider'].items():
+                        console.print(f"[dim]  • {provider}: {count} requests[/dim]")
+                if http_stats.get('errors', 0) > 0:
+                    console.print(f"[yellow]  • Errors: {http_stats['errors']}[/yellow]")
+            
             console.print(f"[dim]Log file: {self.log_file}[/dim]\n")
             
             return self.process.returncode

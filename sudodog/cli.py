@@ -656,5 +656,13 @@ def local_telemetry_enable():
 from .cli_telemetry import add_telemetry_commands
 add_telemetry_commands(cli)
 
+# Import the HTTP commands
+from .cli_http_commands import register_http_commands
+register_http_commands(cli)
+
+# Register HTTP commands
+from .cli_http_commands import register_http_commands
+register_http_commands(cli)
+
 if __name__ == '__main__':
     cli()
