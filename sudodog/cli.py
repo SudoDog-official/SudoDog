@@ -664,5 +664,9 @@ register_http_commands(cli)
 from .cli_http_commands import register_http_commands
 register_http_commands(cli)
 
+# Register rate limit commands
+from .cli_rate_limit import register_rate_limit_commands
+register_rate_limit_commands(cli)
+
 if __name__ == '__main__':
     cli()
