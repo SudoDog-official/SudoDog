@@ -14,7 +14,23 @@ from pathlib import Path
 class SecretManager:
     """Manages secure credential injection for containerized AI agents"""
     
-    def __init__(self, audit_log_path: str = "/var/log/sudodog/secrets.log"):
+    def __init__(self, audit_log_path: Optional[str] = None):
+        # Try /var/log/sudodog first, fallback to ~/.sudodog/logs
+        if audit_log_path is None:
+            try:
+                default_path = Path("/var/log/sudodog/secrets.log")
+                default_path.parent.mkdir(parents=True, exist_ok=True)
+                # Test if writable
+                test_file = default_path.parent / ".write_test"
+                test_file.touch()
+                test_file.unlink()
+                audit_log_path = str(default_path)
+            except (PermissionError, OSError):
+                # Fallback to user home directory
+                home_path = Path.home() / ".sudodog" / "logs" / "secrets.log"
+                home_path.parent.mkdir(parents=True, exist_ok=True)
+                audit_log_path = str(home_path)
+        
         self.audit_log_path = Path(audit_log_path)
         self.audit_log_path.parent.mkdir(parents=True, exist_ok=True)
         
@@ -136,6 +152,9 @@ class SecretManager:
         }
         
         try:
+            if not self.audit_log_path.exists():
+                return stats
+                
             with open(self.audit_log_path, 'r') as f:
                 for line in f:
                     if 'Secret injected:' in line:
