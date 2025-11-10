@@ -30,7 +30,23 @@ class AIDecision:
 class AIDecisionTracker:
     """Tracks and analyzes AI agent decisions for security and audit"""
     
-    def __init__(self, log_path: str = "/var/log/sudodog/ai_decisions.jsonl"):
+    def __init__(self, log_path: Optional[str] = None):
+        # Try /var/log/sudodog first, fallback to ~/.sudodog/logs
+        if log_path is None:
+            try:
+                default_path = Path("/var/log/sudodog/ai_decisions.jsonl")
+                default_path.parent.mkdir(parents=True, exist_ok=True)
+                # Test if writable
+                test_file = default_path.parent / ".write_test"
+                test_file.touch()
+                test_file.unlink()
+                log_path = str(default_path)
+            except (PermissionError, OSError):
+                # Fallback to user home directory
+                home_path = Path.home() / ".sudodog" / "logs" / "ai_decisions.jsonl"
+                home_path.parent.mkdir(parents=True, exist_ok=True)
+                log_path = str(home_path)
+        
         self.log_path = Path(log_path)
         self.log_path.parent.mkdir(parents=True, exist_ok=True)
         
