@@ -3,8 +3,29 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SudoDog.com - Monitor All Your AI Agents In One Place</title>
-  <meta name="description" content="Complete visibility for AI agents. Real-time monitoring, audit logs, pattern detection. Works with LangChain, AutoGPT, CrewAI, any framework. Zero integration.">
+  <title>SudoDog - AI Agent Monitoring & Security | Real-Time Visibility for LangChain, AutoGPT, CrewAI</title>
+  <meta name="description" content="Monitor AI agents with real-time visibility, audit logs, and pattern detection. Works with LangChain, AutoGPT, CrewAI—any framework. Free, open-source, zero integration. Docker isolation and resource monitoring included.">
+  
+  <!-- Enhanced SEO Meta Tags -->
+  <meta name="keywords" content="AI agent monitoring, AI agent security, LangChain monitoring, AutoGPT security, CrewAI monitoring, AI agent audit logs, Docker AI isolation, AI agent observability, AI security tool">
+  <meta name="author" content="SudoDog">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://sudodog.com/">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sudodog.com/">
+  <meta property="og:title" content="SudoDog - AI Agent Monitoring & Security">
+  <meta property="og:description" content="Monitor all your AI agents in one place. Real-time visibility, audit logs, pattern detection. Works with any framework. Free & open-source.">
+  <meta property="og:image" content="https://sudodog.com/assets/hero_logo.png">
+  <meta property="og:site_name" content="SudoDog">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://sudodog.com/">
+  <meta name="twitter:title" content="SudoDog - AI Agent Monitoring & Security">
+  <meta name="twitter:description" content="Monitor all your AI agents in one place. Real-time visibility, audit logs, pattern detection. Works with any framework. Free & open-source.">
+  <meta name="twitter:image" content="https://sudodog.com/assets/hero_logo.png">
   
   <!-- Favicons -->
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
@@ -21,36 +42,135 @@
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css">
   
-  <!-- Structured Data -->
+  <!-- Enhanced Structured Data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "SudoDog",
+    "alternateName": "SudoDog AI Agent Monitoring",
     "url": "https://sudodog.com",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Linux",
-    "description": "Monitor all your AI agents in one place. Real-time visibility, complete audit trail, framework-agnostic. Works with LangChain, AutoGPT, CrewAI, or any framework.",
+    "description": "Monitor all your AI agents in one place. Real-time visibility, complete audit trail, framework-agnostic. Works with LangChain, AutoGPT, CrewAI, or any framework. Free, open-source AI agent security and monitoring tool.",
     "offers": {
       "@type": "Offer",
       "price": "0",
-      "priceCurrency": "USD"
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
     },
     "screenshot": "https://sudodog.com/assets/hero_logo.png",
+    "image": "https://sudodog.com/assets/hero_logo.png",
     "softwareVersion": "0.2.0",
+    "datePublished": "2025-10-15",
+    "dateModified": "2025-11-10",
     "author": {
       "@type": "Organization",
       "name": "SudoDog",
-      "url": "https://sudodog.com"
+      "url": "https://sudodog.com",
+      "logo": "https://sudodog.com/assets/logo.png"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SudoDog",
+      "url": "https://sudodog.com",
+      "logo": "https://sudodog.com/assets/logo.png"
     },
     "downloadUrl": "https://github.com/SudoDog-official/sudodog",
+    "codeRepository": "https://github.com/SudoDog-official/sudodog",
+    "programmingLanguage": "Python",
+    "license": "https://opensource.org/licenses/MIT",
     "featureList": [
-      "Real-time monitoring",
-      "Complete audit trail",
-      "Pattern detection",
-      "Framework-agnostic",
-      "Docker isolation",
-      "Resource monitoring"
+      "Real-time AI agent monitoring",
+      "Complete audit trail with JSONL logs",
+      "Pattern detection for dangerous operations",
+      "Framework-agnostic - works with any AI framework",
+      "Docker container isolation",
+      "CPU and memory resource monitoring",
+      "Zero code changes required",
+      "Works with LangChain, AutoGPT, CrewAI"
+    ],
+    "keywords": "AI agent monitoring, AI security, LangChain monitoring, AutoGPT, CrewAI, Docker isolation, AI observability",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "ratingCount": "1"
+    }
+  }
+  </script>
+  
+  <!-- FAQ Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What AI frameworks does SudoDog support?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SudoDog is framework-agnostic and works with any AI framework including LangChain, AutoGPT, CrewAI, and custom agents built in Python, Node.js, Ruby, or any other language. No code changes are required - just prepend 'sudodog run' to your existing command."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does SudoDog monitor AI agents?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SudoDog provides real-time monitoring with a CLI dashboard that shows CPU and memory usage, tracks all operations with immutable audit logs in JSONL format, and detects dangerous patterns like SQL injection and shell commands. It uses Docker isolation for production-grade security."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is SudoDog free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, SudoDog is completely free and open-source under the MIT license. You can monitor unlimited agents locally with the CLI dashboard. Pro and Enterprise plans with web dashboards and team features are coming soon."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does SudoDog require code changes to my AI agent?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No, SudoDog requires zero code changes. Simply prepend 'sudodog run' to your existing agent command. For example: 'sudodog run python your_agent.py'. It works with any existing AI agent without modification."
+        }
+      }
+    ]
+  }
+  </script>
+  
+  <!-- BreadcrumbList Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://sudodog.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Features",
+        "item": "https://sudodog.com/#features"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Pricing",
+        "item": "https://sudodog.com/#pricing"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "Install",
+        "item": "https://sudodog.com/#install"
+      }
     ]
   }
   </script>
@@ -76,7 +196,8 @@
   <main id="home">
     <section class="hero container">
       <div class="hero-copy center">
-        <img class="hero-logo" src="assets/hero_logo.png" alt="SudoDog logo">
+        <img class="hero-logo" src="assets/hero_logo.png" alt="SudoDog - AI Agent Monitoring and Security Tool">
+        <h1 style="font-size: 0; position: absolute; left: -9999px;">SudoDog - Monitor All Your AI Agents In One Place</h1>
         <p class="lead">Monitor all your AI agents in one place</p>
         <p class="lede-sub">See what every agent is doing. Real-time visibility, complete audit trail, resource monitoring. Works with LangChain, AutoGPT, CrewAI, or any framework. No code changes—just prepend <code style="background: rgba(102, 126, 234, 0.1); padding: 2px 6px; border-radius: 3px;">sudodog run</code>.</p>
         <div class="cta-row">
