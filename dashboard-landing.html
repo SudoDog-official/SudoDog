@@ -27,6 +27,13 @@
   <meta name="twitter:description" content="Monitor, secure, and optimize your AI agents with enterprise-grade observability. Microsoft 365 integration, SOC 2 compliance, and real-time threat detection.">
   <meta name="twitter:image" content="https://sudodog.com/assets/hero_logo.png">
 
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="shortcut icon" href="assets/favicon.ico">
+
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Structured Data for SoftwareApplication -->
@@ -170,8 +177,8 @@
         <div class="flex items-center space-x-4">
           <a href="https://github.com/SudoDog-official/SudoDog/blob/main/dashboard-doc.md" class="text-sm text-[#b8c4d1] hover:text-[#e9eef2]">Docs</a>
           <a href="#features" class="text-sm text-[#b8c4d1] hover:text-[#e9eef2]">Features</a>
+          <a href="#pricing" class="text-sm text-[#b8c4d1] hover:text-[#e9eef2]">Pricing</a>
           <a href="#microsoft365" class="text-sm text-[#b8c4d1] hover:text-[#e9eef2]">Microsoft 365</a>
-          <a href="#faq" class="text-sm text-[#b8c4d1] hover:text-[#e9eef2]">FAQ</a>
           <a href="/dashboard" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">Launch Dashboard</a>
         </div>
       </div>
@@ -182,12 +189,12 @@
   <section class="pt-32 pb-20 px-4">
     <div class="max-w-7xl mx-auto text-center">
       <h1 class="text-5xl md:text-6xl font-bold mb-6">
-        <span class="gradient-text">AI Agent Observability</span><br>
-        & Security Platform
+        <span class="gradient-text">One Dashboard</span><br>
+        For All Your AI Agents
       </h1>
       <p class="text-xl text-[#b8c4d1] mb-8 max-w-3xl mx-auto">
-        Monitor, secure, and optimize your AI agents in production. Track costs, detect threats,
-        and ensure compliance with enterprise-grade observability.
+        See every AI agent across your entire organization in one unified dashboard.
+        Monitor costs, detect threats, track performance, and ensure compliance—all in real-time, all in one place.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
         <a href="/dashboard" class="btn-primary px-8 py-4 rounded-lg text-lg font-semibold">
@@ -222,6 +229,114 @@
         <div>
           <p class="text-4xl font-bold gradient-text">SOC 2</p>
           <p class="text-sm text-[#b8c4d1]">Compliance Ready</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Getting Started Section -->
+  <section class="py-20 px-4">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-4">Add Any Agent in 30 Seconds</h2>
+      <p class="text-center text-[#b8c4d1] mb-12 max-w-2xl mx-auto">
+        No code changes required. Just wrap your agent command with SudoDog and watch it appear in your dashboard instantly.
+      </p>
+
+      <div class="max-w-4xl mx-auto">
+        <!-- Step 1 -->
+        <div class="card rounded-xl p-8 mb-6">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-[#2dd4bf]/10 flex items-center justify-center">
+              <span class="text-2xl font-bold text-[#2dd4bf]">1</span>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-semibold mb-3">Install SudoDog CLI</h3>
+              <div class="bg-[#0f1116] rounded-lg p-4 overflow-x-auto">
+                <pre class="text-sm text-[#e9eef2]"><code>pip install sudodog</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="card rounded-xl p-8 mb-6">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-[#2dd4bf]/10 flex items-center justify-center">
+              <span class="text-2xl font-bold text-[#2dd4bf]">2</span>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-semibold mb-3">Configure Your Dashboard API Key</h3>
+              <div class="bg-[#0f1116] rounded-lg p-4 overflow-x-auto">
+                <pre class="text-sm text-[#e9eef2]"><code>sudodog configure --api-key "your-api-key-from-dashboard"</code></pre>
+              </div>
+              <p class="text-sm text-[#b8c4d1] mt-3">
+                Get your API key from the dashboard at Settings → API Keys
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="card rounded-xl p-8">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-[#2dd4bf]/10 flex items-center justify-center">
+              <span class="text-2xl font-bold text-[#2dd4bf]">3</span>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-semibold mb-3">Wrap Your Agent & Watch It Appear</h3>
+              <div class="bg-[#0f1116] rounded-lg p-4 overflow-x-auto mb-3">
+                <pre class="text-sm text-[#e9eef2]"><code><span class="text-[#b8c4d1]"># LangChain agent</span>
+sudodog run --name "customer-support-agent" python langchain_agent.py
+
+<span class="text-[#b8c4d1]"># AutoGPT agent</span>
+sudodog run --name "research-agent" python -m autogpt
+
+<span class="text-[#b8c4d1]"># CrewAI agent</span>
+sudodog run --name "sales-agent" python crewai_agent.py
+
+<span class="text-[#b8c4d1]"># Custom Node.js agent</span>
+sudodog run --name "analytics-agent" node agent.js</code></pre>
+              </div>
+              <div class="bg-[#083c3b] border border-[#2dd4bf] rounded-lg p-4">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-[#2dd4bf]">✓</span>
+                  <span class="font-semibold text-[#2dd4bf]">Done!</span>
+                </div>
+                <p class="text-sm text-[#b8c4d1]">
+                  Your agent now appears in the dashboard with live monitoring, cost tracking, security alerts, and performance metrics.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual Preview -->
+        <div class="mt-12 text-center">
+          <p class="text-sm text-[#b8c4d1] mb-4">Your dashboard will show all agents in real-time:</p>
+          <div class="card rounded-xl p-6">
+            <div class="grid md:grid-cols-4 gap-4">
+              <div class="bg-[#0f1116] rounded-lg p-4">
+                <p class="text-xs text-[#b8c4d1] mb-1">customer-support-agent</p>
+                <p class="text-sm font-semibold text-[#22c55e]">● Active</p>
+                <p class="text-xs text-[#b8c4d1] mt-2">Cost: $12.45</p>
+              </div>
+              <div class="bg-[#0f1116] rounded-lg p-4">
+                <p class="text-xs text-[#b8c4d1] mb-1">research-agent</p>
+                <p class="text-sm font-semibold text-[#22c55e]">● Active</p>
+                <p class="text-xs text-[#b8c4d1] mt-2">Cost: $8.32</p>
+              </div>
+              <div class="bg-[#0f1116] rounded-lg p-4">
+                <p class="text-xs text-[#b8c4d1] mb-1">sales-agent</p>
+                <p class="text-sm font-semibold text-[#fbbf24]">◐ Idle</p>
+                <p class="text-xs text-[#b8c4d1] mt-2">Cost: $3.12</p>
+              </div>
+              <div class="bg-[#0f1116] rounded-lg p-4">
+                <p class="text-xs text-[#b8c4d1] mb-1">analytics-agent</p>
+                <p class="text-sm font-semibold text-[#22c55e]">● Active</p>
+                <p class="text-xs text-[#b8c4d1] mt-2">Cost: $15.67</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -419,6 +534,278 @@ sudodog compliance report --standard soc2 \
     </div>
   </section>
 
+  <!-- Pricing Section -->
+  <section id="pricing" class="py-20 px-4">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-4">Dashboard Pricing</h2>
+      <p class="text-center text-[#b8c4d1] mb-12 max-w-2xl mx-auto">
+        Start with the free beta, then upgrade to Pro or Enterprise when you need advanced features and team collaboration.
+      </p>
+
+      <div class="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <!-- Free Beta -->
+        <div class="card rounded-xl p-8">
+          <h3 class="text-2xl font-bold mb-2">Free Beta</h3>
+          <p class="text-sm text-[#b8c4d1] mb-6">For individuals testing the platform</p>
+          <div class="mb-6">
+            <span class="text-4xl font-bold text-[#2dd4bf]">$0</span>
+            <span class="text-[#b8c4d1]">/month</span>
+          </div>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Monitor up to 5 agents</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Real-time dashboard</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Basic cost tracking</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Security alerts</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">7-day data retention</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Community support</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#b8c4d1] mt-1">×</span>
+              <span class="text-sm text-[#b8c4d1]">Team collaboration</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#b8c4d1] mt-1">×</span>
+              <span class="text-sm text-[#b8c4d1]">Microsoft 365 integration</span>
+            </li>
+          </ul>
+          <a href="/dashboard" class="btn-secondary block text-center px-6 py-3 rounded-lg font-semibold">
+            Start Free Beta
+          </a>
+        </div>
+
+        <!-- Dashboard Pro -->
+        <div class="card rounded-xl p-8 relative border-2 border-[#2dd4bf]">
+          <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+            <span class="bg-[#2dd4bf] text-[#083c3b] px-4 py-1 rounded-full text-sm font-semibold">COMING SOON</span>
+          </div>
+          <h3 class="text-2xl font-bold mb-2">Dashboard Pro</h3>
+          <p class="text-sm text-[#b8c4d1] mb-6">For teams managing multiple agents</p>
+          <div class="mb-6">
+            <span class="text-4xl font-bold text-[#2dd4bf]">$99</span>
+            <span class="text-[#b8c4d1]">/month</span>
+          </div>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm font-semibold">Everything in Free, plus:</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Monitor unlimited agents</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Up to 5 team members</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Advanced cost analytics</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Performance metrics & alerts</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">30-day data retention</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Email & Slack alerts</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Priority support</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#b8c4d1] mt-1">×</span>
+              <span class="text-sm text-[#b8c4d1]">Microsoft 365 integration</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#b8c4d1] mt-1">×</span>
+              <span class="text-sm text-[#b8c4d1]">Compliance reports</span>
+            </li>
+          </ul>
+          <a href="#waitlist" class="btn-primary block text-center px-6 py-3 rounded-lg font-semibold">
+            Join Waitlist
+          </a>
+        </div>
+
+        <!-- Dashboard Enterprise -->
+        <div class="card rounded-xl p-8">
+          <h3 class="text-2xl font-bold mb-2">Dashboard Enterprise</h3>
+          <p class="text-sm text-[#b8c4d1] mb-6">For large organizations with compliance needs</p>
+          <div class="mb-6">
+            <span class="text-4xl font-bold">Custom</span>
+          </div>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm font-semibold">Everything in Pro, plus:</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Unlimited team members</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Microsoft 365 integration</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Azure AD / Entra SSO</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Shadow agent discovery</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Compliance reports (SOC 2, EU AI Act, ISO 42001, GDPR)</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Custom data retention</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">On-premise deployment option</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">SLA & dedicated support</span>
+            </li>
+          </ul>
+          <a href="#contact" class="btn-secondary block text-center px-6 py-3 rounded-lg font-semibold">
+            Contact Sales
+          </a>
+        </div>
+      </div>
+
+      <!-- Feature Comparison Table -->
+      <div class="mt-16">
+        <h3 class="text-2xl font-bold text-center mb-8">Feature Comparison</h3>
+        <div class="card rounded-xl overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-[#0f1116]">
+                <tr>
+                  <th class="text-left p-4 font-semibold">Feature</th>
+                  <th class="text-center p-4 font-semibold">Free Beta</th>
+                  <th class="text-center p-4 font-semibold text-[#2dd4bf]">Pro</th>
+                  <th class="text-center p-4 font-semibold">Enterprise</th>
+                </tr>
+              </thead>
+              <tbody class="text-sm">
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Agents monitored</td>
+                  <td class="text-center p-4">Up to 5</td>
+                  <td class="text-center p-4">Unlimited</td>
+                  <td class="text-center p-4">Unlimited</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Team members</td>
+                  <td class="text-center p-4">1</td>
+                  <td class="text-center p-4">Up to 5</td>
+                  <td class="text-center p-4">Unlimited</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Data retention</td>
+                  <td class="text-center p-4">7 days</td>
+                  <td class="text-center p-4">30 days</td>
+                  <td class="text-center p-4">Custom</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Real-time monitoring</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Cost tracking</td>
+                  <td class="text-center p-4">Basic</td>
+                  <td class="text-center p-4">Advanced</td>
+                  <td class="text-center p-4">Advanced</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Security alerts</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Performance metrics</td>
+                  <td class="text-center p-4">Basic</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Email/Slack alerts</td>
+                  <td class="text-center p-4">—</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Microsoft 365 integration</td>
+                  <td class="text-center p-4">—</td>
+                  <td class="text-center p-4">—</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Azure AD / Entra SSO</td>
+                  <td class="text-center p-4">—</td>
+                  <td class="text-center p-4">—</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Shadow agent discovery</td>
+                  <td class="text-center p-4">—</td>
+                  <td class="text-center p-4">—</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Compliance reports</td>
+                  <td class="text-center p-4">—</td>
+                  <td class="text-center p-4">—</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">On-premise deployment</td>
+                  <td class="text-center p-4">—</td>
+                  <td class="text-center p-4">—</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Support</td>
+                  <td class="text-center p-4">Community</td>
+                  <td class="text-center p-4">Priority</td>
+                  <td class="text-center p-4">SLA + Dedicated</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- FAQ Section -->
   <section id="faq" class="py-20 px-4 bg-[#151922]">
     <div class="max-w-3xl mx-auto">
@@ -524,6 +911,7 @@ sudodog compliance report --standard soc2 \
           <h4 class="font-semibold mb-3">Product</h4>
           <ul class="space-y-2 text-sm text-[#b8c4d1]">
             <li><a href="#features" class="hover:text-[#e9eef2]">Features</a></li>
+            <li><a href="#pricing" class="hover:text-[#e9eef2]">Pricing</a></li>
             <li><a href="#microsoft365" class="hover:text-[#e9eef2]">Microsoft 365</a></li>
             <li><a href="/dashboard" class="hover:text-[#e9eef2]">Dashboard</a></li>
           </ul>
