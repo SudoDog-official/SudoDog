@@ -3,8 +3,128 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SudoDog - AI Agent Observability & Security Platform</title>
+  <title>SudoDog Dashboard - AI Agent Observability & Security Platform | Real-Time Monitoring</title>
+  <meta name="description" content="Enterprise AI agent observability and security platform. Monitor costs, detect threats, ensure compliance with Microsoft 365 integration. Track all AI agents in production with real-time monitoring and SOC 2 compliance.">
+
+  <!-- Enhanced SEO Meta Tags -->
+  <meta name="keywords" content="AI agent observability, AI agent security, Microsoft 365 integration, SOC 2 compliance, AI monitoring dashboard, enterprise AI security, Agent 365, Azure AD SSO, AI compliance reports">
+  <meta name="author" content="SudoDog">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://sudodog.com/dashboard-landing.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sudodog.com/dashboard-landing.html">
+  <meta property="og:title" content="SudoDog Dashboard - AI Agent Observability & Security Platform">
+  <meta property="og:description" content="Enterprise AI agent observability platform with Microsoft 365 integration. Monitor costs, detect threats, and ensure compliance for all your AI agents.">
+  <meta property="og:image" content="https://sudodog.com/assets/hero_logo.png">
+  <meta property="og:site_name" content="SudoDog">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://sudodog.com/dashboard-landing.html">
+  <meta name="twitter:title" content="SudoDog Dashboard - Enterprise AI Agent Observability">
+  <meta name="twitter:description" content="Monitor, secure, and optimize your AI agents with enterprise-grade observability. Microsoft 365 integration, SOC 2 compliance, and real-time threat detection.">
+  <meta name="twitter:image" content="https://sudodog.com/assets/hero_logo.png">
+
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Structured Data for SoftwareApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SudoDog Dashboard",
+    "alternateName": "SudoDog AI Agent Observability Platform",
+    "url": "https://sudodog.com/dashboard-landing.html",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Web, Linux",
+    "description": "Enterprise AI agent observability and security platform. Monitor costs, detect threats, ensure compliance with enterprise-grade observability. Includes Microsoft 365 integration, Azure AD SSO, and compliance reporting for SOC 2, EU AI Act, ISO 42001, and GDPR.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock",
+      "description": "Free during beta period"
+    },
+    "screenshot": "https://sudodog.com/assets/hero_logo.png",
+    "image": "https://sudodog.com/assets/hero_logo.png",
+    "author": {
+      "@type": "Organization",
+      "name": "SudoDog",
+      "url": "https://sudodog.com"
+    },
+    "featureList": [
+      "Real-time AI agent monitoring",
+      "Cost analytics and budgeting",
+      "Security threat detection",
+      "Microsoft 365 integration",
+      "Azure AD SSO",
+      "Shadow agent discovery",
+      "Compliance reports (SOC 2, EU AI Act, ISO 42001, GDPR)",
+      "Agent orchestration",
+      "Performance metrics",
+      "Audit logging"
+    ]
+  }
+  </script>
+
+  <!-- FAQ Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What AI frameworks does SudoDog support?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SudoDog works with any AI agent framework including LangChain, AutoGPT, CrewAI, custom agents, and more. It monitors at the system level so no code changes are needed."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does pricing work during the beta?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SudoDog is completely free during the beta period. All features including enterprise capabilities like Microsoft 365 integration, compliance reports, and team management are available at no cost. No credit card required."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I set up Microsoft 365 integration?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Go to Settings → Enterprise → Microsoft 365 in the dashboard. You'll need your Azure AD tenant ID, client ID, and client secret from an app registration in Azure Portal. Full setup instructions are in the dashboard."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which compliance standards are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SudoDog generates compliance reports for SOC 2 Type II, EU AI Act, ISO 42001, and GDPR. Reports include audit trails, security incidents, resolution rates, and actionable recommendations."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Organization Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "SudoDog",
+    "url": "https://sudodog.com",
+    "logo": "https://sudodog.com/assets/logo.png",
+    "description": "AI Agent Observability & Security Platform",
+    "sameAs": [
+      "https://github.com/SudoDog-official"
+    ]
+  }
+  </script>
   <style>
     body {
       background-color: #0f1116;
@@ -42,11 +162,13 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16 items-center">
         <div class="flex items-center">
-          <span class="text-2xl font-bold">🐕 SudoDog</span>
+          <a href="index.html" class="flex items-center" aria-label="SudoDog home">
+            <img src="assets/logo.png" alt="SudoDog logo" class="h-8 w-auto">
+          </a>
           <span class="ml-2 px-2 py-0.5 bg-[#2dd4bf]/10 text-[#2dd4bf] text-xs font-medium rounded">FREE BETA</span>
         </div>
         <div class="flex items-center space-x-4">
-          <a href="https://github.com/SudoDog-official/sudodog-platform/blob/main/docs/dashboard-docs.md" class="text-sm text-[#b8c4d1] hover:text-[#e9eef2]">Docs</a>
+          <a href="https://github.com/SudoDog-official/SudoDog/blob/main/dashboard-doc.md" class="text-sm text-[#b8c4d1] hover:text-[#e9eef2]">Docs</a>
           <a href="#features" class="text-sm text-[#b8c4d1] hover:text-[#e9eef2]">Features</a>
           <a href="#microsoft365" class="text-sm text-[#b8c4d1] hover:text-[#e9eef2]">Microsoft 365</a>
           <a href="#faq" class="text-sm text-[#b8c4d1] hover:text-[#e9eef2]">FAQ</a>
@@ -71,7 +193,7 @@
         <a href="/dashboard" class="btn-primary px-8 py-4 rounded-lg text-lg font-semibold">
           Start Free Beta
         </a>
-        <a href="https://github.com/SudoDog-official/sudodog-platform/blob/main/docs/dashboard-docs.md" class="btn-secondary px-8 py-4 rounded-lg text-lg font-semibold">
+        <a href="https://github.com/SudoDog-official/SudoDog/blob/main/dashboard-doc.md" class="btn-secondary px-8 py-4 rounded-lg text-lg font-semibold">
           Read Documentation
         </a>
       </div>
@@ -379,7 +501,7 @@ sudodog compliance report --standard soc2 \
         <a href="/dashboard" class="btn-primary px-8 py-4 rounded-lg text-lg font-semibold">
           Launch Dashboard
         </a>
-        <a href="https://github.com/SudoDog-official/sudodog-platform/blob/main/docs/dashboard-docs.md" class="btn-secondary px-8 py-4 rounded-lg text-lg font-semibold">
+        <a href="https://github.com/SudoDog-official/SudoDog/blob/main/dashboard-doc.md" class="btn-secondary px-8 py-4 rounded-lg text-lg font-semibold">
           Read Documentation
         </a>
       </div>
@@ -391,7 +513,9 @@ sudodog compliance report --standard soc2 \
     <div class="max-w-7xl mx-auto">
       <div class="grid md:grid-cols-4 gap-8">
         <div>
-          <span class="text-xl font-bold">🐕 SudoDog</span>
+          <div class="flex items-center mb-2">
+            <img src="assets/logo.png" alt="SudoDog logo" class="h-6 w-auto">
+          </div>
           <p class="text-sm text-[#b8c4d1] mt-2">
             AI Agent Observability & Security Platform
           </p>
@@ -407,16 +531,16 @@ sudodog compliance report --standard soc2 \
         <div>
           <h4 class="font-semibold mb-3">Resources</h4>
           <ul class="space-y-2 text-sm text-[#b8c4d1]">
-            <li><a href="https://github.com/SudoDog-official/sudodog-platform/blob/main/docs/dashboard-docs.md" class="hover:text-[#e9eef2]">Documentation</a></li>
+            <li><a href="https://github.com/SudoDog-official/SudoDog/blob/main/dashboard-doc.md" class="hover:text-[#e9eef2]">Documentation</a></li>
             <li><a href="#faq" class="hover:text-[#e9eef2]">FAQ</a></li>
-            <li><a href="https://github.com/SudoDog-official/sudodog-platform" class="hover:text-[#e9eef2]">GitHub</a></li>
+            <li><a href="https://github.com/SudoDog-official/SudoDog" class="hover:text-[#e9eef2]">GitHub</a></li>
           </ul>
         </div>
         <div>
           <h4 class="font-semibold mb-3">Company</h4>
           <ul class="space-y-2 text-sm text-[#b8c4d1]">
             <li><a href="https://github.com/SudoDog-official" class="hover:text-[#e9eef2]">About</a></li>
-            <li><a href="https://github.com/SudoDog-official/sudodog-platform/issues" class="hover:text-[#e9eef2]">Support</a></li>
+            <li><a href="https://github.com/SudoDog-official/SudoDog/issues" class="hover:text-[#e9eef2]">Support</a></li>
           </ul>
         </div>
       </div>
