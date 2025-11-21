@@ -1,923 +1,1048 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SudoDog Dashboard - AI Agent Observability & Security</title>
-    <meta name="description" content="Monitor, secure, and optimize your AI agents with SudoDog Dashboard. Real-time observability, security monitoring, cost tracking, and enterprise controls.">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-primary: #0a0d14;
-            --bg-secondary: #0f1116;
-            --bg-card: #151922;
-            --border: #242a36;
-            --text-primary: #e9eef2;
-            --text-secondary: #b8c4d1;
-            --accent: #2dd4bf;
-            --accent-dark: #083c3b;
-            --success: #22c55e;
-            --warning: #f59e0b;
-            --error: #ef4444;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        /* Navigation */
-        nav {
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
-            padding: 16px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .nav-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 32px;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: var(--text-primary);
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s;
-            cursor: pointer;
-            border: none;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: var(--accent-dark);
-        }
-
-        .btn-primary:hover {
-            background: #26b8a5;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--accent);
-            border: 1px solid var(--accent);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(45, 212, 191, 0.1);
-        }
-
-        .btn-large {
-            padding: 16px 32px;
-            font-size: 16px;
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 80px 0;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 48px;
-            font-weight: 700;
-            margin-bottom: 24px;
-            background: linear-gradient(135deg, var(--text-primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            font-size: 20px;
-            color: var(--text-secondary);
-            max-width: 700px;
-            margin: 0 auto 48px;
-        }
-
-        .hero-ctas {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        /* Plans Section */
-        .plans {
-            padding: 80px 0;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-
-        .section-title h2 {
-            font-size: 36px;
-            margin-bottom: 16px;
-        }
-
-        .section-title p {
-            color: var(--text-secondary);
-            font-size: 18px;
-        }
-
-        .plans-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 24px;
-        }
-
-        .plan-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 32px;
-            position: relative;
-        }
-
-        .plan-card.featured {
-            border-color: var(--accent);
-        }
-
-        .plan-badge {
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--accent);
-            color: var(--accent-dark);
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .plan-header {
-            text-align: center;
-            padding-bottom: 24px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 24px;
-        }
-
-        .plan-name {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .plan-price {
-            font-size: 48px;
-            font-weight: 700;
-        }
-
-        .plan-price span {
-            font-size: 16px;
-            color: var(--text-secondary);
-            font-weight: 400;
-        }
-
-        .plan-description {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-top: 8px;
-        }
-
-        .plan-features {
-            list-style: none;
-            margin-bottom: 32px;
-        }
-
-        .plan-features li {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 8px 0;
-            font-size: 14px;
-        }
-
-        .plan-features li svg {
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .check-icon {
-            color: var(--success);
-        }
-
-        .x-icon {
-            color: var(--text-secondary);
-            opacity: 0.5;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 80px 0;
-            background: var(--bg-secondary);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 32px;
-        }
-
-        .feature-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-        }
-
-        .feature-icon {
-            width: 48px;
-            height: 48px;
-            background: rgba(45, 212, 191, 0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 16px;
-        }
-
-        .feature-icon svg {
-            width: 24px;
-            height: 24px;
-            color: var(--accent);
-        }
-
-        .feature-card h3 {
-            font-size: 18px;
-            margin-bottom: 8px;
-        }
-
-        .feature-card p {
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        /* Comparison Table */
-        .comparison {
-            padding: 80px 0;
-        }
-
-        .comparison-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--bg-card);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .comparison-table th,
-        .comparison-table td {
-            padding: 16px 24px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .comparison-table th {
-            background: var(--bg-secondary);
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .comparison-table td {
-            font-size: 14px;
-        }
-
-        .comparison-table td:not(:first-child) {
-            text-align: center;
-        }
-
-        .comparison-table th:not(:first-child) {
-            text-align: center;
-        }
-
-        .comparison-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        /* FAQ Section */
-        .faq {
-            padding: 80px 0;
-            background: var(--bg-secondary);
-        }
-
-        .faq-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 24px;
-        }
-
-        .faq-item {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-        }
-
-        .faq-item h3 {
-            font-size: 16px;
-            margin-bottom: 12px;
-            color: var(--text-primary);
-        }
-
-        .faq-item p {
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        /* CTA Section */
-        .cta {
-            padding: 80px 0;
-            text-align: center;
-        }
-
-        .cta h2 {
-            font-size: 36px;
-            margin-bottom: 16px;
-        }
-
-        .cta p {
-            color: var(--text-secondary);
-            font-size: 18px;
-            margin-bottom: 32px;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border);
-            padding: 48px 0 24px;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 48px;
-            margin-bottom: 48px;
-        }
-
-        .footer-section h4 {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: var(--text-primary);
-        }
-
-        .footer-section a {
-            display: block;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 14px;
-            padding: 4px 0;
-            transition: color 0.2s;
-        }
-
-        .footer-section a:hover {
-            color: var(--accent);
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 24px;
-            border-top: 1px solid var(--border);
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 32px;
-            }
-
-            .hero p {
-                font-size: 16px;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .plans-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .faq-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .comparison-table {
-                font-size: 12px;
-            }
-
-            .comparison-table th,
-            .comparison-table td {
-                padding: 12px 8px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SudoDog Dashboard - Cross-Platform AI Agent Observability | Linux, Windows, macOS</title>
+  <meta name="description" content="Cross-platform AI agent observability platform for Linux, Windows, and macOS. Monitor costs, detect threats, ensure compliance with Microsoft 365 integration. Track all AI agents in one unified dashboard with real-time monitoring and SOC 2 compliance.">
+
+  <!-- Enhanced SEO Meta Tags -->
+  <meta name="keywords" content="cross-platform AI monitoring, AI agent observability, Linux Windows macOS monitoring, AI agent security, Microsoft 365 integration, SOC 2 compliance, AI monitoring dashboard, enterprise AI security, Agent 365, Azure AD SSO, AI compliance reports">
+  <meta name="author" content="SudoDog">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://sudodog.com/dashboard-landing.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sudodog.com/dashboard-landing.html">
+  <meta property="og:title" content="SudoDog Dashboard - Cross-Platform AI Agent Observability">
+  <meta property="og:description" content="Monitor agents from Linux, Windows, and macOS in one unified dashboard. Enterprise AI observability platform with Microsoft 365 integration, cost tracking, threat detection, and SOC 2 compliance.">
+  <meta property="og:image" content="https://sudodog.com/assets/hero_logo.png">
+  <meta property="og:site_name" content="SudoDog">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://sudodog.com/dashboard-landing.html">
+  <meta name="twitter:title" content="SudoDog Dashboard - Cross-Platform AI Agent Observability">
+  <meta name="twitter:description" content="Monitor agents from Linux, Windows, and macOS in one unified dashboard. Enterprise observability with Microsoft 365 integration, SOC 2 compliance, and real-time threat detection.">
+  <meta name="twitter:image" content="https://sudodog.com/assets/hero_logo.png">
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="shortcut icon" href="assets/favicon.ico">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Structured Data for SoftwareApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SudoDog Dashboard",
+    "alternateName": "SudoDog Cross-Platform AI Agent Observability Platform",
+    "url": "https://sudodog.com/dashboard-landing.html",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Web, Linux, Windows, macOS",
+    "description": "Cross-platform AI agent observability and security platform for Linux, Windows, and macOS. Monitor costs, detect threats, ensure compliance with enterprise-grade observability. Includes Microsoft 365 integration, Azure AD SSO, and compliance reporting for SOC 2, EU AI Act, ISO 42001, and GDPR.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock",
+      "description": "Free during beta period"
+    },
+    "screenshot": "https://sudodog.com/assets/hero_logo.png",
+    "image": "https://sudodog.com/assets/hero_logo.png",
+    "author": {
+      "@type": "Organization",
+      "name": "SudoDog",
+      "url": "https://sudodog.com"
+    },
+    "featureList": [
+      "Cross-platform support (Linux, Windows, macOS)",
+      "Real-time AI agent monitoring",
+      "Cost analytics and budgeting",
+      "Security threat detection",
+      "Microsoft 365 integration",
+      "Azure AD SSO",
+      "Shadow agent discovery",
+      "Compliance reports (SOC 2, EU AI Act, ISO 42001, GDPR)",
+      "Agent orchestration",
+      "Performance metrics",
+      "Audit logging"
+    ]
+  }
+  </script>
+
+  <!-- FAQ Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I monitor agents from different platforms in one dashboard?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! SudoDog works on Linux, Windows, and macOS. You can run agents on any combination of these platforms and monitor them all from one unified dashboard. For example, you might have production agents on Linux servers, development agents on Windows workstations, and local agents on macOS laptops—all visible in the same dashboard view."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What AI frameworks does SudoDog support?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SudoDog works with any AI agent framework including LangChain, AutoGPT, CrewAI, custom agents, and more. It monitors at the system level so no code changes are needed."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does pricing work during the beta?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SudoDog is completely free during the beta period. All features including enterprise capabilities like Microsoft 365 integration, compliance reports, and team management are available at no cost. No credit card required."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I set up Microsoft 365 integration?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Go to Settings → Enterprise → Microsoft 365 in the dashboard. You'll need your Azure AD tenant ID, client ID, and client secret from an app registration in Azure Portal. Full setup instructions are in the dashboard."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which compliance standards are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SudoDog generates compliance reports for SOC 2 Type II, EU AI Act, ISO 42001, and GDPR. Reports include audit trails, security incidents, resolution rates, and actionable recommendations."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Organization Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "SudoDog",
+    "url": "https://sudodog.com",
+    "logo": "https://sudodog.com/assets/logo.png",
+    "description": "AI Agent Observability & Security Platform",
+    "sameAs": [
+      "https://github.com/SudoDog-official"
+    ]
+  }
+  </script>
+  <style>
+    body {
+      background-color: #0f1116;
+      color: #e9eef2;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #2dd4bf 0%, #22d3ee 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .card {
+      background: #151922;
+      border: 1px solid #242a36;
+    }
+    .btn-primary {
+      background: #2dd4bf;
+      color: #083c3b;
+    }
+    .btn-primary:hover {
+      background: #26b8a5;
+    }
+    .btn-secondary {
+      border: 1px solid #2dd4bf;
+      color: #2dd4bf;
+    }
+    .btn-secondary:hover {
+      background: rgba(45, 212, 191, 0.1);
+    }
+  </style>
 </head>
-<body>
-    <!-- Navigation -->
-    <nav>
-        <div class="container nav-content">
-            <a href="/" class="logo">SudoDog</a>
-            <div class="nav-links">
-                <a href="#features">Features</a>
-                <a href="#pricing">Pricing</a>
-                <a href="#faq">FAQ</a>
-                <a href="/docs">Docs</a>
-                <a href="/login" class="btn btn-primary">Sign In</a>
-            </div>
+<body class="antialiased">
+  <!-- Navigation -->
+  <nav class="fixed top-0 w-full bg-[#0f1116]/90 backdrop-blur-sm border-b border-[#242a36] z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <div class="flex items-center">
+          <a href="index.html" class="flex items-center" aria-label="SudoDog home">
+            <img src="assets/logo.png" alt="SudoDog logo" class="h-8 w-auto">
+          </a>
+          <span class="ml-2 px-2 py-0.5 bg-[#2dd4bf]/10 text-[#2dd4bf] text-xs font-medium rounded">FREE BETA</span>
         </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <h1>AI Agent Observability & Security</h1>
-            <p>
-                Monitor, secure, and optimize your AI agents in real-time. Get complete visibility into agent behavior, costs, and security events with SudoDog Dashboard.
-            </p>
-            <div class="hero-ctas">
-                <a href="#pricing" class="btn btn-primary btn-large">View Plans</a>
-                <a href="/demo" class="btn btn-secondary btn-large">Request Demo</a>
-            </div>
+        <div class="flex items-center space-x-4">
+          <a href="https://github.com/SudoDog-official/SudoDog/blob/main/dashboard-doc.md" class="text-sm text-[#b8c4d1] hover:text-[#e9eef2]">Docs</a>
+          <a href="#features" class="text-sm text-[#b8c4d1] hover:text-[#e9eef2]">Features</a>
+          <a href="#pricing" class="text-sm text-[#b8c4d1] hover:text-[#e9eef2]">Pricing</a>
+          <a href="#microsoft365" class="text-sm text-[#b8c4d1] hover:text-[#e9eef2]">Microsoft 365</a>
+          <a href="/dashboard" class="bg-[#2dd4bf] hover:bg-[#26b8a5] text-[#0f1116] px-4 py-2 rounded-lg text-sm font-semibold">Launch Dashboard</a>
         </div>
-    </section>
+      </div>
+    </div>
+  </nav>
 
-    <!-- Plans Section -->
-    <section class="plans" id="pricing">
-        <div class="container">
-            <div class="section-title">
-                <h2>Choose Your Plan</h2>
-                <p>Start with Pro for your team, upgrade to Enterprise for full control</p>
-            </div>
+  <!-- Hero Section -->
+  <section class="pt-32 pb-20 px-4">
+    <div class="max-w-7xl mx-auto text-center">
+      <h1 class="text-5xl md:text-6xl font-bold mb-6">
+        <span class="gradient-text">One Dashboard</span><br>
+        For All Your AI Agents<br>
+        <span class="text-3xl text-[#b8c4d1]">Across Every Platform</span>
+      </h1>
+      <p class="text-xl text-[#b8c4d1] mb-6 max-w-3xl mx-auto">
+        Monitor agents from <span class="text-[#2dd4bf] font-semibold">cross-platform</span> environments in one unified dashboard.
+        Track costs, detect threats, monitor performance, and ensure compliance—all in real-time, all in one place.
+      </p>
 
-            <div class="plans-grid">
-                <!-- Pro Plan -->
-                <div class="plan-card">
-                    <div class="plan-header">
-                        <div class="plan-name">Pro</div>
-                        <div class="plan-price">$99<span>/month</span></div>
-                        <div class="plan-description">For teams building with AI agents</div>
-                    </div>
-                    <ul class="plan-features">
-                        <li>
-                            <svg class="check-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            Up to 10 Active Agents
-                        </li>
-                        <li>
-                            <svg class="check-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            100,000 API Calls/month
-                        </li>
-                        <li>
-                            <svg class="check-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            Real-time Dashboard
-                        </li>
-                        <li>
-                            <svg class="check-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            Security Monitoring
-                        </li>
-                        <li>
-                            <svg class="check-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            Cost Tracking & Budgets
-                        </li>
-                        <li>
-                            <svg class="check-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            5 Team Members
-                        </li>
-                        <li>
-                            <svg class="check-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            Email Support
-                        </li>
-                        <li>
-                            <svg class="x-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
-                            <span style="color: var(--text-secondary);">Audit Logs</span>
-                        </li>
-                        <li>
-                            <svg class="x-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
-                            <span style="color: var(--text-secondary);">Slack Integration</span>
-                        </li>
-                        <li>
-                            <svg class="x-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
-                            <span style="color: var(--text-secondary);">Advanced RBAC</span>
-                        </li>
-                    </ul>
-                    <a href="/signup?plan=pro" class="btn btn-secondary" style="width: 100%;">Get Started</a>
-                </div>
-
-                <!-- Enterprise Plan -->
-                <div class="plan-card featured">
-                    <div class="plan-badge">Most Popular</div>
-                    <div class="plan-header">
-                        <div class="plan-name">Enterprise</div>
-                        <div class="plan-price">$499<span>/month</span></div>
-                        <div class="plan-description">For organizations requiring compliance & control</div>
-                    </div>
-                    <ul class="plan-features">
-                        <li>
-                            <svg class="check-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            Up to 100 Active Agents
-                        </li>
-                        <li>
-                            <svg class="check-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            1,000,000 API Calls/month
-                        </li>
-                        <li>
-                            <svg class="check-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            Everything in Pro
-                        </li>
-                        <li>
-                            <svg class="check-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            <strong>Full Audit Logs with CSV Export</strong>
-                        </li>
-                        <li>
-                            <svg class="check-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            <strong>Slack & Email Alerts</strong>
-                        </li>
-                        <li>
-                            <svg class="check-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            <strong>Advanced RBAC (4 Roles)</strong>
-                        </li>
-                        <li>
-                            <svg class="check-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            50 Team Members
-                        </li>
-                        <li>
-                            <svg class="check-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            100 GB Data Storage
-                        </li>
-                        <li>
-                            <svg class="check-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            Priority Support
-                        </li>
-                        <li>
-                            <svg class="check-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            SOC2 & GDPR Compliance
-                        </li>
-                    </ul>
-                    <a href="/signup?plan=enterprise" class="btn btn-primary" style="width: 100%;">Get Started</a>
-                </div>
-            </div>
+      <!-- Platform Logos -->
+      <div class="flex items-center justify-center gap-6 mb-8">
+        <div class="flex items-center gap-2 bg-[#151922] px-4 py-2 rounded-lg">
+          <span class="text-2xl">🐧</span>
+          <span class="text-sm text-[#b8c4d1]">Linux</span>
         </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="container">
-            <div class="section-title">
-                <h2>Everything You Need to Monitor AI Agents</h2>
-                <p>Complete observability and security for your AI agent workflows</p>
-            </div>
-
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                        </svg>
-                    </div>
-                    <h3>Real-time Dashboard</h3>
-                    <p>Monitor all your AI agents in one place with live metrics, status updates, and performance graphs.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                        </svg>
-                    </div>
-                    <h3>Security Monitoring</h3>
-                    <p>Detect prompt injections, data exfiltration attempts, and anomalous agent behavior instantly.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <h3>Cost Tracking</h3>
-                    <p>Track LLM costs per agent, set budgets, and get alerts before you overspend.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                        </svg>
-                    </div>
-                    <h3>Performance Analytics</h3>
-                    <p>Track latency, success rates, and quality scores. Identify bottlenecks and optimize workflows.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
-                        </svg>
-                    </div>
-                    <h3>Audit Logs</h3>
-                    <p>Complete audit trail for compliance. Export to CSV for GDPR, SOC2, and internal audits.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-                        </svg>
-                    </div>
-                    <h3>Smart Alerts</h3>
-                    <p>Get notified via Email or Slack when agents fail, costs spike, or security events occur.</p>
-                </div>
-            </div>
+        <div class="flex items-center gap-2 bg-[#151922] px-4 py-2 rounded-lg">
+          <span class="text-2xl">🪟</span>
+          <span class="text-sm text-[#b8c4d1]">Windows</span>
         </div>
-    </section>
+        <div class="flex items-center gap-2 bg-[#151922] px-4 py-2 rounded-lg">
+          <span class="text-2xl">🍎</span>
+          <span class="text-sm text-[#b8c4d1]">macOS</span>
+        </div>
+      </div>
 
-    <!-- Comparison Table -->
-    <section class="comparison">
-        <div class="container">
-            <div class="section-title">
-                <h2>Compare Plans</h2>
-                <p>See what's included in each plan</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+        <a href="/dashboard" class="btn-primary px-8 py-4 rounded-lg text-lg font-semibold">
+          Start Free Beta
+        </a>
+        <a href="https://github.com/SudoDog-official/SudoDog/blob/main/dashboard-doc.md" class="btn-secondary px-8 py-4 rounded-lg text-lg font-semibold">
+          Read Documentation
+        </a>
+      </div>
+      <p class="text-sm text-[#b8c4d1]">
+        🎉 Free during beta • No credit card required • All features included
+      </p>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="py-12 border-y border-[#242a36]">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-8 text-center">
+        <div>
+          <p class="text-4xl font-bold gradient-text">3</p>
+          <p class="text-sm text-[#b8c4d1]">Platforms Supported</p>
+          <p class="text-xs text-[#b8c4d1]/60 mt-1">Linux • Windows • macOS</p>
+        </div>
+        <div>
+          <p class="text-4xl font-bold gradient-text">100%</p>
+          <p class="text-sm text-[#b8c4d1]">Action Visibility</p>
+        </div>
+        <div>
+          <p class="text-4xl font-bold gradient-text">&lt;1ms</p>
+          <p class="text-sm text-[#b8c4d1]">Monitoring Overhead</p>
+        </div>
+        <div>
+          <p class="text-4xl font-bold gradient-text">Real-time</p>
+          <p class="text-sm text-[#b8c4d1]">Threat Detection</p>
+        </div>
+        <div>
+          <p class="text-4xl font-bold gradient-text">SOC 2</p>
+          <p class="text-sm text-[#b8c4d1]">Compliance Ready</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cross-Platform Highlight Section -->
+  <section class="py-16 px-4 bg-[#151922]">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold mb-4">True Cross-Platform Monitoring</h2>
+        <p class="text-xl text-[#b8c4d1] max-w-3xl mx-auto">
+          Run agents on Linux servers, Windows workstations, and macOS laptops—monitor them all from one unified dashboard.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div class="card rounded-xl p-6 text-center">
+          <div class="text-5xl mb-4">🐧</div>
+          <h3 class="text-xl font-semibold mb-3">Linux</h3>
+          <p class="text-sm text-[#b8c4d1] mb-4">
+            Native support for Ubuntu, Debian, CentOS, RHEL, and more. Uses namespace isolation for secure sandboxing.
+          </p>
+          <div class="bg-[#0f1116] rounded-lg p-3 text-left overflow-x-auto">
+            <pre class="text-xs text-[#e9eef2]"><code>sudodog run --name "prod-agent" \
+  python agent.py</code></pre>
+          </div>
+        </div>
+
+        <div class="card rounded-xl p-6 text-center">
+          <div class="text-5xl mb-4">🪟</div>
+          <h3 class="text-xl font-semibold mb-3">Windows</h3>
+          <p class="text-sm text-[#b8c4d1] mb-4">
+            Full Windows 10/11 and Server support. Uses Job Objects for process isolation and resource limits.
+          </p>
+          <div class="bg-[#0f1116] rounded-lg p-3 text-left overflow-x-auto">
+            <pre class="text-xs text-[#e9eef2]"><code>sudodog run --name "dev-agent" `
+  python agent.py</code></pre>
+          </div>
+        </div>
+
+        <div class="card rounded-xl p-6 text-center">
+          <div class="text-5xl mb-4">🍎</div>
+          <h3 class="text-xl font-semibold mb-3">macOS</h3>
+          <p class="text-sm text-[#b8c4d1] mb-4">
+            Works on macOS 10.15+. Uses sandbox-exec for Apple's native sandboxing capabilities.
+          </p>
+          <div class="bg-[#0f1116] rounded-lg p-3 text-left overflow-x-auto">
+            <pre class="text-xs text-[#e9eef2]"><code>sudodog run --name "local-agent" \
+  python agent.py</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12 card rounded-xl p-8 max-w-3xl mx-auto">
+        <h3 class="text-lg font-semibold mb-4 text-center">
+          <span class="gradient-text">Mix and Match Platforms</span>
+        </h3>
+        <p class="text-center text-[#b8c4d1] mb-6">
+          Your team uses different operating systems? No problem. SudoDog tracks agents from all platforms in one dashboard.
+        </p>
+        <div class="grid grid-cols-3 gap-4 text-center text-sm">
+          <div>
+            <p class="text-2xl mb-2">🐧 + 🪟</p>
+            <p class="text-[#b8c4d1]">Linux production servers + Windows dev machines</p>
+          </div>
+          <div>
+            <p class="text-2xl mb-2">🍎 + 🐧</p>
+            <p class="text-[#b8c4d1]">macOS developers + Linux deployment</p>
+          </div>
+          <div>
+            <p class="text-2xl mb-2">🐧 + 🪟 + 🍎</p>
+            <p class="text-[#b8c4d1]">All platforms unified in one view</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Getting Started Section -->
+  <section class="py-20 px-4">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-4">Add Agents from Any Platform in 30 Seconds</h2>
+      <p class="text-center text-[#b8c4d1] mb-12 max-w-2xl mx-auto">
+        Works on <span class="text-[#2dd4bf] font-semibold">Linux, Windows, and macOS</span>. No code changes required.
+        Just wrap your agent command with SudoDog and watch it appear in your dashboard instantly—regardless of which platform it's running on.
+      </p>
+
+      <div class="max-w-4xl mx-auto">
+        <!-- Step 1 -->
+        <div class="card rounded-xl p-8 mb-6">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-[#2dd4bf]/10 flex items-center justify-center">
+              <span class="text-2xl font-bold text-[#2dd4bf]">1</span>
             </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-semibold mb-3">Install SudoDog CLI (Works on All Platforms)</h3>
+              <div class="grid md:grid-cols-3 gap-4 mb-3">
+                <div>
+                  <p class="text-xs text-[#b8c4d1] mb-2 font-semibold">🐧 Linux</p>
+                  <div class="bg-[#0f1116] rounded-lg p-3 overflow-x-auto">
+                    <pre class="text-xs text-[#e9eef2]"><code>curl -fsSL https://sudodog.com/install.sh | bash</code></pre>
+                  </div>
+                </div>
+                <div>
+                  <p class="text-xs text-[#b8c4d1] mb-2 font-semibold">🪟 Windows</p>
+                  <div class="bg-[#0f1116] rounded-lg p-3 overflow-x-auto">
+                    <pre class="text-xs text-[#e9eef2]"><code>irm sudodog.com/install.ps1 | iex</code></pre>
+                  </div>
+                </div>
+                <div>
+                  <p class="text-xs text-[#b8c4d1] mb-2 font-semibold">🍎 macOS</p>
+                  <div class="bg-[#0f1116] rounded-lg p-3 overflow-x-auto">
+                    <pre class="text-xs text-[#e9eef2]"><code>curl -fsSL https://sudodog.com/install.sh | bash</code></pre>
+                  </div>
+                </div>
+              </div>
+              <p class="text-sm text-[#b8c4d1]">
+                Or use pip on any platform: <code class="bg-[#0f1116] px-2 py-1 rounded text-xs">pip install sudodog</code>
+              </p>
+            </div>
+          </div>
+        </div>
 
-            <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>Feature</th>
-                        <th>Pro</th>
-                        <th>Enterprise</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Active Agents</td>
-                        <td>10</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>API Calls / Month</td>
-                        <td>100,000</td>
-                        <td>1,000,000</td>
-                    </tr>
-                    <tr>
-                        <td>Team Members</td>
-                        <td>5</td>
-                        <td>50</td>
-                    </tr>
-                    <tr>
-                        <td>Data Storage</td>
-                        <td>10 GB</td>
-                        <td>100 GB</td>
-                    </tr>
-                    <tr>
-                        <td>Real-time Dashboard</td>
-                        <td>✓</td>
-                        <td>✓</td>
-                    </tr>
-                    <tr>
-                        <td>Security Monitoring</td>
-                        <td>✓</td>
-                        <td>✓</td>
-                    </tr>
-                    <tr>
-                        <td>Cost Tracking</td>
-                        <td>✓</td>
-                        <td>✓</td>
-                    </tr>
-                    <tr>
-                        <td>Performance Analytics</td>
-                        <td>✓</td>
-                        <td>✓</td>
-                    </tr>
-                    <tr>
-                        <td>Audit Logs & CSV Export</td>
-                        <td>—</td>
-                        <td>✓</td>
-                    </tr>
-                    <tr>
-                        <td>Slack Integration</td>
-                        <td>—</td>
-                        <td>✓</td>
-                    </tr>
-                    <tr>
-                        <td>Advanced RBAC</td>
-                        <td>—</td>
-                        <td>✓</td>
-                    </tr>
-                    <tr>
-                        <td>SOC2 & GDPR Compliance</td>
-                        <td>—</td>
-                        <td>✓</td>
-                    </tr>
-                    <tr>
-                        <td>Support</td>
-                        <td>Email</td>
-                        <td>Priority</td>
-                    </tr>
-                </tbody>
+        <!-- Step 2 -->
+        <div class="card rounded-xl p-8 mb-6">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-[#2dd4bf]/10 flex items-center justify-center">
+              <span class="text-2xl font-bold text-[#2dd4bf]">2</span>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-semibold mb-3">Configure Your Dashboard API Key</h3>
+              <div class="bg-[#0f1116] rounded-lg p-4 overflow-x-auto">
+                <pre class="text-sm text-[#e9eef2]"><code>sudodog configure --api-key "your-api-key-from-dashboard"</code></pre>
+              </div>
+              <p class="text-sm text-[#b8c4d1] mt-3">
+                Get your API key from the dashboard at Settings → API Keys
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="card rounded-xl p-8">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-[#2dd4bf]/10 flex items-center justify-center">
+              <span class="text-2xl font-bold text-[#2dd4bf]">3</span>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-semibold mb-3">Wrap Your Agent & Watch It Appear</h3>
+              <div class="bg-[#0f1116] rounded-lg p-4 overflow-x-auto mb-3">
+                <pre class="text-sm text-[#e9eef2]"><code><span class="text-[#b8c4d1]"># LangChain agent</span>
+sudodog run --name "customer-support-agent" python langchain_agent.py
+
+<span class="text-[#b8c4d1]"># AutoGPT agent</span>
+sudodog run --name "research-agent" python -m autogpt
+
+<span class="text-[#b8c4d1]"># CrewAI agent</span>
+sudodog run --name "sales-agent" python crewai_agent.py
+
+<span class="text-[#b8c4d1]"># Custom Node.js agent</span>
+sudodog run --name "analytics-agent" node agent.js</code></pre>
+              </div>
+              <div class="bg-[#083c3b] border border-[#2dd4bf] rounded-lg p-4">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-[#2dd4bf]">✓</span>
+                  <span class="font-semibold text-[#2dd4bf]">Done!</span>
+                </div>
+                <p class="text-sm text-[#b8c4d1]">
+                  Your agent now appears in the dashboard with live monitoring, cost tracking, security alerts, and performance metrics.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual Preview -->
+        <div class="mt-12 text-center">
+          <p class="text-sm text-[#b8c4d1] mb-4">Your dashboard shows all agents from all platforms in real-time:</p>
+          <div class="card rounded-xl p-6">
+            <div class="grid md:grid-cols-4 gap-4">
+              <div class="bg-[#0f1116] rounded-lg p-4">
+                <div class="flex items-center justify-between mb-1">
+                  <p class="text-xs text-[#b8c4d1]">customer-support-agent</p>
+                  <span class="text-xs">🐧</span>
+                </div>
+                <p class="text-sm font-semibold text-[#22c55e]">● Active</p>
+                <p class="text-xs text-[#b8c4d1] mt-2">Cost: $12.45</p>
+                <p class="text-xs text-[#b8c4d1]/60">Linux</p>
+              </div>
+              <div class="bg-[#0f1116] rounded-lg p-4">
+                <div class="flex items-center justify-between mb-1">
+                  <p class="text-xs text-[#b8c4d1]">research-agent</p>
+                  <span class="text-xs">🪟</span>
+                </div>
+                <p class="text-sm font-semibold text-[#22c55e]">● Active</p>
+                <p class="text-xs text-[#b8c4d1] mt-2">Cost: $8.32</p>
+                <p class="text-xs text-[#b8c4d1]/60">Windows</p>
+              </div>
+              <div class="bg-[#0f1116] rounded-lg p-4">
+                <div class="flex items-center justify-between mb-1">
+                  <p class="text-xs text-[#b8c4d1]">sales-agent</p>
+                  <span class="text-xs">🍎</span>
+                </div>
+                <p class="text-sm font-semibold text-[#fbbf24]">◐ Idle</p>
+                <p class="text-xs text-[#b8c4d1] mt-2">Cost: $3.12</p>
+                <p class="text-xs text-[#b8c4d1]/60">macOS</p>
+              </div>
+              <div class="bg-[#0f1116] rounded-lg p-4">
+                <div class="flex items-center justify-between mb-1">
+                  <p class="text-xs text-[#b8c4d1]">analytics-agent</p>
+                  <span class="text-xs">🐧</span>
+                </div>
+                <p class="text-sm font-semibold text-[#22c55e]">● Active</p>
+                <p class="text-xs text-[#b8c4d1] mt-2">Cost: $15.67</p>
+                <p class="text-xs text-[#b8c4d1]/60">Linux</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-20 px-4">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-4">Complete AI Agent Operations</h2>
+      <p class="text-center text-[#b8c4d1] mb-12 max-w-2xl mx-auto">
+        Everything you need to run AI agents safely and efficiently in production
+      </p>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Feature 1 -->
+        <div class="card rounded-xl p-6">
+          <div class="text-3xl mb-4">🔍</div>
+          <h3 class="text-lg font-semibold mb-2">Real-time Monitoring</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Track every action your AI agents take - file operations, API calls, shell commands.
+            Full visibility into agent behavior with sub-millisecond latency.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="card rounded-xl p-6">
+          <div class="text-3xl mb-4">🛡️</div>
+          <h3 class="text-lg font-semibold mb-2">Security & Threat Detection</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Detect prompt injections, data exfiltration attempts, and unauthorized access.
+            Automatic blocking and alerting for security events.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="card rounded-xl p-6">
+          <div class="text-3xl mb-4">💰</div>
+          <h3 class="text-lg font-semibold mb-2">Cost Analytics</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Track spending by agent, model, and time period. Set budgets, get alerts,
+            and identify optimization opportunities to reduce costs.
+          </p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="card rounded-xl p-6">
+          <div class="text-3xl mb-4">📊</div>
+          <h3 class="text-lg font-semibold mb-2">Performance Metrics</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Monitor latency, error rates, and throughput. Identify bottlenecks and
+            optimize agent performance with detailed quality metrics.
+          </p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="card rounded-xl p-6">
+          <div class="text-3xl mb-4">🔗</div>
+          <h3 class="text-lg font-semibold mb-2">Agent Orchestration</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Visualize multi-agent workflows, track dependencies, and identify
+            coordination issues. See how your agents work together.
+          </p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="card rounded-xl p-6">
+          <div class="text-3xl mb-4">📋</div>
+          <h3 class="text-lg font-semibold mb-2">Audit & Compliance</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Immutable audit logs for every action. Export reports for SOC 2,
+            EU AI Act, ISO 42001, and GDPR compliance requirements.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Microsoft 365 Integration Section -->
+  <section id="microsoft365" class="py-20 px-4 bg-[#151922]">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-12">
+        <span class="px-3 py-1 bg-[#2dd4bf]/10 text-[#2dd4bf] text-sm font-medium rounded-full">NEW</span>
+        <h2 class="text-3xl font-bold mt-4 mb-4">Microsoft Agent 365 Integration</h2>
+        <p class="text-[#b8c4d1] max-w-2xl mx-auto">
+          SudoDog integrates seamlessly with Microsoft Agent 365 for unified governance and operations.
+          The best-in-class operations layer for Agent 365.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div class="card rounded-xl p-6 text-center">
+          <div class="text-3xl mb-3">📤</div>
+          <h3 class="font-semibold mb-2">Telemetry Export</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Export actions, costs, security events, and performance data to Agent 365
+          </p>
+        </div>
+
+        <div class="card rounded-xl p-6 text-center">
+          <div class="text-3xl mb-3">🔐</div>
+          <h3 class="font-semibold mb-2">Azure AD SSO</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Single sign-on with Azure Active Directory / Microsoft Entra
+          </p>
+        </div>
+
+        <div class="card rounded-xl p-6 text-center">
+          <div class="text-3xl mb-3">👻</div>
+          <h3 class="font-semibold mb-2">Shadow Agent Discovery</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Find and monitor rogue AI agents running without oversight
+          </p>
+        </div>
+
+        <div class="card rounded-xl p-6 text-center">
+          <div class="text-3xl mb-3">📑</div>
+          <h3 class="font-semibold mb-2">Compliance Reports</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Auto-generate SOC 2, EU AI Act, ISO 42001, GDPR reports
+          </p>
+        </div>
+      </div>
+
+      <!-- Companion Mode Preview -->
+      <div class="card rounded-xl p-8 max-w-3xl mx-auto">
+        <h3 class="text-lg font-semibold mb-4 text-center">Agent 365 Companion Mode</h3>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <p class="text-sm font-medium text-[#2dd4bf] mb-3">Governance (from Agent 365)</p>
+            <div class="space-y-2">
+              <div class="flex items-center text-sm">
+                <span class="text-[#22c55e] mr-2">✓</span> Agent registered in Entra
+              </div>
+              <div class="flex items-center text-sm">
+                <span class="text-[#22c55e] mr-2">✓</span> Access approved for CRM
+              </div>
+              <div class="flex items-center text-sm">
+                <span class="text-[#22c55e] mr-2">✓</span> Compliance logs enabled
+              </div>
+            </div>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-[#2dd4bf] mb-3">Operations (from SudoDog)</p>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="bg-[#0f1116] rounded p-2">
+                <p class="text-xs text-[#b8c4d1]">Cost Today</p>
+                <p class="font-bold">$47.32</p>
+              </div>
+              <div class="bg-[#0f1116] rounded p-2">
+                <p class="text-xs text-[#b8c4d1]">Blocked</p>
+                <p class="font-bold">2 threats</p>
+              </div>
+              <div class="bg-[#0f1116] rounded p-2">
+                <p class="text-xs text-[#b8c4d1]">Actions</p>
+                <p class="font-bold">247</p>
+              </div>
+              <div class="bg-[#0f1116] rounded p-2">
+                <p class="text-xs text-[#b8c4d1]">P95</p>
+                <p class="font-bold">1.2s</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLI Section -->
+  <section class="py-20 px-4">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-4">Easy CLI Integration</h2>
+      <p class="text-center text-[#b8c4d1] mb-12 max-w-2xl mx-auto">
+        Wrap your existing agents with a single command. No code changes required.
+      </p>
+
+      <div class="card rounded-xl p-6 max-w-3xl mx-auto">
+        <pre class="text-sm overflow-x-auto"><code class="text-[#e9eef2]"><span class="text-[#b8c4d1]"># Install SudoDog</span>
+pip install sudodog
+
+<span class="text-[#b8c4d1]"># Wrap your agent</span>
+sudodog run python my_agent.py
+
+<span class="text-[#b8c4d1]"># Configure Microsoft 365 integration</span>
+sudodog configure --export-to-agent365 \
+  --tenant-id "your-tenant-id" \
+  --client-id "your-app-id"
+
+<span class="text-[#b8c4d1]"># Discover shadow agents</span>
+sudodog discover
+
+<span class="text-[#b8c4d1]"># Generate compliance report</span>
+sudodog compliance report --standard soc2 \
+  --period "2025-Q3" --output report.pdf</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section id="pricing" class="py-20 px-4">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-4">Dashboard Pricing</h2>
+      <p class="text-center text-[#b8c4d1] mb-4 max-w-2xl mx-auto">
+        All features are <span class="text-[#2dd4bf] font-semibold">free during beta</span>. When we launch, choose the plan that fits your team.
+      </p>
+      <p class="text-center text-sm text-[#b8c4d1] mb-12">
+        🎉 No credit card required • Unlimited agents during beta • Full feature access
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <!-- Dashboard Pro -->
+        <div class="card rounded-xl p-8 relative border-2 border-[#2dd4bf]">
+          <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+            <span class="bg-[#2dd4bf] text-[#083c3b] px-4 py-1 rounded-full text-sm font-semibold">FREE BETA</span>
+          </div>
+          <h3 class="text-2xl font-bold mb-2">Dashboard Pro</h3>
+          <p class="text-sm text-[#b8c4d1] mb-6">For teams managing multiple agents</p>
+          <div class="mb-6">
+            <span class="text-4xl font-bold text-[#2dd4bf]">Free Beta</span>
+          </div>
+          <p class="text-xs text-[#b8c4d1] mb-6">Pricing available at launch</p>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Monitor unlimited agents</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Up to 5 team members</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Real-time monitoring dashboard</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Advanced cost analytics</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Performance metrics & alerts</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Security threat detection</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">30-day data retention</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Email & Slack alerts</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Email support</span>
+            </li>
+          </ul>
+          <a href="/dashboard" class="btn-primary block text-center px-6 py-3 rounded-lg font-semibold">
+            Start Free Beta
+          </a>
+        </div>
+
+        <!-- Dashboard Enterprise -->
+        <div class="card rounded-xl p-8 relative">
+          <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+            <span class="bg-[#242a36] text-[#e9eef2] px-4 py-1 rounded-full text-sm font-semibold">FREE BETA</span>
+          </div>
+          <h3 class="text-2xl font-bold mb-2">Dashboard Enterprise</h3>
+          <p class="text-sm text-[#b8c4d1] mb-6">For large organizations with compliance needs</p>
+          <div class="mb-6">
+            <span class="text-4xl font-bold">Free Beta</span>
+          </div>
+          <p class="text-xs text-[#b8c4d1] mb-6">Custom pricing at launch</p>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm font-semibold">Everything in Pro, plus:</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Unlimited team members</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Microsoft 365 integration</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Azure AD / Entra SSO</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Shadow agent discovery</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Compliance reports (SOC 2, EU AI Act, ISO 42001, GDPR)</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Custom data retention</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">On-premise deployment option</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">SIEM integration</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-[#22c55e] mt-1">✓</span>
+              <span class="text-sm">Email support</span>
+            </li>
+          </ul>
+          <a href="/dashboard" class="btn-secondary block text-center px-6 py-3 rounded-lg font-semibold">
+            Start Free Beta
+          </a>
+        </div>
+      </div>
+
+      <!-- Feature Comparison Table -->
+      <div class="mt-16">
+        <h3 class="text-2xl font-bold text-center mb-8">Feature Comparison</h3>
+        <div class="card rounded-xl overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-[#0f1116]">
+                <tr>
+                  <th class="text-left p-4 font-semibold">Feature</th>
+                  <th class="text-center p-4 font-semibold text-[#2dd4bf]">Dashboard Pro</th>
+                  <th class="text-center p-4 font-semibold">Dashboard Enterprise</th>
+                </tr>
+              </thead>
+              <tbody class="text-sm">
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Agents monitored</td>
+                  <td class="text-center p-4">Unlimited</td>
+                  <td class="text-center p-4">Unlimited</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Team members</td>
+                  <td class="text-center p-4">Up to 5</td>
+                  <td class="text-center p-4">Unlimited</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Data retention</td>
+                  <td class="text-center p-4">30 days</td>
+                  <td class="text-center p-4">Custom</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Real-time monitoring</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Cost analytics</td>
+                  <td class="text-center p-4">Advanced</td>
+                  <td class="text-center p-4">Advanced</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Security threat detection</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Performance metrics</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Email & Slack alerts</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Agent orchestration</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Microsoft 365 integration</td>
+                  <td class="text-center p-4">—</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Azure AD / Entra SSO</td>
+                  <td class="text-center p-4">—</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Shadow agent discovery</td>
+                  <td class="text-center p-4">—</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Compliance reports</td>
+                  <td class="text-center p-4">—</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">On-premise deployment</td>
+                  <td class="text-center p-4">—</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">SIEM integration</td>
+                  <td class="text-center p-4">—</td>
+                  <td class="text-center p-4 text-[#22c55e]">✓</td>
+                </tr>
+                <tr class="border-t border-[#242a36]">
+                  <td class="p-4">Support</td>
+                  <td class="text-center p-4">Email</td>
+                  <td class="text-center p-4">Email</td>
+                </tr>
+              </tbody>
             </table>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- FAQ Section -->
-    <section class="faq" id="faq">
-        <div class="container">
-            <div class="section-title">
-                <h2>Frequently Asked Questions</h2>
-                <p>Everything you need to know about SudoDog Dashboard</p>
-            </div>
+  <!-- FAQ Section -->
+  <section id="faq" class="py-20 px-4 bg-[#151922]">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
 
-            <div class="faq-grid">
-                <div class="faq-item">
-                    <h3>What AI agent frameworks do you support?</h3>
-                    <p>SudoDog works with all major frameworks including LangChain, AutoGen, CrewAI, and custom implementations. Our SDK wraps your existing code with minimal changes.</p>
-                </div>
-
-                <div class="faq-item">
-                    <h3>How does the SDK integration work?</h3>
-                    <p>Install our Python SDK, add 3 lines of code, and your agents are immediately visible in the dashboard. We track all actions, LLM calls, and resource usage automatically.</p>
-                </div>
-
-                <div class="faq-item">
-                    <h3>Can I upgrade from Pro to Enterprise?</h3>
-                    <p>Yes! You can upgrade at any time. We'll prorate your billing and immediately unlock all Enterprise features including audit logs and Slack integration.</p>
-                </div>
-
-                <div class="faq-item">
-                    <h3>What security events do you detect?</h3>
-                    <p>We monitor for prompt injections, sensitive data exposure, anomalous behavior patterns, unauthorized access attempts, and resource abuse.</p>
-                </div>
-
-                <div class="faq-item">
-                    <h3>How accurate is cost tracking?</h3>
-                    <p>We track actual tokens used per LLM call and calculate costs based on provider pricing. Costs are updated in real-time and you can set budget alerts.</p>
-                </div>
-
-                <div class="faq-item">
-                    <h3>Do you offer annual billing?</h3>
-                    <p>Yes! Annual billing gives you 2 months free (pay for 10, get 12). Contact us for custom enterprise contracts with SLAs.</p>
-                </div>
-
-                <div class="faq-item">
-                    <h3>What compliance standards do you meet?</h3>
-                    <p>Enterprise plan includes full audit logs for SOC2 Type II and GDPR compliance. Export logs as CSV for your compliance team or auditors.</p>
-                </div>
-
-                <div class="faq-item">
-                    <h3>Can I try before I buy?</h3>
-                    <p>Yes! We offer a 14-day free trial of the Pro plan. No credit card required. Contact us for Enterprise trials.</p>
-                </div>
-            </div>
+      <div class="space-y-6">
+        <div class="card rounded-xl p-6">
+          <h3 class="font-semibold mb-2">Can I monitor agents from different platforms in one dashboard?</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Yes! SudoDog works on Linux, Windows, and macOS. You can run agents on any combination of these platforms
+            and monitor them all from one unified dashboard. For example, you might have production agents on Linux servers,
+            development agents on Windows workstations, and local agents on macOS laptops—all visible in the same dashboard view.
+          </p>
         </div>
-    </section>
 
-    <!-- CTA Section -->
-    <section class="cta">
-        <div class="container">
-            <h2>Ready to Monitor Your AI Agents?</h2>
-            <p>Start with a 14-day free trial. No credit card required.</p>
-            <div class="cta-buttons">
-                <a href="/signup" class="btn btn-primary btn-large">Start Free Trial</a>
-                <a href="/demo" class="btn btn-secondary btn-large">Schedule Demo</a>
-            </div>
+        <div class="card rounded-xl p-6">
+          <h3 class="font-semibold mb-2">What AI frameworks does SudoDog support?</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            SudoDog works with any AI agent framework including LangChain, AutoGPT, CrewAI,
+            custom agents, and more. It monitors at the system level so no code changes are needed.
+          </p>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Product</h4>
-                    <a href="#features">Features</a>
-                    <a href="#pricing">Pricing</a>
-                    <a href="/docs">Documentation</a>
-                    <a href="/changelog">Changelog</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Company</h4>
-                    <a href="/about">About</a>
-                    <a href="/blog">Blog</a>
-                    <a href="/careers">Careers</a>
-                    <a href="/contact">Contact</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Resources</h4>
-                    <a href="/docs/quickstart">Quick Start</a>
-                    <a href="/docs/sdk">SDK Reference</a>
-                    <a href="/docs/api">API Docs</a>
-                    <a href="/status">Status</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <a href="/privacy">Privacy Policy</a>
-                    <a href="/terms">Terms of Service</a>
-                    <a href="/security">Security</a>
-                    <a href="/gdpr">GDPR</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 SudoDog. All rights reserved.</p>
-            </div>
+        <div class="card rounded-xl p-6">
+          <h3 class="font-semibold mb-2">How does pricing work during the beta?</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            SudoDog is completely free during the beta period. All features including enterprise
+            capabilities like Microsoft 365 integration, compliance reports, and team management
+            are available at no cost. No credit card required.
+          </p>
         </div>
-    </footer>
+
+        <div class="card rounded-xl p-6">
+          <h3 class="font-semibold mb-2">What data is collected and where is it stored?</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            SudoDog collects agent actions (file ops, API calls, shell commands), performance metrics,
+            and cost data. All data is encrypted in transit and at rest. You can self-host for
+            complete data control or use our cloud service.
+          </p>
+        </div>
+
+        <div class="card rounded-xl p-6">
+          <h3 class="font-semibold mb-2">How do I set up Microsoft 365 integration?</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Go to Settings → Enterprise → Microsoft 365 in the dashboard. You'll need your
+            Azure AD tenant ID, client ID, and client secret from an app registration in Azure Portal.
+            Full setup instructions are in the dashboard.
+          </p>
+        </div>
+
+        <div class="card rounded-xl p-6">
+          <h3 class="font-semibold mb-2">What is Shadow Agent Discovery?</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Shadow Agent Discovery scans your servers for AI agents running without SudoDog monitoring.
+            It detects them by analyzing network traffic and process signatures for AI API calls.
+            You can then wrap them for visibility or quarantine them.
+          </p>
+        </div>
+
+        <div class="card rounded-xl p-6">
+          <h3 class="font-semibold mb-2">Which compliance standards are supported?</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            SudoDog generates compliance reports for SOC 2 Type II, EU AI Act, ISO 42001,
+            and GDPR. Reports include audit trails, security incidents, resolution rates,
+            and actionable recommendations.
+          </p>
+        </div>
+
+        <div class="card rounded-xl p-6">
+          <h3 class="font-semibold mb-2">How does SudoDog affect agent performance?</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            SudoDog adds less than 1ms of latency to agent operations. Monitoring happens
+            asynchronously and doesn't block your agent's execution. We've optimized for
+            minimal overhead in production environments.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20 px-4">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-3xl font-bold mb-4">Start Monitoring Your AI Agents Today</h2>
+      <p class="text-[#b8c4d1] mb-8">
+        Free during beta. No credit card required. All features included.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/dashboard" class="btn-primary px-8 py-4 rounded-lg text-lg font-semibold">
+          Launch Dashboard
+        </a>
+        <a href="https://github.com/SudoDog-official/SudoDog/blob/main/dashboard-doc.md" class="btn-secondary px-8 py-4 rounded-lg text-lg font-semibold">
+          Read Documentation
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 px-4 border-t border-[#242a36]">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center mb-2">
+            <img src="assets/logo.png" alt="SudoDog logo" class="h-6 w-auto">
+          </div>
+          <p class="text-sm text-[#b8c4d1] mt-2">
+            AI Agent Observability & Security Platform
+          </p>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-3">Product</h4>
+          <ul class="space-y-2 text-sm text-[#b8c4d1]">
+            <li><a href="#features" class="hover:text-[#e9eef2]">Features</a></li>
+            <li><a href="#pricing" class="hover:text-[#e9eef2]">Pricing</a></li>
+            <li><a href="#microsoft365" class="hover:text-[#e9eef2]">Microsoft 365</a></li>
+            <li><a href="/dashboard" class="hover:text-[#e9eef2]">Dashboard</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-3">Resources</h4>
+          <ul class="space-y-2 text-sm text-[#b8c4d1]">
+            <li><a href="https://github.com/SudoDog-official/SudoDog/blob/main/dashboard-doc.md" class="hover:text-[#e9eef2]">Documentation</a></li>
+            <li><a href="#faq" class="hover:text-[#e9eef2]">FAQ</a></li>
+            <li><a href="https://github.com/SudoDog-official/SudoDog" class="hover:text-[#e9eef2]">GitHub</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-3">Company</h4>
+          <ul class="space-y-2 text-sm text-[#b8c4d1]">
+            <li><a href="https://github.com/SudoDog-official" class="hover:text-[#e9eef2]">About</a></li>
+            <li><a href="mailto:support@sudodog.com" class="hover:text-[#e9eef2]">Support</a></li>
+            <li><a href="mailto:support@sudodog.com" class="hover:text-[#e9eef2]">support@sudodog.com</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-12 pt-8 border-t border-[#242a36] text-center text-sm text-[#b8c4d1]">
+        <p>© 2025 SudoDog. Free during beta.</p>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
