@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SudoDog - Cross-Platform AI Agent Monitoring | Linux, Windows, macOS</title>
+  <meta name="description" content="Monitor AI agents across Linux, Windows, and macOS. Real-time visibility, audit logs, and security monitoring. Works with LangChain, AutoGPT, CrewAI—any framework. Free CLI, paid dashboard.">
+
+  <!-- Enhanced SEO Meta Tags -->
+  <meta name="keywords" content="AI agent monitoring, cross-platform AI monitoring, Linux AI tools, Windows AI monitoring, macOS AI security, LangChain monitoring, AutoGPT security, CrewAI monitoring, AI agent observability">
+  <meta name="author" content="SudoDog">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://sudodog.com/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sudodog.com/">
+  <meta property="og:title" content="SudoDog - Cross-Platform AI Agent Monitoring">
+  <meta property="og:description" content="Monitor all your AI agents across Linux, Windows, and macOS. Free CLI, paid dashboard for teams. Works with any framework.">
+  <meta property="og:image" content="https://sudodog.com/assets/hero_logo.png">
+  <meta property="og:site_name" content="SudoDog">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://sudodog.com/">
+  <meta name="twitter:title" content="SudoDog - Cross-Platform AI Agent Monitoring">
+  <meta name="twitter:description" content="Monitor all your AI agents across Linux, Windows, and macOS. Free CLI, paid dashboard for teams.">
+  <meta name="twitter:image" content="https://sudodog.com/assets/hero_logo.png">
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="shortcut icon" href="assets/favicon.ico">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Enhanced Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "SudoDog",
+    "alternateName": "SudoDog Cross-Platform AI Agent Monitoring",
+    "url": "https://sudodog.com",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Linux, Windows, macOS",
+    "description": "Monitor all your AI agents across Linux, Windows, and macOS. Real-time visibility, complete audit trail, framework-agnostic. Works with LangChain, AutoGPT, CrewAI, or any framework. Free CLI for local monitoring, paid dashboard for teams.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock",
+      "description": "Free CLI, paid dashboard from $29/month"
+    },
+    "screenshot": "https://sudodog.com/assets/hero_logo.png",
+    "image": "https://sudodog.com/assets/hero_logo.png",
+    "softwareVersion": "2.0.0",
+    "datePublished": "2024-11-21",
+    "dateModified": "2024-11-21",
+    "author": {
+      "@type": "Organization",
+      "name": "SudoDog",
+      "url": "https://sudodog.com",
+      "logo": "https://sudodog.com/assets/logo.png"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "SudoDog",
+      "url": "https://sudodog.com",
+      "logo": "https://sudodog.com/assets/logo.png"
+    },
+    "downloadUrl": "https://github.com/SudoDog-official/sudodog",
+    "codeRepository": "https://github.com/SudoDog-official/sudodog",
+    "programmingLanguage": "Python",
+    "license": "https://opensource.org/licenses/MIT",
+    "featureList": [
+      "Cross-platform support (Linux, Windows, macOS)",
+      "Real-time AI agent monitoring",
+      "Complete audit trail with logs",
+      "Framework-agnostic - works with any AI framework",
+      "Native sandboxing per platform",
+      "Resource monitoring - CPU & memory tracking",
+      "Zero code changes required",
+      "Free CLI, paid dashboard for teams"
+    ],
+    "keywords": "AI agent monitoring, cross-platform, Linux, Windows, macOS, LangChain, AutoGPT, CrewAI"
+  }
+  </script>
+
+  <!-- FAQ Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What platforms does SudoDog support?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SudoDog works natively on Linux, Windows, and macOS. Each platform has native sandboxing: Linux uses namespaces, Windows uses Job Objects, and macOS uses sandbox-exec. No WSL or Docker required, though Docker mode is available as an option."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is SudoDog free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, the SudoDog CLI is completely free and open-source under the MIT license. You can monitor unlimited agents locally on any platform (Linux, Windows, macOS). The paid Pro dashboard ($29/month) is for teams who need to see all agents across all platforms in one unified web interface."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's the difference between the free CLI and paid dashboard?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The free CLI monitors agents locally on your machine with terminal output. The paid dashboard ($29/month) provides a web interface where you can see ALL your agents across ALL platforms (Linux, Windows, macOS) in one unified view, with team collaboration, cost tracking, and advanced analytics."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does SudoDog work with my AI framework?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! SudoDog is framework-agnostic and works with LangChain, AutoGPT, CrewAI, and any custom agent in Python, Node.js, Ruby, or any language. Just prepend 'sudodog run' to your existing command—no code changes required."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="#home" aria-label="SudoDog home">
+        <img class="logo" src="assets/logo.png" alt="SudoDog logo">
+        <strong class="name"></strong>
+      </a>
+      <nav class="menu">
+        <a href="#platforms">Platforms</a>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="dashboard-landing.html">Dashboard</a>
+        <a href="#install" class="btn primary">Get Started Free</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="home">
+    <section class="hero container">
+      <div class="hero-copy center">
+        <img class="hero-logo" src="assets/hero_logo.png" alt="SudoDog - Cross-Platform AI Agent Monitoring">
+        <h1 style="font-size: 0; position: absolute; left: -9999px;">SudoDog - Monitor All Your AI Agents Across Linux, Windows, and macOS</h1>
+        <p class="lead">One Dashboard. Every Platform.</p>
+        <p class="lede-sub">Monitor all your AI agents across <strong>Linux</strong>, <strong>Windows</strong>, and <strong>macOS</strong> in one unified dashboard. Real-time visibility, complete audit trail. Works with LangChain, AutoGPT, CrewAI—any framework. <strong>Free CLI</strong>, paid dashboard for teams.</p>
+        <div class="cta-row">
+          <a class="btn primary lg" href="#platforms">Choose Your Platform</a>
+          <a class="btn ghost lg" href="dashboard-landing.html">See Dashboard</a>
+        </div>
+        <p class="sub center" style="margin-top: 20px;">
+          ✅ Free CLI on all platforms • 💎 $29/mo for team dashboard • 🔓 Open source (MIT)
+        </p>
+      </div>
+    </section>
+
+    <!-- Platform Selection -->
+    <section class="container" id="platforms" style="padding-top: 80px; padding-bottom: 80px;">
+      <h2 style="text-align: center; margin-bottom: 20px;">Choose Your Platform</h2>
+      <p class="sub center" style="margin-bottom: 60px; max-width: 600px; margin-left: auto; margin-right: auto;">
+        SudoDog works natively on Linux, Windows, and macOS. No WSL or Docker required.<br>
+        Install the free CLI and start monitoring instantly.
+      </p>
+
+      <div class="grid grid-3" style="gap: 30px; max-width: 1000px; margin: 0 auto 40px;">
+        <a href="linux.html" class="card hoverlift" style="text-decoration: none; color: inherit; text-align: center; padding: 40px 30px;">
+          <div style="font-size: 64px; margin-bottom: 20px;">🐧</div>
+          <h3 style="margin-bottom: 10px;">Linux</h3>
+          <p class="sub" style="margin-bottom: 20px; font-size: 14px;">Ubuntu • Debian • Arch • Fedora</p>
+          <span class="btn primary">Install for Linux</span>
+        </a>
+
+        <a href="windows.html" class="card hoverlift" style="text-decoration: none; color: inherit; text-align: center; padding: 40px 30px;">
+          <div style="font-size: 64px; margin-bottom: 20px;">🪟</div>
+          <h3 style="margin-bottom: 10px;">Windows</h3>
+          <p class="sub" style="margin-bottom: 20px; font-size: 14px;">Windows 10 • Windows 11</p>
+          <span class="btn primary">Install for Windows</span>
+        </a>
+
+        <a href="macos.html" class="card hoverlift" style="text-decoration: none; color: inherit; text-align: center; padding: 40px 30px;">
+          <div style="font-size: 64px; margin-bottom: 20px;">🍎</div>
+          <h3 style="margin-bottom: 10px;">macOS</h3>
+          <p class="sub" style="margin-bottom: 20px; font-size: 14px;">Intel • Apple Silicon (M1/M2/M3)</p>
+          <span class="btn primary">Install for macOS</span>
+        </a>
+      </div>
+
+      <div class="card" style="max-width: 700px; margin: 0 auto; padding: 30px; text-align: center;">
+        <p style="margin-bottom: 15px;">
+          <strong>🐳 Or use Docker</strong> (works on all platforms)
+        </p>
+        <pre class="codeblock" style="text-align: left;"><code class="lang">curl -sL https://sudodog.com/install.sh | bash</code></pre>
+      </div>
+    </section>
+
+    <!-- Quick Demo -->
+    <section class="code container" id="demo">
+      <h2>See It In Action</h2>
+      <p class="sub center">Zero integration - just prepend <code style="background: rgba(102, 126, 234, 0.1); padding: 2px 6px; border-radius: 3px;">sudodog run</code> to your existing command</p>
+      <div class="hero-terminal card">
+        <div class="term-top">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          <span class="title">bash • sudodog run python agent.py</span>
+        </div>
+<pre class="tty"><code><span class="prompt">user@laptop:~$</span> <span class="cmd">sudodog run python agent.py</span>
+<span class="out">🐕 SudoDog AI Agent Security</span>
+<span class="out">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="out">🍎 Platform: macOS</span>
+
+<span class="okline">▶️  Running: python agent.py</span>
+
+<span class="okline">[Safe Operation] Reading configuration...</span>
+<span class="okline">[Safe Operation] Connecting to API...</span>
+
+<span class="alert">[Security Alert] Attempting SQL injection pattern detected</span>
+<span class="alert">  Pattern: DROP TABLE users;</span>
+<span class="warning">  ⚠️ Blocked by SudoDog</span>
+
+<span class="out">✅ Command completed successfully</span>
+<span class="out">CPU: 8.2% | Memory: 124MB</span>
+
+<span class="prompt">user@laptop:~$</span> <span class="cursor"></span></code></pre>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features container" id="features">
+      <h2>Complete Visibility Across All Platforms</h2>
+      <div class="grid grid-3">
+        <article class="feature card hoverlift">
+          <div class="icbox">🌍</div>
+          <h3>Cross-Platform</h3>
+          <p>Native support for Linux, Windows, and macOS. Each platform uses native sandboxing for maximum security and performance.</p>
+        </article>
+
+        <article class="feature card hoverlift">
+          <div class="icbox">👁️</div>
+          <h3>Unified Dashboard</h3>
+          <p>See ALL your agents across ALL platforms in one place. Linux servers, Windows desktops, Mac laptops—unified view.</p>
+        </article>
+
+        <article class="feature card hoverlift">
+          <div class="icbox">📊</div>
+          <h3>Real-Time Monitoring</h3>
+          <p>Live CPU and memory stats. Track resource usage across platforms. Know exactly what each agent is doing right now.</p>
+        </article>
+
+        <article class="feature card hoverlift">
+          <div class="icbox">🛡️</div>
+          <h3>Security Monitoring</h3>
+          <p>Detect dangerous patterns like SQL injection, shell commands, and file access. Cross-platform threat detection.</p>
+        </article>
+
+        <article class="feature card hoverlift">
+          <div class="icbox">🚀</div>
+          <h3>Framework-Agnostic</h3>
+          <p>Works with LangChain, AutoGPT, CrewAI, or any custom agent. Python, Node.js, Ruby—any language, any framework.</p>
+        </article>
+
+        <article class="feature card hoverlift">
+          <div class="icbox">💰</div>
+          <h3>Cost Tracking</h3>
+          <p>Track API costs across all agents. See spending by platform, agent, or team. Budget alerts and forecasting.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing container" id="pricing">
+      <h2>Free CLI, Paid Dashboard</h2>
+      <p class="sub center">Monitor locally for free. Upgrade to dashboard when you need team visibility.</p>
+      <div class="plans plans-3">
+        <article class="plan card hoverlift">
+          <h3>Free</h3>
+          <p class="price-coming">$0/month</p>
+          <p>Monitor agents locally on any platform</p>
+          <ul>
+            <li><strong>Linux, Windows, macOS support</strong></li>
+            <li>Unlimited agents (local)</li>
+            <li>Terminal monitoring</li>
+            <li>Framework-agnostic</li>
+            <li>Native sandboxing</li>
+            <li>Resource monitoring</li>
+            <li>Security alerts</li>
+            <li>Local logs</li>
+            <li>Open source (MIT)</li>
+            <li>Community support</li>
+          </ul>
+          <a class="btn primary" href="#platforms">Install Free CLI</a>
+        </article>
+
+        <article class="plan card popular hoverlift">
+          <div class="flag">Most Popular</div>
+          <h3>Pro</h3>
+          <p class="price-coming">$29/month</p>
+          <p>Web dashboard for teams</p>
+          <ul>
+            <li>Everything in Free</li>
+            <li><strong>Web dashboard</strong> - all agents, all platforms</li>
+            <li><strong>Cross-platform view</strong> - Linux, Windows, macOS unified</li>
+            <li><strong>Multi-agent monitoring</strong></li>
+            <li><strong>Team collaboration</strong> (up to 5 users)</li>
+            <li><strong>Cost tracking & budgets</strong></li>
+            <li><strong>Email/Slack alerts</strong></li>
+            <li><strong>Historical analytics</strong></li>
+            <li>30-day log retention</li>
+            <li>Priority support</li>
+          </ul>
+          <a class="btn primary" href="dashboard-landing.html">Start Free Trial</a>
+        </article>
+
+        <article class="plan card hoverlift">
+          <div class="flag-muted">For Teams</div>
+          <h3>Enterprise</h3>
+          <p class="price-coming">$99/month</p>
+          <p>Advanced compliance and security</p>
+          <ul>
+            <li>Everything in Pro</li>
+            <li><strong>Unlimited team members</strong></li>
+            <li><strong>SOC 2 compliance reports</strong></li>
+            <li><strong>Microsoft 365 integration</strong></li>
+            <li><strong>SSO (Azure AD)</strong></li>
+            <li>Custom data retention (1 year+)</li>
+            <li>SIEM integration</li>
+            <li>On-premise deployment</li>
+            <li>Custom integrations</li>
+            <li>SLA & premium support</li>
+          </ul>
+          <a class="btn ghost" href="dashboard-landing.html">Contact Sales</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- Installation -->
+    <section class="container code" id="install">
+      <h2>Get Started in 30 Seconds</h2>
+      <p class="sub center">Install on your platform and start monitoring immediately. No code changes required.</p>
+
+      <h3 style="margin-top: 60px; text-align: center;">Linux Installation</h3>
+<pre class="codeblock"><code class="lang"># Install SudoDog
+curl -sL https://sudodog.com/install-linux.sh | bash
+
+# Initialize
+sudodog init
+
+# Run your agent
+sudodog run python agent.py
+</code></pre>
+
+      <h3 style="margin-top: 60px; text-align: center;">Windows Installation</h3>
+<pre class="codeblock"><code class="lang"># PowerShell (as Administrator)
+irm https://sudodog.com/install.ps1 | iex
+
+# Initialize
+sudodog init
+
+# Run your agent
+sudodog run python agent.py
+</code></pre>
+
+      <h3 style="margin-top: 60px; text-align: center;">macOS Installation</h3>
+<pre class="codeblock"><code class="lang"># Terminal
+curl -sL https://sudodog.com/install-macos.sh | bash
+
+# Initialize
+sudodog init
+
+# Run your agent
+sudodog run python agent.py
+</code></pre>
+
+      <h3 style="margin-top: 60px; text-align: center;">Works With Any Framework</h3>
+      <p class="sub center">Zero code changes - just prepend <code>sudodog run</code></p>
+<pre class="codeblock"><code class="lang"># LangChain
+sudodog run python langchain_agent.py
+
+# AutoGPT
+sudodog run python -m autogpt
+
+# CrewAI
+sudodog run python crewai_agent.py
+
+# Custom agent
+sudodog run python your_agent.py
+
+# Any language
+sudodog run node agent.js
+sudodog run ruby agent.rb
+</code></pre>
+
+      <p class="sub center" style="margin-top: 40px;">
+        <strong>📚 Full Documentation:</strong>
+        <a href="https://github.com/SudoDog-official/sudodog#readme" style="color: #667eea;">GitHub Repo</a> •
+        <a href="https://github.com/SudoDog-official/sudodog/blob/main/QUICKSTART.md" style="color: #667eea;">Quick Start Guide</a>
+      </p>
+      <p class="sub center">
+        <strong>Open Source:</strong>
+        <a href="https://github.com/SudoDog-official/sudodog" style="color: #667eea;">View on GitHub</a> • MIT License
+      </p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container foot">
+      <div class="id">
+        <img class="logo sm" src="assets/logo.png" alt="SudoDog logo small">
+        <div>
+          <strong>SudoDog</strong><br>
+          <small>Cross-platform AI agent monitoring</small><br>
+          <small>© <span id="y"></span> SudoDog. MIT License.</small>
+        </div>
+      </div>
+      <nav class="links">
+        <a href="https://github.com/SudoDog-official/sudodog">GitHub</a>
+        <a href="linux.html">Linux</a>
+        <a href="windows.html">Windows</a>
+        <a href="macos.html">macOS</a>
+        <a href="dashboard-landing.html">Dashboard</a>
+        <a href="https://github.com/SudoDog-official/sudodog#readme">Docs</a>
+        <a href="https://github.com/SudoDog-official/sudodog/blob/main/PRIVACY.md">Privacy</a>
+        <a href="mailto:support@sudodog.com">Support</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="https://va.vercel-scripts.com/v1/script.js"></script>
+
+  <script>document.getElementById('y').textContent=new Date().getFullYear();</script>
+</body>
+</html>
