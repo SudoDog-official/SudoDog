@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SudoDog - AI Agent Observability & Security Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #0f1116;
+      color: #e9eef2;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #2dd4bf 0%, #22d3ee 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .card {
+      background: #151922;
+      border: 1px solid #242a36;
+    }
+    .btn-primary {
+      background: #2dd4bf;
+      color: #083c3b;
+    }
+    .btn-primary:hover {
+      background: #26b8a5;
+    }
+    .btn-secondary {
+      border: 1px solid #2dd4bf;
+      color: #2dd4bf;
+    }
+    .btn-secondary:hover {
+      background: rgba(45, 212, 191, 0.1);
+    }
+  </style>
+</head>
+<body class="antialiased">
+  <!-- Navigation -->
+  <nav class="fixed top-0 w-full bg-[#0f1116]/90 backdrop-blur-sm border-b border-[#242a36] z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <div class="flex items-center">
+          <span class="text-2xl font-bold">🐕 SudoDog</span>
+          <span class="ml-2 px-2 py-0.5 bg-[#2dd4bf]/10 text-[#2dd4bf] text-xs font-medium rounded">FREE BETA</span>
+        </div>
+        <div class="flex items-center space-x-4">
+          <a href="https://github.com/SudoDog-official/sudodog-platform/blob/main/docs/dashboard-docs.md" class="text-sm text-[#b8c4d1] hover:text-[#e9eef2]">Docs</a>
+          <a href="#features" class="text-sm text-[#b8c4d1] hover:text-[#e9eef2]">Features</a>
+          <a href="#microsoft365" class="text-sm text-[#b8c4d1] hover:text-[#e9eef2]">Microsoft 365</a>
+          <a href="#faq" class="text-sm text-[#b8c4d1] hover:text-[#e9eef2]">FAQ</a>
+          <a href="/dashboard" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">Launch Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="pt-32 pb-20 px-4">
+    <div class="max-w-7xl mx-auto text-center">
+      <h1 class="text-5xl md:text-6xl font-bold mb-6">
+        <span class="gradient-text">AI Agent Observability</span><br>
+        & Security Platform
+      </h1>
+      <p class="text-xl text-[#b8c4d1] mb-8 max-w-3xl mx-auto">
+        Monitor, secure, and optimize your AI agents in production. Track costs, detect threats,
+        and ensure compliance with enterprise-grade observability.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+        <a href="/dashboard" class="btn-primary px-8 py-4 rounded-lg text-lg font-semibold">
+          Start Free Beta
+        </a>
+        <a href="https://github.com/SudoDog-official/sudodog-platform/blob/main/docs/dashboard-docs.md" class="btn-secondary px-8 py-4 rounded-lg text-lg font-semibold">
+          Read Documentation
+        </a>
+      </div>
+      <p class="text-sm text-[#b8c4d1]">
+        🎉 Free during beta • No credit card required • All features included
+      </p>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="py-12 border-y border-[#242a36]">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div>
+          <p class="text-4xl font-bold gradient-text">100%</p>
+          <p class="text-sm text-[#b8c4d1]">Action Visibility</p>
+        </div>
+        <div>
+          <p class="text-4xl font-bold gradient-text">&lt;1ms</p>
+          <p class="text-sm text-[#b8c4d1]">Monitoring Overhead</p>
+        </div>
+        <div>
+          <p class="text-4xl font-bold gradient-text">Real-time</p>
+          <p class="text-sm text-[#b8c4d1]">Threat Detection</p>
+        </div>
+        <div>
+          <p class="text-4xl font-bold gradient-text">SOC 2</p>
+          <p class="text-sm text-[#b8c4d1]">Compliance Ready</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-20 px-4">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-4">Complete AI Agent Operations</h2>
+      <p class="text-center text-[#b8c4d1] mb-12 max-w-2xl mx-auto">
+        Everything you need to run AI agents safely and efficiently in production
+      </p>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Feature 1 -->
+        <div class="card rounded-xl p-6">
+          <div class="text-3xl mb-4">🔍</div>
+          <h3 class="text-lg font-semibold mb-2">Real-time Monitoring</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Track every action your AI agents take - file operations, API calls, shell commands.
+            Full visibility into agent behavior with sub-millisecond latency.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="card rounded-xl p-6">
+          <div class="text-3xl mb-4">🛡️</div>
+          <h3 class="text-lg font-semibold mb-2">Security & Threat Detection</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Detect prompt injections, data exfiltration attempts, and unauthorized access.
+            Automatic blocking and alerting for security events.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="card rounded-xl p-6">
+          <div class="text-3xl mb-4">💰</div>
+          <h3 class="text-lg font-semibold mb-2">Cost Analytics</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Track spending by agent, model, and time period. Set budgets, get alerts,
+            and identify optimization opportunities to reduce costs.
+          </p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="card rounded-xl p-6">
+          <div class="text-3xl mb-4">📊</div>
+          <h3 class="text-lg font-semibold mb-2">Performance Metrics</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Monitor latency, error rates, and throughput. Identify bottlenecks and
+            optimize agent performance with detailed quality metrics.
+          </p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="card rounded-xl p-6">
+          <div class="text-3xl mb-4">🔗</div>
+          <h3 class="text-lg font-semibold mb-2">Agent Orchestration</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Visualize multi-agent workflows, track dependencies, and identify
+            coordination issues. See how your agents work together.
+          </p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="card rounded-xl p-6">
+          <div class="text-3xl mb-4">📋</div>
+          <h3 class="text-lg font-semibold mb-2">Audit & Compliance</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Immutable audit logs for every action. Export reports for SOC 2,
+            EU AI Act, ISO 42001, and GDPR compliance requirements.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Microsoft 365 Integration Section -->
+  <section id="microsoft365" class="py-20 px-4 bg-[#151922]">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-12">
+        <span class="px-3 py-1 bg-[#2dd4bf]/10 text-[#2dd4bf] text-sm font-medium rounded-full">NEW</span>
+        <h2 class="text-3xl font-bold mt-4 mb-4">Microsoft Agent 365 Integration</h2>
+        <p class="text-[#b8c4d1] max-w-2xl mx-auto">
+          SudoDog integrates seamlessly with Microsoft Agent 365 for unified governance and operations.
+          The best-in-class operations layer for Agent 365.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div class="card rounded-xl p-6 text-center">
+          <div class="text-3xl mb-3">📤</div>
+          <h3 class="font-semibold mb-2">Telemetry Export</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Export actions, costs, security events, and performance data to Agent 365
+          </p>
+        </div>
+
+        <div class="card rounded-xl p-6 text-center">
+          <div class="text-3xl mb-3">🔐</div>
+          <h3 class="font-semibold mb-2">Azure AD SSO</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Single sign-on with Azure Active Directory / Microsoft Entra
+          </p>
+        </div>
+
+        <div class="card rounded-xl p-6 text-center">
+          <div class="text-3xl mb-3">👻</div>
+          <h3 class="font-semibold mb-2">Shadow Agent Discovery</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Find and monitor rogue AI agents running without oversight
+          </p>
+        </div>
+
+        <div class="card rounded-xl p-6 text-center">
+          <div class="text-3xl mb-3">📑</div>
+          <h3 class="font-semibold mb-2">Compliance Reports</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Auto-generate SOC 2, EU AI Act, ISO 42001, GDPR reports
+          </p>
+        </div>
+      </div>
+
+      <!-- Companion Mode Preview -->
+      <div class="card rounded-xl p-8 max-w-3xl mx-auto">
+        <h3 class="text-lg font-semibold mb-4 text-center">Agent 365 Companion Mode</h3>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <p class="text-sm font-medium text-[#2dd4bf] mb-3">Governance (from Agent 365)</p>
+            <div class="space-y-2">
+              <div class="flex items-center text-sm">
+                <span class="text-[#22c55e] mr-2">✓</span> Agent registered in Entra
+              </div>
+              <div class="flex items-center text-sm">
+                <span class="text-[#22c55e] mr-2">✓</span> Access approved for CRM
+              </div>
+              <div class="flex items-center text-sm">
+                <span class="text-[#22c55e] mr-2">✓</span> Compliance logs enabled
+              </div>
+            </div>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-[#2dd4bf] mb-3">Operations (from SudoDog)</p>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="bg-[#0f1116] rounded p-2">
+                <p class="text-xs text-[#b8c4d1]">Cost Today</p>
+                <p class="font-bold">$47.32</p>
+              </div>
+              <div class="bg-[#0f1116] rounded p-2">
+                <p class="text-xs text-[#b8c4d1]">Blocked</p>
+                <p class="font-bold">2 threats</p>
+              </div>
+              <div class="bg-[#0f1116] rounded p-2">
+                <p class="text-xs text-[#b8c4d1]">Actions</p>
+                <p class="font-bold">247</p>
+              </div>
+              <div class="bg-[#0f1116] rounded p-2">
+                <p class="text-xs text-[#b8c4d1]">P95</p>
+                <p class="font-bold">1.2s</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLI Section -->
+  <section class="py-20 px-4">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-4">Easy CLI Integration</h2>
+      <p class="text-center text-[#b8c4d1] mb-12 max-w-2xl mx-auto">
+        Wrap your existing agents with a single command. No code changes required.
+      </p>
+
+      <div class="card rounded-xl p-6 max-w-3xl mx-auto">
+        <pre class="text-sm overflow-x-auto"><code class="text-[#e9eef2]"><span class="text-[#b8c4d1]"># Install SudoDog</span>
+pip install sudodog
+
+<span class="text-[#b8c4d1]"># Wrap your agent</span>
+sudodog run python my_agent.py
+
+<span class="text-[#b8c4d1]"># Configure Microsoft 365 integration</span>
+sudodog configure --export-to-agent365 \
+  --tenant-id "your-tenant-id" \
+  --client-id "your-app-id"
+
+<span class="text-[#b8c4d1]"># Discover shadow agents</span>
+sudodog discover
+
+<span class="text-[#b8c4d1]"># Generate compliance report</span>
+sudodog compliance report --standard soc2 \
+  --period "2025-Q3" --output report.pdf</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq" class="py-20 px-4 bg-[#151922]">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
+
+      <div class="space-y-6">
+        <div class="card rounded-xl p-6">
+          <h3 class="font-semibold mb-2">What AI frameworks does SudoDog support?</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            SudoDog works with any AI agent framework including LangChain, AutoGPT, CrewAI,
+            custom agents, and more. It monitors at the system level so no code changes are needed.
+          </p>
+        </div>
+
+        <div class="card rounded-xl p-6">
+          <h3 class="font-semibold mb-2">How does pricing work during the beta?</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            SudoDog is completely free during the beta period. All features including enterprise
+            capabilities like Microsoft 365 integration, compliance reports, and team management
+            are available at no cost. No credit card required.
+          </p>
+        </div>
+
+        <div class="card rounded-xl p-6">
+          <h3 class="font-semibold mb-2">What data is collected and where is it stored?</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            SudoDog collects agent actions (file ops, API calls, shell commands), performance metrics,
+            and cost data. All data is encrypted in transit and at rest. You can self-host for
+            complete data control or use our cloud service.
+          </p>
+        </div>
+
+        <div class="card rounded-xl p-6">
+          <h3 class="font-semibold mb-2">How do I set up Microsoft 365 integration?</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Go to Settings → Enterprise → Microsoft 365 in the dashboard. You'll need your
+            Azure AD tenant ID, client ID, and client secret from an app registration in Azure Portal.
+            Full setup instructions are in the dashboard.
+          </p>
+        </div>
+
+        <div class="card rounded-xl p-6">
+          <h3 class="font-semibold mb-2">What is Shadow Agent Discovery?</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            Shadow Agent Discovery scans your servers for AI agents running without SudoDog monitoring.
+            It detects them by analyzing network traffic and process signatures for AI API calls.
+            You can then wrap them for visibility or quarantine them.
+          </p>
+        </div>
+
+        <div class="card rounded-xl p-6">
+          <h3 class="font-semibold mb-2">Which compliance standards are supported?</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            SudoDog generates compliance reports for SOC 2 Type II, EU AI Act, ISO 42001,
+            and GDPR. Reports include audit trails, security incidents, resolution rates,
+            and actionable recommendations.
+          </p>
+        </div>
+
+        <div class="card rounded-xl p-6">
+          <h3 class="font-semibold mb-2">How does SudoDog affect agent performance?</h3>
+          <p class="text-sm text-[#b8c4d1]">
+            SudoDog adds less than 1ms of latency to agent operations. Monitoring happens
+            asynchronously and doesn't block your agent's execution. We've optimized for
+            minimal overhead in production environments.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20 px-4">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-3xl font-bold mb-4">Start Monitoring Your AI Agents Today</h2>
+      <p class="text-[#b8c4d1] mb-8">
+        Free during beta. No credit card required. All features included.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/dashboard" class="btn-primary px-8 py-4 rounded-lg text-lg font-semibold">
+          Launch Dashboard
+        </a>
+        <a href="https://github.com/SudoDog-official/sudodog-platform/blob/main/docs/dashboard-docs.md" class="btn-secondary px-8 py-4 rounded-lg text-lg font-semibold">
+          Read Documentation
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 px-4 border-t border-[#242a36]">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div>
+          <span class="text-xl font-bold">🐕 SudoDog</span>
+          <p class="text-sm text-[#b8c4d1] mt-2">
+            AI Agent Observability & Security Platform
+          </p>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-3">Product</h4>
+          <ul class="space-y-2 text-sm text-[#b8c4d1]">
+            <li><a href="#features" class="hover:text-[#e9eef2]">Features</a></li>
+            <li><a href="#microsoft365" class="hover:text-[#e9eef2]">Microsoft 365</a></li>
+            <li><a href="/dashboard" class="hover:text-[#e9eef2]">Dashboard</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-3">Resources</h4>
+          <ul class="space-y-2 text-sm text-[#b8c4d1]">
+            <li><a href="https://github.com/SudoDog-official/sudodog-platform/blob/main/docs/dashboard-docs.md" class="hover:text-[#e9eef2]">Documentation</a></li>
+            <li><a href="#faq" class="hover:text-[#e9eef2]">FAQ</a></li>
+            <li><a href="https://github.com/SudoDog-official/sudodog-platform" class="hover:text-[#e9eef2]">GitHub</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-3">Company</h4>
+          <ul class="space-y-2 text-sm text-[#b8c4d1]">
+            <li><a href="https://github.com/SudoDog-official" class="hover:text-[#e9eef2]">About</a></li>
+            <li><a href="https://github.com/SudoDog-official/sudodog-platform/issues" class="hover:text-[#e9eef2]">Support</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-12 pt-8 border-t border-[#242a36] text-center text-sm text-[#b8c4d1]">
+        <p>© 2025 SudoDog. Free during beta.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
