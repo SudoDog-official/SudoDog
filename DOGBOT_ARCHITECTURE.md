@@ -399,6 +399,107 @@ What happens:
 
 ---
 
+## Licensing Strategy: Open Core
+
+### Principle
+The security engine must be open source — users need to verify the code that intercepts their agent's traffic. The dashboard and multi-agent orchestration are closed source — that's the convenience layer people pay for.
+
+### Open Source (Apache 2.0)
+
+| Component | Why Open |
+|---|---|
+| **Security engine** (command blocking, audit trail, secret masking) | Non-negotiable. Users MUST be able to read the code that intercepts their agent's actions. A closed-source security tool from an unknown company is indistinguishable from malware to this audience. |
+| **Agent runtime** (Docker container, agent.js) | Reinforces the portability promise. Users can verify there's no lock-in or data exfiltration. |
+| **CLI** (`dogbot run`, `dogbot migrate`, `dogbot status`) | Developer adoption requires open-source CLI tools. This is the distribution channel. |
+| **Core integrations** (Telegram, Slack, Email MCP servers) | Community will build more integrations if the pattern is open. |
+| **Migration tools** | If these are closed, the "no lock-in" pitch is hollow and nobody will believe it. |
+
+### Closed Source (Proprietary)
+
+| Component | Why Closed |
+|---|---|
+| **Dashboard** (Next.js web UI) | The management/convenience layer. Users CAN use the open-source CLI for everything. The dashboard is the reason to pay. |
+| **Multi-agent orchestration engine** | The logic that makes spawning and managing 5-20 isolated agents seamless. Hard to build, easy to use, worth paying for. |
+| **Fleet management** | Team features, multi-user access, shared security policies, RBAC. Enterprise value. |
+| **Billing and metering engine** | Per-agent cost tracking, usage dashboards, cost cap alerts. |
+| **Advanced analytics** | Security trend analysis, cross-agent pattern detection, compliance reporting. |
+
+### Why Apache 2.0 (Not MIT, AGPL, or BSL)
+
+| License | Considered? | Verdict |
+|---|---|---|
+| **MIT** | Yes | Too permissive — no patent grant. A cloud provider could host it and sue over patents. |
+| **Apache 2.0** | **Selected** | Includes patent grant (matters when code sits in the security path of other systems). Widely trusted. Compatible with OpenClaw's MIT license. |
+| **AGPL** | Yes | Forces anyone hosting it to open their changes. But scares away enterprise adopters and some contributors. |
+| **BSL** (Business Source License) | Yes | Prevents cloud providers from competing. But the HN/OpenClaw crowd will call it "fauxpen source" and reject it. Trust matters more than protection for this audience. |
+| **SSPL** | No | Not OSI-approved. Controversial. Would undermine trust positioning entirely. |
+
+### The Trust Architecture
+
+```
+What's open (Apache 2.0):              What's closed (proprietary):
++----------------------------------+    +---------------------------+
+| Everything that touches          |    | Everything that manages   |
+| user data:                       |    | user experience:          |
+|                                  |    |                           |
+| - Security policy engine         |    | - Web dashboard UI        |
+| - Command blocking patterns      |    | - Agent creation wizard   |
+| - HTTP traffic interceptor       |    | - Multi-agent orchestrator|
+| - Audit trail logger             |    | - Fleet management        |
+| - Secret injection & masking     |    | - Billing & metering      |
+| - Agent runtime (Docker image)   |    | - Analytics & reporting   |
+| - CLI tools                      |    | - SSO / SAML integration  |
+| - MCP integration servers        |    |                           |
+| - Migration tools                |    |                           |
++----------------------------------+    +---------------------------+
+
+Marketing message:
+"Every line of code that processes your messages, API calls, and
+files is open source. The closed-source parts are the management
+UI — they never see your data."
+```
+
+### What This Means for Each User Type
+
+**Self-hoster (never pays):**
+```
+$ dogbot run --telegram my-agent --config agent.yaml
+```
+- Gets: 1 agent, full security engine, full audit trail, CLI management
+- Configures: YAML files, environment variables
+- Hosts: their own Docker, their own cloud
+- Support: GitHub issues, community
+- Cost: $0
+
+**Pro subscriber ($29/mo):**
+- Gets: everything above PLUS web dashboard, multi-agent, hosted on Cloudflare
+- Configures: point-and-click in the dashboard
+- Hosts: DogBot manages it
+- Support: email
+- Cost: $29/mo
+
+**The conversion trigger:** The moment a user wants a second agent, or wants to stop editing YAML, or wants their non-technical partner to manage an agent — they hit the dashboard paywall. The free tier is genuinely useful (not crippled), but the dashboard is genuinely better.
+
+### Competitive Defense
+
+**Risk:** Someone forks the open-source runtime and builds their own dashboard.
+
+**Why it's OK:**
+1. The dashboard + orchestration engine is months of work. Most forks die.
+2. Anyone who forks and self-hosts was never going to pay. Let them go.
+3. The multi-cloud migration tooling requires active maintenance across providers. A fork can't keep up.
+4. Your brand, community, and hosted service are the moat — not the code.
+
+**Risk:** Cloudflare uses the open-source security engine in a competing product.
+
+**Why it's OK:**
+1. Cloudflare would only build for Cloudflare. Your moat is multi-cloud portability.
+2. It validates your security approach and the market.
+3. Apache 2.0 requires attribution — they'd have to credit DogBot/SudoDog.
+4. If Cloudflare ships this, you're the team that built the original. That's credibility, not defeat.
+
+---
+
 ## Key Risks and Honest Assessment
 
 ### This is a big build.
